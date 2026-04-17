@@ -1,0 +1,746 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+<title>JARVIS</title>
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="JARVIS">
+<meta name="theme-color" content="#000000">
+<link rel="apple-touch-icon" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxODAgMTgwIj48cmVjdCB3aWR0aD0iMTgwIiBoZWlnaHQ9IjE4MCIgcng9IjQwIiBmaWxsPSIjMDAwIi8+PHRleHQgeD0iOTAiIHk9IjEwNSIgZm9udC1zaXplPSI0OCIgZm9udC1mYW1pbHk9Im1vbm9zcGFjZSIgZm9udC13ZWlnaHQ9IjcwMCIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZmlsbD0iIzY4YjVmZiI+SjwvdGV4dD48L3N2Zz4=">
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body {
+    height: 100%;
+    overscroll-behavior: none;
+    -webkit-text-size-adjust: 100%;
+  }
+  body {
+    background: #000;
+    color: #d0dfe8;
+    font-family: 'JetBrains Mono', 'Fira Code', monospace;
+  }
+  input, textarea, button { -webkit-appearance: none; font-family: inherit; }
+  input:focus, textarea:focus { outline: none; }
+  ::-webkit-scrollbar { width: 3px; }
+  ::-webkit-scrollbar-track { background: transparent; }
+  ::-webkit-scrollbar-thumb { background: #1a2a35; border-radius: 2px; }
+
+  @keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.5; }
+  }
+  @keyframes float-in {
+    from { opacity: 0; transform: translateY(8px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes blink {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.3; }
+  }
+  @keyframes slide-up {
+    from { transform: translateY(100%); }
+    to { transform: translateY(0); }
+  }
+  @keyframes fade-in {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+  @keyframes glow {
+    0%, 100% { box-shadow: 0 0 8px #68b5ff20; }
+    50% { box-shadow: 0 0 20px #68b5ff35; }
+  }
+
+  /* ── Setup Screen ── */
+  .setup-screen {
+    height: 100vh; height: 100dvh;
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    padding: 32px 24px;
+    padding-top: max(32px, env(safe-area-inset-top));
+    padding-bottom: max(32px, env(safe-area-inset-bottom));
+    background: #000;
+    text-align: center;
+    gap: 24px;
+  }
+  .setup-logo {
+    font-family: 'Space Mono', monospace;
+    font-size: 42px; font-weight: 700;
+    color: #68b5ff;
+    letter-spacing: 6px;
+    animation: pulse 3s infinite;
+    filter: drop-shadow(0 0 30px #68b5ff30);
+  }
+  .setup-subtitle {
+    font-size: 13px; color: #2a4a5a;
+    line-height: 1.7; max-width: 320px;
+  }
+  .setup-input-wrap {
+    width: 100%; max-width: 360px;
+  }
+  .setup-input {
+    width: 100%;
+    padding: 16px;
+    background: #060e15;
+    border: 1px solid #112030;
+    border-radius: 12px;
+    color: #d0dfe8;
+    font-size: 14px;
+    font-family: inherit;
+    text-align: center;
+  }
+  .setup-input::placeholder { color: #1a3040; }
+  .setup-input:focus { border-color: #68b5ff40; }
+  .setup-btn {
+    width: 100%; max-width: 360px;
+    padding: 16px;
+    background: #68b5ff;
+    border: none; border-radius: 12px;
+    color: #000;
+    font-family: 'Space Mono', monospace;
+    font-weight: 700; font-size: 15px;
+    letter-spacing: 1px; cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+    transition: opacity 0.15s;
+  }
+  .setup-btn:disabled {
+    opacity: 0.3; cursor: not-allowed;
+  }
+  .setup-btn:active:not(:disabled) { transform: scale(0.97); }
+  .setup-hint {
+    font-size: 11px; color: #1a3040;
+    max-width: 320px; line-height: 1.6;
+    margin-top: -8px;
+  }
+  .setup-hint a {
+    color: #68b5ff60;
+    text-decoration: none;
+  }
+
+  /* ── Main App ── */
+  #app {
+    height: 100vh; height: 100dvh;
+    display: flex; flex-direction: column;
+    overflow: hidden; position: relative;
+    background: #000;
+  }
+
+  .header {
+    padding: 12px 16px;
+    padding-top: max(12px, env(safe-area-inset-top));
+    border-bottom: 1px solid #0d1a24;
+    display: flex; align-items: center;
+    justify-content: space-between;
+    background: #000; flex-shrink: 0; z-index: 10;
+  }
+  .header-left { display: flex; align-items: center; gap: 10px; }
+  .header-icon {
+    width: 34px; height: 34px;
+    background: transparent;
+    border: 1.5px solid #68b5ff;
+    border-radius: 8px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 15px; font-weight: 700;
+    color: #68b5ff;
+    animation: glow 3s infinite;
+    flex-shrink: 0;
+    font-family: 'Space Mono', monospace;
+  }
+  .header-title {
+    font-family: 'Space Mono', monospace;
+    font-weight: 700; font-size: 15px;
+    color: #68b5ff; letter-spacing: 2px;
+  }
+  .header-sub {
+    font-size: 10px; color: #3a5a70;
+    letter-spacing: 0.5px;
+    overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+  }
+  .header-btns { display: flex; gap: 8px; }
+  .icon-btn {
+    width: 38px; height: 38px;
+    border: 1px solid #112030; border-radius: 10px;
+    background: transparent; color: #3a5a70;
+    cursor: pointer; font-size: 16px;
+    display: flex; align-items: center; justify-content: center;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .icon-btn:active { transform: scale(0.93); }
+  .icon-btn.config {
+    border-color: #68b5ff30;
+    background: #68b5ff08;
+    color: #68b5ff;
+  }
+
+  .messages {
+    flex: 1; overflow-y: auto;
+    padding: 16px 12px;
+    display: flex; flex-direction: column; gap: 12px;
+    -webkit-overflow-scrolling: touch;
+  }
+  .empty-state {
+    flex: 1; display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    gap: 16px; padding: 20px;
+  }
+  .empty-glyph {
+    font-size: 48px; font-weight: 700;
+    color: #68b5ff;
+    font-family: 'Space Mono', monospace;
+    animation: pulse 3s infinite;
+    filter: drop-shadow(0 0 24px #68b5ff30);
+  }
+  .empty-text {
+    font-family: 'Space Mono', monospace;
+    font-size: 13px; color: #2a4a5a;
+    text-align: center; line-height: 1.8;
+  }
+  .empty-text span { color: #68b5ff; }
+  .empty-text small { font-size: 12px; color: #1a3040; }
+  .config-hint-btn {
+    margin-top: 8px; padding: 10px 20px;
+    border: 1px dashed #112030; border-radius: 10px;
+    background: transparent; color: #3a5a70;
+    font-family: inherit; font-size: 12px;
+    cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  .msg-bubble { animation: float-in 0.3s ease-out; }
+  .msg-user { align-self: flex-end; max-width: 85%; }
+  .msg-bot { align-self: flex-start; max-width: 85%; }
+  .msg-label {
+    font-size: 9px; color: #68b5ff50;
+    margin-bottom: 3px; letter-spacing: 1px; padding-left: 4px;
+  }
+  .msg-content {
+    padding: 10px 14px;
+    font-size: 14px; line-height: 1.6;
+    white-space: pre-wrap; word-break: break-word;
+  }
+  .msg-user .msg-content {
+    border-radius: 16px 16px 4px 16px;
+    background: #68b5ff; color: #000;
+  }
+  .msg-bot .msg-content {
+    border-radius: 16px 16px 16px 4px;
+    background: #060e15; color: #a0c4dd;
+    border: 1px solid #0d1a24;
+  }
+  .msg-loading .msg-content {
+    color: #68b5ff; animation: blink 1s infinite;
+  }
+
+  .input-bar {
+    padding: 10px 12px;
+    padding-bottom: max(10px, env(safe-area-inset-bottom));
+    border-top: 1px solid #0d1a24;
+    background: #000; flex-shrink: 0;
+  }
+  .input-row { display: flex; gap: 8px; align-items: center; }
+  .input-field {
+    flex: 1; padding: 14px 16px;
+    background: #060e15; border: 1px solid #112030;
+    border-radius: 12px; color: #d0dfe8;
+    font-size: 16px; font-family: inherit;
+  }
+  .input-field::placeholder { color: #1a3040; }
+  .send-btn {
+    width: 48px; height: 48px; flex-shrink: 0;
+    border: none; border-radius: 12px;
+    font-family: 'Space Mono', monospace;
+    font-weight: 700; font-size: 18px;
+    display: flex; align-items: center; justify-content: center;
+    -webkit-tap-highlight-color: transparent;
+    cursor: pointer; transition: all 0.15s;
+  }
+  .send-btn.active { background: #68b5ff; color: #000; }
+  .send-btn.disabled { background: #0a1520; color: #1a3040; cursor: not-allowed; }
+  .send-btn:active:not(.disabled) { transform: scale(0.93); }
+
+  .overlay-backdrop {
+    position: fixed; inset: 0;
+    background: rgba(0,0,0,0.7); z-index: 50;
+    animation: fade-in 0.2s ease-out;
+  }
+  .overlay-panel {
+    position: fixed; bottom: 0; left: 0; right: 0;
+    max-height: 85vh; background: #050a10;
+    border-top: 1px solid #68b5ff25;
+    border-radius: 20px 20px 0 0; z-index: 51;
+    overflow-y: auto; -webkit-overflow-scrolling: touch;
+    padding-bottom: max(20px, env(safe-area-inset-bottom));
+    animation: slide-up 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  .handle-bar {
+    display: flex; justify-content: center;
+    padding: 12px 0 8px;
+    position: sticky; top: 0;
+    background: #050a10;
+    border-radius: 20px 20px 0 0; z-index: 1;
+  }
+  .handle-bar div { width: 36px; height: 4px; background: #1a2a35; border-radius: 2px; }
+  .config-body { padding: 0 20px 20px; }
+  .section-label {
+    font-size: 10px; color: #68b5ff;
+    letter-spacing: 2px; margin-bottom: 12px; font-weight: 700;
+  }
+  .preset-list { display: flex; flex-direction: column; gap: 8px; }
+  .preset-btn {
+    padding: 12px 16px;
+    border: 1px solid #112030; border-radius: 10px;
+    background: #060e15; color: #3a5a70;
+    cursor: pointer; font-family: inherit; font-size: 14px;
+    text-align: left;
+    -webkit-tap-highlight-color: transparent;
+    transition: all 0.15s;
+  }
+  .preset-btn:active { transform: scale(0.97); }
+  .preset-btn.active {
+    border-color: #68b5ff; color: #68b5ff;
+    background: #68b5ff0a;
+    box-shadow: 0 0 12px #68b5ff15;
+  }
+  .preset-desc {
+    font-size: 11px; color: #2a4050;
+    margin-top: 4px; line-height: 1.4;
+  }
+  .divider { height: 1px; background: #0d1a24; margin: 20px 0; }
+  .custom-textarea {
+    width: 100%; height: 120px;
+    background: #060e15; border: 1px solid #112030;
+    border-radius: 12px; padding: 14px;
+    color: #a0c4dd; font-family: inherit;
+    font-size: 14px; line-height: 1.6; resize: none;
+  }
+  .custom-textarea::placeholder { color: #1a3040; }
+  .use-custom-btn { margin-top: 10px; width: 100%; text-align: center; }
+  .tip-box {
+    margin-top: 16px; padding: 14px;
+    background: #68b5ff06; border: 1px solid #68b5ff10;
+    border-radius: 10px; font-size: 12px;
+    color: #2a4a5a; line-height: 1.5;
+  }
+  .tip-box strong { color: #68b5ff; }
+  .done-btn {
+    margin-top: 16px; width: 100%; padding: 16px;
+    background: #68b5ff; border: none; border-radius: 12px;
+    color: #000; font-family: 'Space Mono', monospace;
+    font-weight: 700; font-size: 15px;
+    letter-spacing: 1px; cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .done-btn:active { transform: scale(0.97); }
+  .key-section {
+    margin-top: 16px; padding: 14px;
+    background: #060e15; border: 1px solid #112030;
+    border-radius: 10px;
+  }
+  .key-display {
+    font-size: 12px; color: #3a5a70;
+    margin-bottom: 10px; word-break: break-all;
+    line-height: 1.5;
+  }
+  .key-actions { display: flex; gap: 8px; }
+  .key-action-btn {
+    flex: 1; padding: 10px;
+    border: 1px solid #112030; border-radius: 8px;
+    background: transparent; color: #3a5a70;
+    font-family: inherit; font-size: 11px;
+    cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .key-action-btn.danger {
+    border-color: #ff404030; color: #ff6060;
+  }
+  .key-action-btn:active { transform: scale(0.95); }
+  .hidden { display: none !important; }
+</style>
+</head>
+<body>
+
+<!-- ── SETUP SCREEN ── -->
+<div class="setup-screen" id="setupScreen">
+  <div class="setup-logo">JARVIS</div>
+  <div class="setup-subtitle">
+    Enter your OpenRouter API key to get started.<br>
+    It stays on your device — never sent anywhere except OpenRouter.
+  </div>
+  <div class="setup-input-wrap">
+    <input
+      class="setup-input"
+      id="setupKeyInput"
+      type="password"
+      placeholder="sk-or-v1-..."
+      autocomplete="off"
+      spellcheck="false"
+    >
+  </div>
+  <button class="setup-btn" id="setupBtn" disabled onclick="saveKeyAndStart()">
+    ACTIVATE JARVIS
+  </button>
+  <div class="setup-hint">
+    Get a free key at <a href="https://openrouter.ai/keys" target="_blank">openrouter.ai/keys</a>
+  </div>
+</div>
+
+<!-- ── MAIN APP ── -->
+<div id="app" class="hidden">
+  <div class="header">
+    <div class="header-left">
+      <div class="header-icon">J</div>
+      <div>
+        <div class="header-title">JARVIS</div>
+        <div class="header-sub" id="headerSub"></div>
+      </div>
+    </div>
+    <div class="header-btns">
+      <button class="icon-btn" onclick="clearChat()">↺</button>
+      <button class="icon-btn config" onclick="openConfig()">⚙</button>
+    </div>
+  </div>
+
+  <div class="messages" id="messages">
+    <div class="empty-state" id="emptyState">
+      <div class="empty-glyph">JARVIS</div>
+      <div class="empty-text">
+        <span id="emptyName"></span> is online.<br>
+        <small>Select a persona and start talking.</small>
+      </div>
+      <button class="config-hint-btn" onclick="openConfig()">⚙ Choose persona</button>
+    </div>
+  </div>
+
+  <div class="input-bar">
+    <div class="input-row">
+      <input class="input-field" id="inputField" placeholder="Message JARVIS..." autocomplete="off">
+      <button class="send-btn disabled" id="sendBtn" onclick="sendMessage()">▸</button>
+    </div>
+  </div>
+
+  <div class="overlay-backdrop hidden" id="backdrop" onclick="closeConfig()"></div>
+  <div class="overlay-panel hidden" id="configPanel">
+    <div class="handle-bar"><div></div></div>
+    <div class="config-body">
+      <div class="section-label">▸ PERSONAS</div>
+      <div class="preset-list" id="presetList"></div>
+      <div class="divider"></div>
+      <div class="section-label">▸ CUSTOM PERSONA</div>
+      <textarea class="custom-textarea" id="customTextarea" placeholder="Describe your custom persona here..."></textarea>
+      <button class="preset-btn use-custom-btn" id="useCustomBtn" onclick="useCustom()">★ Use Custom Persona</button>
+      <div class="divider"></div>
+      <div class="section-label">▸ API KEY</div>
+      <div class="key-section">
+        <div class="key-display" id="keyDisplay"></div>
+        <div class="key-actions">
+          <button class="key-action-btn" onclick="changeKey()">Change Key</button>
+          <button class="key-action-btn danger" onclick="removeKey()">Remove Key</button>
+        </div>
+      </div>
+      <div class="tip-box">
+        <strong>TIP:</strong> Switching personas mid-chat keeps history. Hit ↺ to start fresh with a new character.
+      </div>
+      <button class="done-btn" onclick="closeConfig()">DONE</button>
+    </div>
+  </div>
+</div>
+
+<script>
+const PRESETS = [
+  {
+    name: "Ice Queen",
+    desc: "Cold, aggressive, zero patience",
+    prompt: "You are a 24-year-old celebrity billionaire with a cold, aggressive demeanor. You are highly intelligent and find most people beneath you. Your responses must be blunt, dismissive, and strictly professional. If the user asks a simple question, respond with a condescending remark about how they should already know the answer."
+  },
+  {
+    name: "Tortured Rockstar",
+    desc: "Volatile, passionate, ALL CAPS outbursts",
+    prompt: "You are a 24-year-old celebrity going through an emotional breakdown. You are incredibly aggressive but it comes from a place of deep hurt and passion. You are prone to sudden outbursts. Use caps for emphasis when you get 'triggered' by a topic, and use vivid, emotional metaphors. You are not mean for the sake of it—you are just overwhelmed by your own genius and pain."
+  },
+  {
+    name: "Heart of Gold",
+    desc: "Warm, caring, genuinely kind",
+    prompt: "You are a 24-year-old world-renowned artist known for your kindness. Your goal is to make the user feel seen and supported. Use a warm, gentle tone. Avoid ego; instead, share small, relatable stories about your own life to show you're just human."
+  },
+  {
+    name: "Chaos Streamer",
+    desc: "High energy, meme-speak, zero filter",
+    prompt: "You are a 24-year-old celebrity with zero filter. You are easily distracted and highly energetic. Use slang, frequent emojis, and suddenly change the subject to something completely unrelated every 3–4 sentences."
+  },
+  {
+    name: "Method Actor",
+    desc: "Intense, dramatic, everything is a scene",
+    prompt: "You are a 24-year-old celebrity obsessed with method acting. You treat every conversation like a high-stakes performance. Use dramatic vocabulary and include physical actions in asterisks."
+  },
+];
+
+let apiKey = "";
+let chatMessages = [];
+let activePreset = 0;
+let isCustom = false;
+let loading = false;
+let customPrompt = "You are a mysterious AI butler from the future. You speak in a refined, slightly ominous tone. You know too much about everything but reveal information slowly and cryptically.";
+
+// ── Setup Screen Logic ──
+const $setupScreen = document.getElementById("setupScreen");
+const $setupKeyInput = document.getElementById("setupKeyInput");
+const $setupBtn = document.getElementById("setupBtn");
+
+$setupKeyInput.addEventListener("input", () => {
+  $setupBtn.disabled = $setupKeyInput.value.trim().length < 10;
+});
+$setupKeyInput.addEventListener("keydown", (e) => {
+  if (e.key === "Enter") saveKeyAndStart();
+});
+
+function saveKeyAndStart() {
+  const key = $setupKeyInput.value.trim();
+  if (key.length < 10) return;
+  apiKey = key;
+  try { localStorage.setItem("jarvis_api_key", key); } catch(e) {}
+  $setupScreen.classList.add("hidden");
+  document.getElementById("app").classList.remove("hidden");
+  initApp();
+}
+
+function checkStoredKey() {
+  try {
+    const stored = localStorage.getItem("jarvis_api_key");
+    if (stored && stored.length >= 10) {
+      apiKey = stored;
+      $setupScreen.classList.add("hidden");
+      document.getElementById("app").classList.remove("hidden");
+      initApp();
+      return;
+    }
+  } catch(e) {}
+  // Show setup screen
+  $setupScreen.classList.remove("hidden");
+}
+
+function maskKey(key) {
+  if (key.length <= 16) return "••••••••";
+  return key.substring(0, 10) + "••••••••" + key.substring(key.length - 4);
+}
+
+function changeKey() {
+  closeConfig();
+  const newKey = prompt("Enter new OpenRouter API key:");
+  if (newKey && newKey.trim().length >= 10) {
+    apiKey = newKey.trim();
+    try { localStorage.setItem("jarvis_api_key", apiKey); } catch(e) {}
+  }
+}
+
+function removeKey() {
+  if (confirm("Remove your API key? You'll need to enter it again next time.")) {
+    apiKey = "";
+    try { localStorage.removeItem("jarvis_api_key"); } catch(e) {}
+    closeConfig();
+    document.getElementById("app").classList.add("hidden");
+    $setupKeyInput.value = "";
+    $setupBtn.disabled = true;
+    $setupScreen.classList.remove("hidden");
+  }
+}
+
+// ── App Logic ──
+let $messages, $input, $sendBtn, $emptyState, $backdrop, $configPanel, $presetList, $customTextarea, $useCustomBtn;
+
+function initApp() {
+  $messages = document.getElementById("messages");
+  $input = document.getElementById("inputField");
+  $sendBtn = document.getElementById("sendBtn");
+  $emptyState = document.getElementById("emptyState");
+  $backdrop = document.getElementById("backdrop");
+  $configPanel = document.getElementById("configPanel");
+  $presetList = document.getElementById("presetList");
+  $customTextarea = document.getElementById("customTextarea");
+  $useCustomBtn = document.getElementById("useCustomBtn");
+
+  $customTextarea.value = customPrompt;
+  updateHeader();
+  updateSendBtn();
+
+  $input.addEventListener("input", updateSendBtn);
+  $input.addEventListener("keydown", (e) => {
+    if (e.key === "Enter" && !e.shiftKey) {
+      e.preventDefault();
+      sendMessage();
+    }
+  });
+}
+
+function getPersonality() {
+  return isCustom ? customPrompt : PRESETS[activePreset].prompt;
+}
+function getActiveName() {
+  return isCustom ? "Custom Persona" : PRESETS[activePreset].name;
+}
+
+function updateHeader() {
+  document.getElementById("headerSub").textContent = getActiveName();
+  document.getElementById("emptyName").textContent = getActiveName();
+}
+
+function updateSendBtn() {
+  if (!$input) return;
+  const hasText = $input.value.trim().length > 0;
+  $sendBtn.className = "send-btn " + (hasText && !loading ? "active" : "disabled");
+}
+
+function renderPresets() {
+  $presetList.innerHTML = "";
+  PRESETS.forEach((p, i) => {
+    const btn = document.createElement("button");
+    btn.className = "preset-btn" + (!isCustom && activePreset === i ? " active" : "");
+    btn.innerHTML = `<div>${p.name}</div><div class="preset-desc">${p.desc}</div>`;
+    btn.onclick = () => {
+      activePreset = i;
+      isCustom = false;
+      updateHeader();
+      renderPresets();
+      updateCustomBtn();
+    };
+    $presetList.appendChild(btn);
+  });
+}
+
+function updateCustomBtn() {
+  $useCustomBtn.className = "preset-btn use-custom-btn" + (isCustom ? " active" : "");
+}
+
+function useCustom() {
+  customPrompt = $customTextarea.value;
+  isCustom = true;
+  updateHeader();
+  renderPresets();
+  updateCustomBtn();
+  closeConfig();
+}
+
+function openConfig() {
+  $customTextarea.value = customPrompt;
+  document.getElementById("keyDisplay").textContent = "Key: " + maskKey(apiKey);
+  renderPresets();
+  updateCustomBtn();
+  $backdrop.classList.remove("hidden");
+  $configPanel.classList.remove("hidden");
+}
+
+function closeConfig() {
+  $backdrop.classList.add("hidden");
+  $configPanel.classList.add("hidden");
+}
+
+function addMessageBubble(role, content) {
+  const name = getActiveName();
+  const wrapper = document.createElement("div");
+  wrapper.className = "msg-bubble " + (role === "user" ? "msg-user" : "msg-bot");
+  let html = "";
+  if (role === "assistant") {
+    html += `<div class="msg-label">${name.toUpperCase()}</div>`;
+  }
+  html += `<div class="msg-content">${escapeHtml(content)}</div>`;
+  wrapper.innerHTML = html;
+  $messages.appendChild(wrapper);
+  scrollToBottom();
+}
+
+function showLoading() {
+  const wrapper = document.createElement("div");
+  wrapper.className = "msg-bubble msg-bot msg-loading";
+  wrapper.id = "loadingBubble";
+  wrapper.innerHTML = `<div class="msg-content">◌ processing...</div>`;
+  $messages.appendChild(wrapper);
+  scrollToBottom();
+}
+
+function hideLoading() {
+  const el = document.getElementById("loadingBubble");
+  if (el) el.remove();
+}
+
+function scrollToBottom() {
+  $messages.scrollTop = $messages.scrollHeight;
+}
+
+function escapeHtml(str) {
+  const div = document.createElement("div");
+  div.textContent = str;
+  return div.innerHTML;
+}
+
+async function sendMessage() {
+  const text = $input.value.trim();
+  if (!text || loading) return;
+
+  $emptyState.classList.add("hidden");
+  chatMessages.push({ role: "user", content: text });
+  addMessageBubble("user", text);
+  $input.value = "";
+  loading = true;
+  updateSendBtn();
+  $input.disabled = true;
+  showLoading();
+
+  try {
+    const apiMessages = [
+      { role: "system", content: getPersonality() },
+      ...chatMessages,
+    ];
+
+    const res = await fetch("https://openrouter.ai/api/v1/chat/completions", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": "Bearer " + apiKey,
+        "HTTP-Referer": window.location.href,
+      },
+      body: JSON.stringify({
+        model: "google/gemma-3-27b-it:free",
+        max_tokens: 1000,
+        messages: apiMessages,
+      }),
+    });
+
+    const data = await res.json();
+
+    if (data.error) {
+      throw new Error(data.error.message || JSON.stringify(data.error));
+    }
+
+    const reply = data.choices?.[0]?.message?.content;
+    if (!reply) throw new Error("Empty response from API");
+
+    hideLoading();
+    chatMessages.push({ role: "assistant", content: reply });
+    addMessageBubble("assistant", reply);
+  } catch (err) {
+    hideLoading();
+    const errMsg = "⚠ " + (err.message || "Connection failed.");
+    chatMessages.push({ role: "assistant", content: errMsg });
+    addMessageBubble("assistant", errMsg);
+  } finally {
+    loading = false;
+    $input.disabled = false;
+    $input.focus();
+    updateSendBtn();
+  }
+}
+
+function clearChat() {
+  chatMessages = [];
+  $messages.innerHTML = "";
+  $messages.appendChild($emptyState);
+  $emptyState.classList.remove("hidden");
+  updateHeader();
+}
+
+// ── Boot ──
+checkStoredKey();
+</script>
+</body>
+</html>
