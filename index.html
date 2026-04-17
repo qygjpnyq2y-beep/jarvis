@@ -431,6 +431,9 @@
       <textarea class="custom-textarea" id="customTextarea" placeholder="Describe your custom persona here..."></textarea>
       <button class="preset-btn use-custom-btn" id="useCustomBtn" onclick="useCustom()">★ Use Custom Persona</button>
       <div class="divider"></div>
+      <div class="section-label">▸ MODEL</div>
+      <div class="preset-list" id="modelList"></div>
+      <div class="divider"></div>
       <div class="section-label">▸ API KEY</div>
       <div class="key-section">
         <div class="key-display" id="keyDisplay"></div>
@@ -476,9 +479,18 @@ const PRESETS = [
   },
 ];
 
+const MODELS = [
+  { id: "openrouter/elephant-alpha", name: "Elephant Alpha", desc: "Free · 100B · OpenRouter" },
+  { id: "google/gemma-3-27b-it:free", name: "Gemma 3 27B", desc: "Free · Google" },
+  { id: "meta-llama/llama-4-maverick:free", name: "Llama 4 Maverick", desc: "Free · Meta" },
+  { id: "deepseek/deepseek-chat-v3-0324:free", name: "DeepSeek V3", desc: "Free · DeepSeek" },
+  { id: "qwen/qwen3-235b-a22b:free", name: "Qwen 3 235B", desc: "Free · Alibaba" },
+];
+
 let apiKey = "";
 let chatMessages = [];
 let activePreset = 0;
+let activeModel = 0;
 let isCustom = false;
 let loading = false;
 let customPrompt = "You are a mysterious AI butler from the future. You speak in a refined, slightly ominous tone. You know too much about everything but reveal information slowly and cryptically.";
@@ -625,9 +637,26 @@ function openConfig() {
   $customTextarea.value = customPrompt;
   document.getElementById("keyDisplay").textContent = "Key: " + maskKey(apiKey);
   renderPresets();
+  renderModels();
   updateCustomBtn();
   $backdrop.classList.remove("hidden");
   $configPanel.classList.remove("hidden");
+}
+
+function renderModels() {
+  const $modelList = document.getElementById("modelList");
+  $modelList.innerHTML = "";
+  MODELS.forEach((m, i) => {
+    const btn = document.createElement("button");
+    btn.className = "preset-btn" + (activeModel === i ? " active" : "");
+    btn.innerHTML = `<div>${m.name}</div><div class="preset-desc">${m.desc}</div>`;
+    btn.onclick = () => {
+      activeModel = i;
+      try { localStorage.setItem("jarvis_model", i); } catch(e) {}
+      renderModels();
+    };
+    $modelList.appendChild(btn);
+  });
 }
 
 function closeConfig() {
@@ -673,6 +702,32 @@ function escapeHtml(str) {
   return div.innerHTML;
 }
 
+async function tryModel(modelId, apiMessages) {
+  const res = await fetch("https://openrouter.ai/api/v1/chat/completions", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      "Authorization": "Bearer " + apiKey,
+      "HTTP-Referer": window.location.href,
+    },
+    body: JSON.stringify({
+      model: modelId,
+      max_tokens: 1000,
+      messages: apiMessages,
+    }),
+  });
+
+  const data = await res.json();
+
+  if (data.error) {
+    throw new Error(data.error.message || JSON.stringify(data.error));
+  }
+
+  const reply = data.choices?.[0]?.message?.content;
+  if (!reply) throw new Error("Empty response");
+  return reply;
+}
+
 async function sendMessage() {
   const text = $input.value.trim();
   if (!text || loading) return;
@@ -692,28 +747,22 @@ async function sendMessage() {
       ...chatMessages,
     ];
 
-    const res = await fetch("https://openrouter.ai/api/v1/chat/completions", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        "Authorization": "Bearer " + apiKey,
-        "HTTP-Referer": window.location.href,
-      },
-      body: JSON.stringify({
-        model: "google/gemma-3-27b-it:free",
-        max_tokens: 1000,
-        messages: apiMessages,
-      }),
-    });
+    // Try selected model first, then fallback to others
+    const modelOrder = [activeModel, ...MODELS.map((_, i) => i).filter(i => i !== activeModel)];
+    let reply = null;
+    let lastErr = null;
 
-    const data = await res.json();
-
-    if (data.error) {
-      throw new Error(data.error.message || JSON.stringify(data.error));
+    for (const idx of modelOrder) {
+      try {
+        reply = await tryModel(MODELS[idx].id, apiMessages);
+        break;
+      } catch (e) {
+        lastErr = e;
+        continue;
+      }
     }
 
-    const reply = data.choices?.[0]?.message?.content;
-    if (!reply) throw new Error("Empty response from API");
+    if (!reply) throw lastErr || new Error("All models failed");
 
     hideLoading();
     chatMessages.push({ role: "assistant", content: reply });
