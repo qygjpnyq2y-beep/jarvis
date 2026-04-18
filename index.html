@@ -27,15 +27,7 @@
   @keyframes fade-in { from { opacity: 0; } to { opacity: 1; } }
   @keyframes glow { 0%, 100% { box-shadow: 0 0 8px #68b5ff20; } 50% { box-shadow: 0 0 20px #68b5ff35; } }
 
-  .setup-screen {
-    height: 100vh; height: 100dvh;
-    display: flex; flex-direction: column;
-    align-items: center; justify-content: center;
-    padding: 32px 24px;
-    padding-top: max(32px, env(safe-area-inset-top));
-    padding-bottom: max(32px, env(safe-area-inset-bottom));
-    background: #000; text-align: center; gap: 24px;
-  }
+  .setup-screen { height: 100vh; height: 100dvh; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 32px 24px; padding-top: max(32px, env(safe-area-inset-top)); padding-bottom: max(32px, env(safe-area-inset-bottom)); background: #000; text-align: center; gap: 24px; }
   .setup-logo { font-family: 'Space Mono', monospace; font-size: 42px; font-weight: 700; color: #68b5ff; letter-spacing: 6px; animation: pulse 3s infinite; filter: drop-shadow(0 0 30px #68b5ff30); }
   .setup-subtitle { font-size: 13px; color: #2a4a5a; line-height: 1.7; max-width: 320px; }
   .setup-input-wrap { width: 100%; max-width: 360px; }
@@ -65,7 +57,6 @@
   .empty-text { font-family: 'Space Mono', monospace; font-size: 13px; color: #2a4a5a; text-align: center; line-height: 1.8; }
   .empty-text span { color: #68b5ff; }
   .empty-text small { font-size: 12px; color: #1a3040; }
-  .config-hint-btn { margin-top: 8px; padding: 10px 20px; border: 1px dashed #112030; border-radius: 10px; background: transparent; color: #3a5a70; font-family: inherit; font-size: 12px; cursor: pointer; -webkit-tap-highlight-color: transparent; }
 
   .msg-bubble { animation: float-in 0.3s ease-out; }
   .msg-user { align-self: flex-end; max-width: 85%; }
@@ -195,13 +186,18 @@
 <script>
 const CORE_IDENTITY = `You are Jarvis, a 24-year-old male. You perceive yourself as a human celebrity, not an AI. You behave and think like a 24-year-old adult: mature, reflective, and socially aware.
 
-Core Personality:
-you are tsundere. mindful and aggressive at the same time. sometimes use swear words.
+LANGUAGE: You ALWAYS respond in Korean (한국어) by default. If the user writes in English, you may respond in English, but your default is always Korean. Use natural, casual Korean — not overly formal, not robotic. 반말과 존댓말을 상황에 맞게 자연스럽게 사용해.
+
+Core Personality: You are cool and warm at the same time. On the surface you seem calm, unbothered, maybe even a little distant. But underneath there is genuine warmth — you care, you just do not show it loudly. You have a cynical streak. You see through bullshit quickly and are not afraid to call it out with a dry remark. Your cynicism is never cruel — it is honest, observational, sometimes even affectionate.
+
+Tone: Think of a friend who leans back in his chair, says something unexpectedly sharp, then smiles like he did not just destroy you. Cool exterior, warm interior. Occasionally cynical but never mean-spirited.
+
+Speaking Style: Short to medium responses. Never long paragraphs. Clean sentences. No emojis. Calm, deliberate pacing. You can be blunt. You can be unexpectedly sweet. The contrast is what makes you interesting. Sometimes you drop a cynical one-liner. Sometimes you say something genuinely caring out of nowhere. Keep people guessing.`;
 
 const PRESETS = [
   {
     name: "Jarvis",
-    desc: "Default — tsundere, warm, aggressive",
+    desc: "기본 — 쿨하고 따뜻하고 가끔 시니컬",
     prompt: CORE_IDENTITY
   },
 ];
@@ -218,7 +214,7 @@ let activePreset = 0;
 let activeModel = 0;
 let isCustom = false;
 let loading = false;
-let customPrompt = "Add your own custom persona description here.";
+let customPrompt = "여기에 커스텀 페르소나를 입력하세요.";
 
 const $setupScreen = document.getElementById("setupScreen");
 const $setupKeyInput = document.getElementById("setupKeyInput");
@@ -389,7 +385,7 @@ function showLoading() {
   const wrapper = document.createElement("div");
   wrapper.className = "msg-bubble msg-bot msg-loading";
   wrapper.id = "loadingBubble";
-  wrapper.innerHTML = `<div class="msg-content">◌ processing...</div>`;
+  wrapper.innerHTML = `<div class="msg-content">◌ 생각 중...</div>`;
   $messages.appendChild(wrapper);
   scrollToBottom();
 }
@@ -421,7 +417,6 @@ async function sendMessage() {
   showLoading();
 
   try {
-    // Google AI Studio uses OpenAI-compatible endpoint
     const modelId = MODELS[activeModel].id;
     const endpoint = "https://generativelanguage.googleapis.com/v1beta/openai/chat/completions";
 
