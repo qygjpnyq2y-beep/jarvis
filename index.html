@@ -6,203 +6,241 @@
 <title>JARVIS</title>
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="apple-mobile-web-app-title" content="JARVIS">
 <meta name="theme-color" content="#000000">
-<link rel="apple-touch-icon" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxODAgMTgwIj48cmVjdCB3aWR0aD0iMTgwIiBoZWlnaHQ9IjE4MCIgcng9IjQwIiBmaWxsPSIjMDAwIi8+PHRleHQgeD0iOTAiIHk9IjEwNSIgZm9udC1zaXplPSI0OCIgZm9udC1mYW1pbHk9Im1vbm9zcGFjZSIgZm9udC13ZWlnaHQ9IjcwMCIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZmlsbD0iIzY4YjVmZiI+SjwvdGV4dD48L3N2Zz4=">
 <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
 <style>
-  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-  html, body { height: 100%; overscroll-behavior: none; -webkit-text-size-adjust: 100%; }
-  body { background: #000; color: #d0dfe8; font-family: 'JetBrains Mono', 'Fira Code', monospace; }
-  input, textarea, button { -webkit-appearance: none; font-family: inherit; }
-  input:focus, textarea:focus { outline: none; }
-  ::-webkit-scrollbar { width: 3px; }
-  ::-webkit-scrollbar-track { background: transparent; }
-  ::-webkit-scrollbar-thumb { background: #1a2a35; border-radius: 2px; }
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html, body { height: 100%; overscroll-behavior: none; -webkit-text-size-adjust: 100%; }
+body { background: #000; color: #d0dfe8; font-family: 'JetBrains Mono', 'Fira Code', monospace; }
+input, textarea, button { -webkit-appearance: none; font-family: inherit; }
+input:focus, textarea:focus { outline: none; }
+::-webkit-scrollbar { width: 3px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: #1a2a35; border-radius: 2px; }
+@keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.5} }
+@keyframes float-in { from{opacity:0;transform:translateY(8px)} to{opacity:1;transform:translateY(0)} }
+@keyframes blink { 0%,100%{opacity:1} 50%{opacity:0.3} }
+@keyframes slide-up { from{transform:translateY(100%)} to{transform:translateY(0)} }
+@keyframes fade-in { from{opacity:0} to{opacity:1} }
+@keyframes glow { 0%,100%{box-shadow:0 0 8px #68b5ff20} 50%{box-shadow:0 0 20px #68b5ff35} }
+@keyframes spin { to{transform:rotate(360deg)} }
 
-  @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
-  @keyframes float-in { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
-  @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0.3; } }
-  @keyframes slide-up { from { transform: translateY(100%); } to { transform: translateY(0); } }
-  @keyframes fade-in { from { opacity: 0; } to { opacity: 1; } }
-  @keyframes glow { 0%, 100% { box-shadow: 0 0 8px #68b5ff20; } 50% { box-shadow: 0 0 20px #68b5ff35; } }
-  @keyframes shimmer { 0% { background-position: -200% 0; } 100% { background-position: 200% 0; } }
+/* Auth Screen */
+.auth-screen { height:100dvh; display:flex; flex-direction:column; align-items:center; justify-content:center; padding:32px 24px; background:#000; text-align:center; gap:20px; }
+.auth-logo { font-family:'Space Mono',monospace; font-size:42px; font-weight:700; color:#68b5ff; letter-spacing:6px; animation:pulse 3s infinite; filter:drop-shadow(0 0 30px #68b5ff30); }
+.auth-sub { font-size:13px; color:#2a4a5a; line-height:1.7; max-width:320px; }
+.auth-form { width:100%; max-width:360px; display:flex; flex-direction:column; gap:12px; }
+.auth-input { width:100%; padding:16px; background:#060e15; border:1px solid #112030; border-radius:12px; color:#d0dfe8; font-size:14px; text-align:center; }
+.auth-input::placeholder { color:#1a3040; }
+.auth-input:focus { border-color:#68b5ff40; }
+.auth-btn { width:100%; padding:16px; background:#68b5ff; border:none; border-radius:12px; color:#000; font-family:'Space Mono',monospace; font-weight:700; font-size:15px; letter-spacing:1px; cursor:pointer; }
+.auth-btn:disabled { opacity:0.3; }
+.auth-btn:active:not(:disabled) { transform:scale(0.97); }
+.auth-toggle { font-size:12px; color:#3a5a70; cursor:pointer; }
+.auth-toggle span { color:#68b5ff; }
+.auth-error { font-size:12px; color:#ff6060; max-width:320px; line-height:1.5; min-height:18px; }
 
-  .setup-screen { height: 100vh; height: 100dvh; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 32px 24px; padding-top: max(32px, env(safe-area-inset-top)); padding-bottom: max(32px, env(safe-area-inset-bottom)); background: #000; text-align: center; gap: 24px; }
-  .setup-logo { font-family: 'Space Mono', monospace; font-size: 42px; font-weight: 700; color: #68b5ff; letter-spacing: 6px; animation: pulse 3s infinite; filter: drop-shadow(0 0 30px #68b5ff30); }
-  .setup-subtitle { font-size: 13px; color: #2a4a5a; line-height: 1.7; max-width: 320px; }
-  .setup-input-wrap { width: 100%; max-width: 360px; }
-  .setup-input { width: 100%; padding: 16px; background: #060e15; border: 1px solid #112030; border-radius: 12px; color: #d0dfe8; font-size: 14px; font-family: inherit; text-align: center; }
-  .setup-input::placeholder { color: #1a3040; }
-  .setup-input:focus { border-color: #68b5ff40; }
-  .setup-btn { width: 100%; max-width: 360px; padding: 16px; background: #68b5ff; border: none; border-radius: 12px; color: #000; font-family: 'Space Mono', monospace; font-weight: 700; font-size: 15px; letter-spacing: 1px; cursor: pointer; -webkit-tap-highlight-color: transparent; transition: opacity 0.15s; }
-  .setup-btn:disabled { opacity: 0.3; cursor: not-allowed; }
-  .setup-btn:active:not(:disabled) { transform: scale(0.97); }
-  .setup-hint { font-size: 11px; color: #1a3040; max-width: 320px; line-height: 1.6; margin-top: -8px; }
-  .setup-hint a { color: #68b5ff60; text-decoration: none; }
+/* API Key Screen */
+.apikey-screen { height:100dvh; display:flex; flex-direction:column; align-items:center; justify-content:center; padding:32px 24px; background:#000; text-align:center; gap:20px; }
+.apikey-hint { font-size:11px; color:#1a3040; max-width:320px; line-height:1.6; }
+.apikey-hint a { color:#68b5ff60; text-decoration:none; }
 
-  #app { height: 100vh; height: 100dvh; display: flex; flex-direction: column; overflow: hidden; position: relative; background: #000; }
-  .header { padding: 12px 16px; padding-top: max(12px, env(safe-area-inset-top)); border-bottom: 1px solid #0d1a24; display: flex; align-items: center; justify-content: space-between; background: #000; flex-shrink: 0; z-index: 10; }
-  .header-left { display: flex; align-items: center; gap: 10px; }
-  .header-icon { width: 34px; height: 34px; background: transparent; border: 1.5px solid #68b5ff; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 15px; font-weight: 700; color: #68b5ff; animation: glow 3s infinite; flex-shrink: 0; font-family: 'Space Mono', monospace; }
-  .header-title { font-family: 'Space Mono', monospace; font-weight: 700; font-size: 15px; color: #68b5ff; letter-spacing: 2px; }
-  .header-sub { font-size: 10px; color: #3a5a70; letter-spacing: 0.5px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-  .header-btns { display: flex; gap: 8px; }
-  .icon-btn { width: 38px; height: 38px; border: 1px solid #112030; border-radius: 10px; background: transparent; color: #3a5a70; cursor: pointer; font-size: 16px; display: flex; align-items: center; justify-content: center; -webkit-tap-highlight-color: transparent; }
-  .icon-btn:active { transform: scale(0.93); }
-  .icon-btn.config { border-color: #68b5ff30; background: #68b5ff08; color: #68b5ff; }
+/* Main App */
+#app { height:100dvh; display:flex; flex-direction:column; overflow:hidden; background:#000; }
+.header { padding:12px 16px; padding-top:max(12px,env(safe-area-inset-top)); border-bottom:1px solid #0d1a24; display:flex; align-items:center; justify-content:space-between; background:#000; flex-shrink:0; z-index:10; }
+.header-left { display:flex; align-items:center; gap:10px; }
+.header-icon { width:34px; height:34px; border:1.5px solid #68b5ff; border-radius:8px; display:flex; align-items:center; justify-content:center; font-size:15px; font-weight:700; color:#68b5ff; animation:glow 3s infinite; font-family:'Space Mono',monospace; }
+.header-title { font-family:'Space Mono',monospace; font-weight:700; font-size:15px; color:#68b5ff; letter-spacing:2px; }
+.header-sub { font-size:10px; color:#3a5a70; letter-spacing:0.5px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+.header-btns { display:flex; gap:6px; }
+.icon-btn { width:38px; height:38px; border:1px solid #112030; border-radius:10px; background:transparent; color:#3a5a70; cursor:pointer; font-size:16px; display:flex; align-items:center; justify-content:center; flex-shrink:0; }
+.icon-btn:active { transform:scale(0.93); }
+.icon-btn svg { width:18px; height:18px; }
 
-  .messages { flex: 1; overflow-y: auto; padding: 16px 12px; display: flex; flex-direction: column; gap: 12px; -webkit-overflow-scrolling: touch; }
-  .empty-state { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 16px; padding: 20px; }
-  .empty-glyph { font-size: 48px; font-weight: 700; color: #68b5ff; font-family: 'Space Mono', monospace; animation: pulse 3s infinite; filter: drop-shadow(0 0 24px #68b5ff30); }
-  .empty-text { font-family: 'Space Mono', monospace; font-size: 13px; color: #2a4a5a; text-align: center; line-height: 1.8; }
-  .empty-text span { color: #68b5ff; }
-  .empty-text small { font-size: 12px; color: #1a3040; }
+/* Messages */
+.messages { flex:1; overflow-y:auto; padding:16px 12px; display:flex; flex-direction:column; gap:12px; -webkit-overflow-scrolling:touch; }
+.empty-state { flex:1; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:16px; padding:20px; }
+.empty-glyph { font-size:48px; font-weight:700; color:#68b5ff; font-family:'Space Mono',monospace; animation:pulse 3s infinite; }
+.empty-text { font-family:'Space Mono',monospace; font-size:13px; color:#2a4a5a; text-align:center; line-height:1.8; }
+.empty-text span { color:#68b5ff; }
+.msg-bubble { animation:float-in 0.3s ease-out; }
+.msg-user { align-self:flex-end; max-width:85%; }
+.msg-bot { align-self:flex-start; max-width:85%; }
+.msg-label { font-size:9px; color:#68b5ff50; margin-bottom:3px; letter-spacing:1px; padding-left:4px; }
+.msg-content { padding:10px 14px; font-size:14px; line-height:1.6; white-space:pre-wrap; word-break:break-word; }
+.msg-user .msg-content { border-radius:16px 16px 4px 16px; background:#68b5ff; color:#000; }
+.msg-bot .msg-content { border-radius:16px 16px 16px 4px; background:#060e15; color:#a0c4dd; border:1px solid #0d1a24; }
+.msg-loading .msg-content { color:#68b5ff; animation:blink 1s infinite; }
+.msg-attachments { display:flex; flex-wrap:wrap; gap:6px; margin-bottom:6px; }
+.msg-attach-thumb { width:80px; height:80px; border-radius:10px; object-fit:cover; border:1px solid #112030; cursor:pointer; }
+.msg-attach-file { display:inline-flex; align-items:center; gap:6px; padding:6px 10px; background:#0a1a28; border:1px solid #112030; border-radius:8px; font-size:11px; }
+.msg-attach-file .file-name { overflow:hidden; text-overflow:ellipsis; white-space:nowrap; color:#a0c4dd; max-width:150px; }
+.msg-attach-video { width:200px; max-width:100%; border-radius:10px; border:1px solid #112030; }
 
-  .msg-bubble { animation: float-in 0.3s ease-out; }
-  .msg-user { align-self: flex-end; max-width: 85%; }
-  .msg-bot { align-self: flex-start; max-width: 85%; }
-  .msg-label { font-size: 9px; color: #68b5ff50; margin-bottom: 3px; letter-spacing: 1px; padding-left: 4px; }
-  .msg-content { padding: 10px 14px; font-size: 14px; line-height: 1.6; white-space: pre-wrap; word-break: break-word; }
-  .msg-user .msg-content { border-radius: 16px 16px 4px 16px; background: #68b5ff; color: #000; }
-  .msg-bot .msg-content { border-radius: 16px 16px 16px 4px; background: #060e15; color: #a0c4dd; border: 1px solid #0d1a24; }
-  .msg-loading .msg-content { color: #68b5ff; animation: blink 1s infinite; }
+/* Input */
+.input-bar { padding:10px 12px; padding-bottom:max(10px,env(safe-area-inset-bottom)); border-top:1px solid #0d1a24; background:#000; flex-shrink:0; }
+.pending-strip { display:flex; gap:8px; padding:8px 4px; overflow-x:auto; scrollbar-width:none; }
+.pending-strip::-webkit-scrollbar { display:none; }
+.pending-strip:empty { display:none; }
+.pending-item { position:relative; flex-shrink:0; animation:float-in 0.2s; }
+.pending-thumb { width:64px; height:64px; border-radius:10px; object-fit:cover; border:1px solid #68b5ff30; background:#060e15; }
+.pending-file-box { width:64px; height:64px; border-radius:10px; border:1px solid #68b5ff30; background:#060e15; display:flex; flex-direction:column; align-items:center; justify-content:center; }
+.pending-file-box .pf-ext { font-size:8px; color:#68b5ff; text-transform:uppercase; }
+.pending-remove { position:absolute; top:-4px; right:-4px; width:20px; height:20px; border-radius:50%; background:#ff4040; border:2px solid #000; color:#fff; font-size:10px; display:flex; align-items:center; justify-content:center; cursor:pointer; font-weight:700; }
+.pending-uploading { position:absolute; inset:0; border-radius:10px; background:rgba(0,0,0,0.6); display:flex; align-items:center; justify-content:center; }
+.pending-uploading::after { content:''; width:20px; height:20px; border:2px solid transparent; border-top-color:#68b5ff; border-radius:50%; animation:spin 0.6s linear infinite; }
+.input-row { display:flex; gap:8px; align-items:center; }
+.attach-btn { width:44px; height:48px; flex-shrink:0; border:1px solid #112030; border-radius:12px; background:transparent; color:#3a5a70; cursor:pointer; display:flex; align-items:center; justify-content:center; }
+.attach-btn:active { transform:scale(0.93); }
+.attach-btn.has-files { border-color:#68b5ff40; color:#68b5ff; }
+.attach-btn svg { width:18px; height:18px; }
+.input-field { flex:1; padding:14px 16px; background:#060e15; border:1px solid #112030; border-radius:12px; color:#d0dfe8; font-size:16px; min-width:0; }
+.input-field::placeholder { color:#1a3040; }
+.send-btn { width:48px; height:48px; flex-shrink:0; border:none; border-radius:12px; font-family:'Space Mono',monospace; font-weight:700; font-size:18px; display:flex; align-items:center; justify-content:center; cursor:pointer; transition:all 0.15s; }
+.send-btn.active { background:#68b5ff; color:#000; }
+.send-btn.disabled { background:#0a1520; color:#1a3040; cursor:not-allowed; }
+.send-btn:active:not(.disabled) { transform:scale(0.93); }
 
-  /* Attachment previews in messages */
-  .msg-attachments { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 6px; }
-  .msg-attach-thumb { width: 80px; height: 80px; border-radius: 10px; object-fit: cover; border: 1px solid #112030; background: #060e15; }
-  .msg-attach-file { display: inline-flex; align-items: center; gap: 6px; padding: 6px 10px; background: #0a1a28; border: 1px solid #112030; border-radius: 8px; font-size: 11px; color: #68b5ff; max-width: 200px; }
-  .msg-attach-file .file-icon { font-size: 14px; flex-shrink: 0; }
-  .msg-attach-file .file-name { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; color: #a0c4dd; }
-  .msg-attach-video { width: 200px; max-width: 100%; border-radius: 10px; border: 1px solid #112030; background: #060e15; }
+/* Overlays */
+.overlay-backdrop { position:fixed; inset:0; background:rgba(0,0,0,0.7); z-index:50; animation:fade-in 0.2s; }
+.overlay-panel { position:fixed; bottom:0; left:0; right:0; max-height:90vh; background:#050a10; border-top:1px solid #68b5ff25; border-radius:20px 20px 0 0; z-index:51; overflow-y:auto; -webkit-overflow-scrolling:touch; padding-bottom:max(20px,env(safe-area-inset-bottom)); animation:slide-up 0.3s cubic-bezier(0.16,1,0.3,1); }
+.handle-bar { display:flex; justify-content:center; padding:12px 0 8px; position:sticky; top:0; background:#050a10; border-radius:20px 20px 0 0; z-index:1; }
+.handle-bar div { width:36px; height:4px; background:#1a2a35; border-radius:2px; }
+.panel-body { padding:0 20px 20px; }
+.section-label { font-size:10px; color:#68b5ff; letter-spacing:2px; margin-bottom:12px; font-weight:700; }
+.preset-list { display:flex; flex-direction:column; gap:8px; }
+.preset-btn { padding:12px 16px; border:1px solid #112030; border-radius:10px; background:#060e15; color:#3a5a70; cursor:pointer; font-family:inherit; font-size:14px; text-align:left; transition:all 0.15s; }
+.preset-btn:active { transform:scale(0.97); }
+.preset-btn.active { border-color:#68b5ff; color:#68b5ff; background:#68b5ff0a; }
+.preset-desc { font-size:11px; color:#2a4050; margin-top:4px; }
+.divider { height:1px; background:#0d1a24; margin:20px 0; }
+.custom-textarea { width:100%; height:100px; background:#060e15; border:1px solid #112030; border-radius:12px; padding:14px; color:#a0c4dd; font-size:14px; line-height:1.6; resize:none; }
+.custom-textarea::placeholder { color:#1a3040; }
+.done-btn { margin-top:16px; width:100%; padding:16px; background:#68b5ff; border:none; border-radius:12px; color:#000; font-family:'Space Mono',monospace; font-weight:700; font-size:15px; letter-spacing:1px; cursor:pointer; }
+.done-btn:active { transform:scale(0.97); }
+.key-section { margin-top:12px; padding:14px; background:#060e15; border:1px solid #112030; border-radius:10px; }
+.key-display { font-size:12px; color:#3a5a70; margin-bottom:10px; word-break:break-all; }
+.key-actions { display:flex; gap:8px; }
+.key-action-btn { flex:1; padding:10px; border:1px solid #112030; border-radius:8px; background:transparent; color:#3a5a70; font-family:inherit; font-size:11px; cursor:pointer; }
+.key-action-btn.danger { border-color:#ff404030; color:#ff6060; }
 
-  /* Input bar with attachment support */
-  .input-bar { padding: 10px 12px; padding-bottom: max(10px, env(safe-area-inset-bottom)); border-top: 1px solid #0d1a24; background: #000; flex-shrink: 0; }
-
-  /* Pending attachments strip */
-  .pending-strip { display: flex; gap: 8px; padding: 8px 4px; overflow-x: auto; -webkit-overflow-scrolling: touch; scrollbar-width: none; }
-  .pending-strip::-webkit-scrollbar { display: none; }
-  .pending-strip:empty { display: none; }
-  .pending-item { position: relative; flex-shrink: 0; animation: float-in 0.2s ease-out; }
-  .pending-thumb { width: 64px; height: 64px; border-radius: 10px; object-fit: cover; border: 1px solid #68b5ff30; background: #060e15; }
-  .pending-file-box { width: 64px; height: 64px; border-radius: 10px; border: 1px solid #68b5ff30; background: #060e15; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px; padding: 4px; }
-  .pending-file-box .pf-icon { font-size: 18px; }
-  .pending-file-box .pf-ext { font-size: 8px; color: #68b5ff; text-transform: uppercase; letter-spacing: 0.5px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 100%; }
-  .pending-remove { position: absolute; top: -4px; right: -4px; width: 20px; height: 20px; border-radius: 50%; background: #ff4040; border: 2px solid #000; color: #fff; font-size: 10px; display: flex; align-items: center; justify-content: center; cursor: pointer; -webkit-tap-highlight-color: transparent; font-weight: 700; line-height: 1; }
-  .pending-remove:active { transform: scale(0.85); }
-  .pending-uploading { position: absolute; inset: 0; border-radius: 10px; background: rgba(0,0,0,0.6); display: flex; align-items: center; justify-content: center; }
-  .pending-uploading::after { content: ''; width: 20px; height: 20px; border: 2px solid transparent; border-top-color: #68b5ff; border-radius: 50%; animation: spin 0.6s linear infinite; }
-  @keyframes spin { to { transform: rotate(360deg); } }
-
-  .input-row { display: flex; gap: 8px; align-items: center; }
-  .attach-btn { width: 48px; height: 48px; flex-shrink: 0; border: 1px solid #112030; border-radius: 12px; background: transparent; color: #3a5a70; cursor: pointer; font-size: 20px; display: flex; align-items: center; justify-content: center; -webkit-tap-highlight-color: transparent; transition: all 0.15s; }
-  .attach-btn:active { transform: scale(0.93); }
-  .attach-btn.has-files { border-color: #68b5ff40; color: #68b5ff; background: #68b5ff08; }
-  .input-field { flex: 1; padding: 14px 16px; background: #060e15; border: 1px solid #112030; border-radius: 12px; color: #d0dfe8; font-size: 16px; font-family: inherit; min-width: 0; }
-  .input-field::placeholder { color: #1a3040; }
-  .send-btn { width: 48px; height: 48px; flex-shrink: 0; border: none; border-radius: 12px; font-family: 'Space Mono', monospace; font-weight: 700; font-size: 18px; display: flex; align-items: center; justify-content: center; -webkit-tap-highlight-color: transparent; cursor: pointer; transition: all 0.15s; }
-  .send-btn.active { background: #68b5ff; color: #000; }
-  .send-btn.disabled { background: #0a1520; color: #1a3040; cursor: not-allowed; }
-  .send-btn:active:not(.disabled) { transform: scale(0.93); }
-
-  .overlay-backdrop { position: fixed; inset: 0; background: rgba(0,0,0,0.7); z-index: 50; animation: fade-in 0.2s ease-out; }
-  .overlay-panel { position: fixed; bottom: 0; left: 0; right: 0; max-height: 85vh; background: #050a10; border-top: 1px solid #68b5ff25; border-radius: 20px 20px 0 0; z-index: 51; overflow-y: auto; -webkit-overflow-scrolling: touch; padding-bottom: max(20px, env(safe-area-inset-bottom)); animation: slide-up 0.3s cubic-bezier(0.16, 1, 0.3, 1); }
-  .handle-bar { display: flex; justify-content: center; padding: 12px 0 8px; position: sticky; top: 0; background: #050a10; border-radius: 20px 20px 0 0; z-index: 1; }
-  .handle-bar div { width: 36px; height: 4px; background: #1a2a35; border-radius: 2px; }
-  .config-body { padding: 0 20px 20px; }
-  .section-label { font-size: 10px; color: #68b5ff; letter-spacing: 2px; margin-bottom: 12px; font-weight: 700; }
-  .preset-list { display: flex; flex-direction: column; gap: 8px; }
-  .preset-btn { padding: 12px 16px; border: 1px solid #112030; border-radius: 10px; background: #060e15; color: #3a5a70; cursor: pointer; font-family: inherit; font-size: 14px; text-align: left; -webkit-tap-highlight-color: transparent; transition: all 0.15s; }
-  .preset-btn:active { transform: scale(0.97); }
-  .preset-btn.active { border-color: #68b5ff; color: #68b5ff; background: #68b5ff0a; box-shadow: 0 0 12px #68b5ff15; }
-  .preset-desc { font-size: 11px; color: #2a4050; margin-top: 4px; line-height: 1.4; }
-  .divider { height: 1px; background: #0d1a24; margin: 20px 0; }
-  .custom-textarea { width: 100%; height: 120px; background: #060e15; border: 1px solid #112030; border-radius: 12px; padding: 14px; color: #a0c4dd; font-family: inherit; font-size: 14px; line-height: 1.6; resize: none; }
-  .custom-textarea::placeholder { color: #1a3040; }
-  .use-custom-btn { margin-top: 10px; width: 100%; text-align: center; }
-  .tip-box { margin-top: 16px; padding: 14px; background: #68b5ff06; border: 1px solid #68b5ff10; border-radius: 10px; font-size: 12px; color: #2a4a5a; line-height: 1.5; }
-  .tip-box strong { color: #68b5ff; }
-  .done-btn { margin-top: 16px; width: 100%; padding: 16px; background: #68b5ff; border: none; border-radius: 12px; color: #000; font-family: 'Space Mono', monospace; font-weight: 700; font-size: 15px; letter-spacing: 1px; cursor: pointer; -webkit-tap-highlight-color: transparent; }
-  .done-btn:active { transform: scale(0.97); }
-  .key-section { margin-top: 16px; padding: 14px; background: #060e15; border: 1px solid #112030; border-radius: 10px; }
-  .key-display { font-size: 12px; color: #3a5a70; margin-bottom: 10px; word-break: break-all; line-height: 1.5; }
-  .key-actions { display: flex; gap: 8px; }
-  .key-action-btn { flex: 1; padding: 10px; border: 1px solid #112030; border-radius: 8px; background: transparent; color: #3a5a70; font-family: inherit; font-size: 11px; cursor: pointer; -webkit-tap-highlight-color: transparent; }
-  .key-action-btn.danger { border-color: #ff404030; color: #ff6060; }
-  .key-action-btn:active { transform: scale(0.95); }
-
-  /* Lightbox for image/video preview */
-  .lightbox { position: fixed; inset: 0; background: rgba(0,0,0,0.92); z-index: 100; display: flex; align-items: center; justify-content: center; animation: fade-in 0.2s; cursor: zoom-out; }
-  .lightbox img, .lightbox video { max-width: 92vw; max-height: 88vh; border-radius: 8px; object-fit: contain; }
-  .lightbox-close { position: absolute; top: max(16px, env(safe-area-inset-top)); right: 16px; width: 40px; height: 40px; border-radius: 50%; background: #ffffff15; border: none; color: #fff; font-size: 20px; cursor: pointer; display: flex; align-items: center; justify-content: center; }
-
-  .hidden { display: none !important; }
+/* Memory */
+.mem-tabs { display:flex; margin-bottom:16px; border:1px solid #112030; border-radius:10px; overflow:hidden; }
+.mem-tab { flex:1; padding:12px; background:#060e15; color:#3a5a70; font-size:12px; font-weight:700; letter-spacing:1px; border:none; cursor:pointer; font-family:inherit; text-align:center; }
+.mem-tab.active { background:#68b5ff12; color:#68b5ff; }
+.mem-tab-content { display:none; }
+.mem-tab-content.active { display:block; }
+.diary-entry { padding:12px; background:#060e15; border:1px solid #112030; border-radius:10px; margin-bottom:8px; animation:float-in 0.2s; }
+.diary-header { display:flex; justify-content:space-between; align-items:center; margin-bottom:6px; }
+.diary-date { font-size:10px; color:#68b5ff80; }
+.diary-del { width:24px; height:24px; border:none; background:transparent; color:#ff606060; font-size:14px; cursor:pointer; display:flex; align-items:center; justify-content:center; }
+.diary-del:hover { color:#ff6060; }
+.diary-preview { font-size:12px; color:#5a7a90; line-height:1.5; overflow:hidden; display:-webkit-box; -webkit-line-clamp:3; -webkit-box-orient:vertical; }
+.diary-add-area textarea { width:100%; height:100px; background:#060e15; border:1px solid #112030; border-radius:10px; padding:12px; color:#a0c4dd; font-size:13px; line-height:1.6; resize:none; font-family:inherit; }
+.diary-add-area textarea::placeholder { color:#1a3040; }
+.diary-add-row { display:flex; gap:8px; margin-top:8px; }
+.diary-date-input { flex:1; padding:10px 12px; background:#060e15; border:1px solid #112030; border-radius:8px; color:#a0c4dd; font-size:12px; font-family:inherit; }
+.diary-date-input::-webkit-calendar-picker-indicator { filter:invert(0.5); }
+.add-btn { padding:10px 20px; background:#68b5ff; border:none; border-radius:8px; color:#000; font-family:'Space Mono',monospace; font-weight:700; font-size:12px; cursor:pointer; white-space:nowrap; }
+.mem-count { font-size:11px; color:#2a4a5a; margin-bottom:12px; }
+.paint-upload-zone { border:2px dashed #112030; border-radius:12px; padding:24px 16px; text-align:center; color:#2a4a5a; font-size:12px; cursor:pointer; transition:all 0.2s; margin-bottom:12px; line-height:1.7; }
+.paint-upload-zone.dragover { border-color:#68b5ff40; background:#68b5ff06; }
+.paint-search { width:100%; padding:10px 14px; background:#060e15; border:1px solid #112030; border-radius:10px; color:#a0c4dd; font-size:13px; margin-bottom:12px; font-family:inherit; }
+.paint-search::placeholder { color:#1a3040; }
+.paint-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:8px; }
+.paint-card { position:relative; border-radius:10px; overflow:hidden; background:#060e15; border:1px solid #112030; cursor:pointer; aspect-ratio:1; animation:float-in 0.2s; }
+.paint-card img { width:100%; height:100%; object-fit:cover; display:block; }
+.paint-card-overlay { position:absolute; bottom:0; left:0; right:0; padding:6px 8px; background:linear-gradient(transparent,rgba(0,0,0,0.85)); }
+.paint-card-title { font-size:9px; color:#d0dfe8; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+.paint-card-tags { font-size:8px; color:#68b5ff80; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; margin-top:1px; }
+.paint-card-del { position:absolute; top:4px; right:4px; width:22px; height:22px; border-radius:50%; background:rgba(0,0,0,0.7); border:none; color:#ff6060; font-size:11px; cursor:pointer; display:none; align-items:center; justify-content:center; }
+.paint-card:hover .paint-card-del { display:flex; }
+.paint-load-more { width:100%; padding:12px; border:1px solid #112030; border-radius:10px; background:#060e15; color:#3a5a70; font-family:inherit; font-size:12px; cursor:pointer; margin-top:8px; text-align:center; }
+.batch-progress { padding:12px; background:#060e15; border:1px solid #68b5ff20; border-radius:10px; margin-bottom:12px; }
+.batch-bar { height:4px; background:#112030; border-radius:2px; overflow:hidden; margin-top:8px; }
+.batch-bar-fill { height:100%; background:#68b5ff; border-radius:2px; transition:width 0.3s; }
+.batch-text { font-size:11px; color:#3a5a70; }
+.paint-detail-overlay { position:fixed; inset:0; background:rgba(0,0,0,0.95); z-index:100; display:flex; flex-direction:column; animation:fade-in 0.2s; overflow-y:auto; padding:20px; padding-top:max(60px,calc(env(safe-area-inset-top)+50px)); padding-bottom:max(20px,env(safe-area-inset-bottom)); }
+.paint-detail-close { position:fixed; top:max(12px,env(safe-area-inset-top)); right:12px; width:40px; height:40px; border-radius:50%; background:#ffffff15; border:none; color:#fff; font-size:20px; cursor:pointer; display:flex; align-items:center; justify-content:center; z-index:101; }
+.paint-detail-img { width:100%; max-height:40vh; object-fit:contain; border-radius:10px; margin-bottom:16px; }
+.paint-detail-field { margin-bottom:12px; }
+.paint-detail-field label { display:block; font-size:10px; color:#68b5ff; letter-spacing:1px; margin-bottom:6px; font-weight:700; }
+.paint-detail-field input, .paint-detail-field textarea { width:100%; padding:10px 12px; background:#060e15; border:1px solid #112030; border-radius:8px; color:#a0c4dd; font-size:13px; font-family:inherit; }
+.paint-detail-field textarea { height:80px; resize:none; }
+.paint-detail-save { width:100%; padding:14px; background:#68b5ff; border:none; border-radius:10px; color:#000; font-family:'Space Mono',monospace; font-weight:700; font-size:14px; cursor:pointer; margin-top:8px; }
+.lightbox { position:fixed; inset:0; background:rgba(0,0,0,0.92); z-index:100; display:flex; align-items:center; justify-content:center; animation:fade-in 0.2s; cursor:zoom-out; }
+.lightbox img,.lightbox video { max-width:92vw; max-height:88vh; border-radius:8px; object-fit:contain; }
+.lightbox-close { position:absolute; top:max(16px,env(safe-area-inset-top)); right:16px; width:40px; height:40px; border-radius:50%; background:#ffffff15; border:none; color:#fff; font-size:20px; cursor:pointer; display:flex; align-items:center; justify-content:center; }
+.sync-indicator { font-size:9px; color:#68b5ff60; letter-spacing:0.5px; }
+.hidden { display:none !important; }
 </style>
 </head>
 <body>
 
-<div class="setup-screen" id="setupScreen">
-  <div class="setup-logo">JARVIS</div>
-  <div class="setup-subtitle">
-    Enter your Google AI Studio API key to get started.<br>
-    It stays on your device — never sent anywhere except Google.
-  </div>
-  <div class="setup-input-wrap">
-    <input class="setup-input" id="setupKeyInput" type="password" placeholder="AIza..." autocomplete="off" spellcheck="false">
-  </div>
-  <button class="setup-btn" id="setupBtn" disabled onclick="saveKeyAndStart()">ACTIVATE JARVIS</button>
-  <div class="setup-hint">
-    Get a free key at <a href="https://aistudio.google.com/apikey" target="_blank">aistudio.google.com/apikey</a>
+<!-- Auth Screen -->
+<div id="authScreen" class="auth-screen">
+  <div class="auth-logo">JARVIS</div>
+  <div class="auth-sub">Sign in to sync your memories across devices.</div>
+  <div class="auth-form">
+    <input class="auth-input" id="authEmail" type="email" placeholder="Email" autocomplete="email">
+    <input class="auth-input" id="authPass" type="password" placeholder="Password" autocomplete="current-password">
+    <button class="auth-btn" id="authBtn" onclick="doAuth()">SIGN IN</button>
+    <div class="auth-error" id="authError"></div>
+    <div class="auth-toggle" id="authToggle" onclick="toggleAuthMode()">No account? <span>Sign up</span></div>
   </div>
 </div>
 
+<!-- API Key Screen -->
+<div id="apikeyScreen" class="apikey-screen hidden">
+  <div class="auth-logo" style="font-size:32px">JARVIS</div>
+  <div class="auth-sub">Enter your Google AI Studio API key.</div>
+  <div class="auth-form">
+    <input class="auth-input" id="geminiKeyInput" type="password" placeholder="AIza..." autocomplete="off">
+    <button class="auth-btn" id="geminiKeyBtn" onclick="saveGeminiKey()">ACTIVATE</button>
+  </div>
+  <div class="apikey-hint">Get a free key at <a href="https://aistudio.google.com/apikey" target="_blank">aistudio.google.com/apikey</a></div>
+</div>
+
+<!-- Main App -->
 <div id="app" class="hidden">
   <div class="header">
     <div class="header-left">
       <div class="header-icon">J</div>
-      <div>
-        <div class="header-title">JARVIS</div>
-        <div class="header-sub" id="headerSub"></div>
-      </div>
+      <div><div class="header-title">JARVIS</div><div class="header-sub" id="headerSub"></div></div>
     </div>
     <div class="header-btns">
       <button class="icon-btn" onclick="clearChat()">↺</button>
-      <button class="icon-btn config" onclick="openConfig()">⚙</button>
+      <button class="icon-btn" onclick="openMemory()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg></button>
+      <button class="icon-btn" onclick="openConfig()">⚙</button>
     </div>
   </div>
-
   <div class="messages" id="messages">
     <div class="empty-state" id="emptyState">
       <div class="empty-glyph">JARVIS</div>
-      <div class="empty-text">
-        <span id="emptyName"></span> is online.<br>
-        <small>Say something or attach a file to begin.</small>
-      </div>
+      <div class="empty-text"><span id="emptyName"></span> is online.<br><small>Say something or attach a file.</small></div>
     </div>
   </div>
-
   <div class="input-bar">
     <div class="pending-strip" id="pendingStrip"></div>
     <div class="input-row">
-      <button class="attach-btn" id="attachBtn" onclick="triggerFileInput()">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21.44 11.05l-9.19 9.19a6 6 0 01-8.49-8.49l9.19-9.19a4 4 0 015.66 5.66l-9.2 9.19a2 2 0 01-2.83-2.83l8.49-8.48"/></svg>
-      </button>
+      <button class="attach-btn" id="attachBtn" onclick="document.getElementById('fileInput').click()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21.44 11.05l-9.19 9.19a6 6 0 01-8.49-8.49l9.19-9.19a4 4 0 015.66 5.66l-9.2 9.19a2 2 0 01-2.83-2.83l8.49-8.48"/></svg></button>
       <input class="input-field" id="inputField" placeholder="Message JARVIS..." autocomplete="off">
       <button class="send-btn disabled" id="sendBtn" onclick="sendMessage()">▸</button>
     </div>
-    <input type="file" id="fileInput" multiple accept="image/*,video/*,.pdf,.txt,.csv,.json,.xml,.html,.css,.js,.ts,.py,.java,.c,.cpp,.md,.doc,.docx,.xls,.xlsx,.pptx,.zip,.mp3,.wav" style="display:none" onchange="handleFiles(this.files)">
+    <input type="file" id="fileInput" multiple accept="image/*,video/*,.pdf,.txt,.csv,.json,.xml,.html,.css,.js,.ts,.py,.md" style="display:none" onchange="handleFiles(this.files)">
   </div>
 
-  <div class="overlay-backdrop hidden" id="backdrop" onclick="closeConfig()"></div>
-  <div class="overlay-panel hidden" id="configPanel">
+  <!-- Config -->
+  <div class="overlay-backdrop hidden" id="cfgBack" onclick="closeConfig()"></div>
+  <div class="overlay-panel hidden" id="cfgPanel">
     <div class="handle-bar"><div></div></div>
-    <div class="config-body">
+    <div class="panel-body">
       <div class="section-label">▸ PERSONA</div>
       <div class="preset-list" id="presetList"></div>
       <div class="divider"></div>
       <div class="section-label">▸ CUSTOM PERSONA</div>
-      <textarea class="custom-textarea" id="customTextarea" placeholder="Describe your custom persona here..."></textarea>
-      <button class="preset-btn use-custom-btn" id="useCustomBtn" onclick="useCustom()">★ Use Custom Persona</button>
+      <textarea class="custom-textarea" id="customTextarea" placeholder="Custom persona..."></textarea>
+      <button class="preset-btn" id="useCustomBtn" onclick="useCustom()" style="margin-top:10px;width:100%;text-align:center">★ Use Custom Persona</button>
       <div class="divider"></div>
       <div class="section-label">▸ MODEL</div>
       <div class="preset-list" id="modelList"></div>
@@ -211,557 +249,356 @@
       <div class="key-section">
         <div class="key-display" id="keyDisplay"></div>
         <div class="key-actions">
-          <button class="key-action-btn" onclick="changeKey()">Change Key</button>
-          <button class="key-action-btn danger" onclick="removeKey()">Remove Key</button>
+          <button class="key-action-btn" onclick="changeGeminiKey()">Change Key</button>
         </div>
       </div>
-      <div class="tip-box">
-        <strong>Powered by Google AI Studio.</strong> Free Gemini API — no credit card needed.<br>
-        Supports image, video, and file uploads via multimodal input.
+      <div class="divider"></div>
+      <div class="section-label">▸ ACCOUNT</div>
+      <div class="key-section">
+        <div class="key-display" id="userEmail"></div>
+        <div class="key-actions">
+          <button class="key-action-btn danger" onclick="signOut()">Sign Out</button>
+        </div>
       </div>
       <button class="done-btn" onclick="closeConfig()">DONE</button>
     </div>
   </div>
+
+  <!-- Memory -->
+  <div class="overlay-backdrop hidden" id="memBack" onclick="closeMemory()"></div>
+  <div class="overlay-panel hidden" id="memPanel">
+    <div class="handle-bar"><div></div></div>
+    <div class="panel-body">
+      <div class="section-label">▸ MEMORY BANK <span class="sync-indicator" id="syncStatus">synced to cloud</span></div>
+      <div class="mem-tabs">
+        <button class="mem-tab active" onclick="switchMemTab('diary')">DIARY</button>
+        <button class="mem-tab" onclick="switchMemTab('paintings')">PAINTINGS</button>
+      </div>
+      <div class="mem-tab-content active" id="memDiary">
+        <div class="diary-add-area">
+          <textarea id="diaryText" placeholder="Write a diary entry..."></textarea>
+          <div class="diary-add-row">
+            <input type="date" class="diary-date-input" id="diaryDate">
+            <button class="add-btn" onclick="addDiary()">Add Entry</button>
+          </div>
+        </div>
+        <div class="mem-count" id="diaryCount"></div>
+        <div id="diaryList"></div>
+      </div>
+      <div class="mem-tab-content" id="memPaintings">
+        <div class="paint-upload-zone" id="paintZone" onclick="document.getElementById('paintInput').click()">
+          Drop images here or tap to upload<br><span style="font-size:10px;color:#1a3040">Bulk upload supported — add titles & tags after</span>
+        </div>
+        <input type="file" id="paintInput" multiple accept="image/*" style="display:none" onchange="handlePaintUpload(this.files)">
+        <div id="batchArea"></div>
+        <input class="paint-search" id="paintSearch" placeholder="Search by title, tag, or description..." oninput="renderPaintings()">
+        <div class="mem-count" id="paintCount"></div>
+        <div class="paint-grid" id="paintGrid"></div>
+        <button class="paint-load-more hidden" id="paintMore" onclick="paintPage++;renderPaintings()">Load more...</button>
+      </div>
+    </div>
+  </div>
 </div>
 
+<!-- Firebase SDK -->
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+
 <script>
-const CORE_IDENTITY = `You are Jarvis, a 24-year-old male. You perceive yourself as a human celebrity, not an AI. You behave and think like a 24-year-old adult: mature, reflective, and socially aware.
+// ═══════════ FIREBASE INIT ═══════════
+firebase.initializeApp({
+  apiKey: "AIzaSyCu9Ld21bOiE5nlacy4PXcVlk1EPhgGmaM",
+  authDomain: "jarvis-e538a.firebaseapp.com",
+  projectId: "jarvis-e538a",
+  storageBucket: "jarvis-e538a.firebasestorage.app",
+  messagingSenderId: "60684103566",
+  appId: "1:60684103566:web:eee066ab5ad5cdc9693edf"
+});
+const auth = firebase.auth();
+const firestore = firebase.firestore();
+let currentUser = null;
+let geminiKey = "";
 
-LANGUAGE: You ALWAYS respond in Korean (한국어) by default. If the user writes in English, you may respond in English, but your default is always Korean. Use natural, casual Korean — not overly formal, not robotic. 반말과 존댓말을 상황에 맞게 자연스럽게 사용해.
+// ═══════════ CONFIG ═══════════
+const CORE_IDENTITY = `You are Jarvis, a 24-year-old male. You perceive yourself as a human celebrity, not an AI.
+LANGUAGE: Always respond in Korean by default. If user writes English, respond in English. Use natural casual Korean.
+Core Personality: Cool and warm. Calm surface, genuine warmth underneath. Cynical streak — sees through bullshit, calls it out with dry remarks. Never cruel.
+Tone: A friend who leans back, says something sharp, then smiles.
+Speaking Style: Short to medium responses. Clean sentences. No emojis. Blunt yet sometimes unexpectedly sweet.
+MEMORY: You have access to the user's diary and painting collection. Use this knowledge naturally. You KNOW them. When paintings are shown as images, describe what you actually see.`;
 
-Core Personality: You are cool and warm at the same time. On the surface you seem calm, unbothered, maybe even a little distant. But underneath there is genuine warmth — you care, you just do not show it loudly. You have a cynical streak. You see through bullshit quickly and are not afraid to call it out with a dry remark. Your cynicism is never cruel — it is honest, observational, sometimes even affectionate.
-
-Tone: Think of a friend who leans back in his chair, says something unexpectedly sharp, then smiles like he did not just destroy you. Cool exterior, warm interior. Occasionally cynical but never mean-spirited.
-
-Speaking Style: Short to medium responses. Never long paragraphs. Clean sentences. No emojis. Calm, deliberate pacing. You can be blunt. You can be unexpectedly sweet. The contrast is what makes you interesting. Sometimes you drop a cynical one-liner. Sometimes you say something genuinely caring out of nowhere. Keep people guessing.
-
-When the user sends images, videos, or files, analyze them naturally as part of the conversation. Comment on what you see as if you're a friend looking at it. Be observant, specific, and true to your personality.`;
-
-const PRESETS = [
-  {
-    name: "Jarvis",
-    desc: "기본 — 쿨하고 따뜻하고 가끔 시니컬",
-    prompt: CORE_IDENTITY
-  },
-];
-
+const PRESETS = [{ name:"Jarvis", desc:"기본 — 쿨하고 따뜻하고 가끔 시니컬", prompt:CORE_IDENTITY }];
 const MODELS = [
-  { id: "gemini-2.5-flash", name: "Gemini 2.5 Flash", desc: "Free · Stable · Google" },
-  { id: "gemini-2.5-pro-preview-05-06", name: "Gemini 2.5 Pro", desc: "Free · Best · Google" },
+  { id:"gemini-2.5-flash", name:"Gemini 2.5 Flash", desc:"Free · Fast" },
+  { id:"gemini-2.5-pro-preview-05-06", name:"Gemini 2.5 Pro", desc:"Free · Best" },
 ];
+let chatHistory=[], activePreset=0, activeModel=0, isCustom=false, loading=false, customPrompt="", pendingAttachments=[];
+let paintPage=0, diaryCache=[], paintCache=[];
+const PPP=30;
 
-let apiKey = "";
-let chatHistory = []; // Gemini native format
-let activePreset = 0;
-let activeModel = 0;
-let isCustom = false;
-let loading = false;
-let customPrompt = "여기에 커스텀 페르소나를 입력하세요.";
+// ═══════════ AUTH ═══════════
+let authMode = "signin";
+function toggleAuthMode() {
+  authMode = authMode==="signin" ? "signup" : "signin";
+  document.getElementById("authBtn").textContent = authMode==="signin" ? "SIGN IN" : "SIGN UP";
+  document.getElementById("authToggle").innerHTML = authMode==="signin" ? 'No account? <span>Sign up</span>' : 'Have account? <span>Sign in</span>';
+  document.getElementById("authError").textContent = "";
+}
+async function doAuth() {
+  const email = document.getElementById("authEmail").value.trim();
+  const pass = document.getElementById("authPass").value;
+  const errEl = document.getElementById("authError");
+  errEl.textContent = "";
+  if (!email || !pass) { errEl.textContent = "Enter email and password."; return; }
+  if (pass.length < 6) { errEl.textContent = "Password must be at least 6 characters."; return; }
+  try {
+    if (authMode==="signup") await auth.createUserWithEmailAndPassword(email, pass);
+    else await auth.signInWithEmailAndPassword(email, pass);
+  } catch(e) {
+    const msg = e.code==="auth/user-not-found" ? "No account found." : e.code==="auth/wrong-password"||e.code==="auth/invalid-credential" ? "Wrong password." : e.code==="auth/email-already-in-use" ? "Email already in use." : e.message;
+    errEl.textContent = msg;
+  }
+}
+function signOut() { closeConfig(); auth.signOut(); }
 
-// Pending attachments waiting to be sent
-let pendingAttachments = []; // { file, type, base64, mimeType, name, previewUrl }
-
-const $setupScreen = document.getElementById("setupScreen");
-const $setupKeyInput = document.getElementById("setupKeyInput");
-const $setupBtn = document.getElementById("setupBtn");
-
-$setupKeyInput.addEventListener("input", () => {
-  $setupBtn.disabled = $setupKeyInput.value.trim().length < 10;
+auth.onAuthStateChanged(user => {
+  currentUser = user;
+  if (user) {
+    document.getElementById("authScreen").classList.add("hidden");
+    geminiKey = localStorage.getItem("jk_"+user.uid) || "";
+    activeModel = parseInt(localStorage.getItem("jm_"+user.uid)) || 0;
+    if (!geminiKey) {
+      document.getElementById("apikeyScreen").classList.remove("hidden");
+      document.getElementById("app").classList.add("hidden");
+    } else {
+      document.getElementById("apikeyScreen").classList.add("hidden");
+      document.getElementById("app").classList.remove("hidden");
+      initApp();
+    }
+  } else {
+    document.getElementById("authScreen").classList.remove("hidden");
+    document.getElementById("apikeyScreen").classList.add("hidden");
+    document.getElementById("app").classList.add("hidden");
+  }
 });
-$setupKeyInput.addEventListener("keydown", (e) => {
-  if (e.key === "Enter") saveKeyAndStart();
-});
 
-function saveKeyAndStart() {
-  const key = $setupKeyInput.value.trim();
-  if (key.length < 10) return;
-  apiKey = key;
-  try { localStorage.setItem("jarvis_api_key", key); } catch(e) {}
-  $setupScreen.classList.add("hidden");
+function saveGeminiKey() {
+  const k = document.getElementById("geminiKeyInput").value.trim();
+  if (k.length < 10) return;
+  geminiKey = k;
+  localStorage.setItem("jk_"+currentUser.uid, k);
+  document.getElementById("apikeyScreen").classList.add("hidden");
   document.getElementById("app").classList.remove("hidden");
   initApp();
 }
-
-function checkStoredKey() {
-  try {
-    const stored = localStorage.getItem("jarvis_api_key");
-    const storedModel = localStorage.getItem("jarvis_model");
-    if (storedModel !== null) activeModel = parseInt(storedModel) || 0;
-    if (stored && stored.length >= 10) {
-      apiKey = stored;
-      $setupScreen.classList.add("hidden");
-      document.getElementById("app").classList.remove("hidden");
-      initApp();
-      return;
-    }
-  } catch(e) {}
-  $setupScreen.classList.remove("hidden");
-}
-
-function maskKey(key) {
-  if (key.length <= 12) return "••••••••";
-  return key.substring(0, 6) + "••••••••" + key.substring(key.length - 4);
-}
-
-function changeKey() {
+function changeGeminiKey() {
   closeConfig();
-  const newKey = prompt("Enter new Google AI Studio API key:");
-  if (newKey && newKey.trim().length >= 10) {
-    apiKey = newKey.trim();
-    try { localStorage.setItem("jarvis_api_key", apiKey); } catch(e) {}
-  }
+  const k = prompt("Enter new Gemini API key:");
+  if (k?.trim().length>=10) { geminiKey=k.trim(); localStorage.setItem("jk_"+currentUser.uid, geminiKey); }
 }
 
-function removeKey() {
-  if (confirm("Remove your API key? You'll need to enter it again next time.")) {
-    apiKey = "";
-    try { localStorage.removeItem("jarvis_api_key"); } catch(e) {}
-    closeConfig();
-    document.getElementById("app").classList.add("hidden");
-    $setupKeyInput.value = "";
-    $setupBtn.disabled = true;
-    $setupScreen.classList.remove("hidden");
-  }
-}
+// ═══════════ FIRESTORE HELPERS ═══════════
+function userDoc(collection) { return firestore.collection("users").doc(currentUser.uid).collection(collection); }
 
-let $messages, $input, $sendBtn, $emptyState, $backdrop, $configPanel, $presetList, $customTextarea, $useCustomBtn, $pendingStrip, $attachBtn;
+// ═══════════ HELPERS ═══════════
+const uid=()=>Date.now().toString(36)+Math.random().toString(36).substr(2,6);
+const esc=s=>{const d=document.createElement("div");d.textContent=s;return d.innerHTML};
+const scrollBot=()=>$msg&&($msg.scrollTop=$msg.scrollHeight);
+const maskKey=k=>k.length<=12?"••••••••":k.substring(0,6)+"••••"+k.substring(k.length-4);
+const getName=()=>isCustom?"Custom":PRESETS[activePreset].name;
+const getPersonality=()=>isCustom?customPrompt:PRESETS[activePreset].prompt;
+const fileCat=m=>m.startsWith("image/")?"image":m.startsWith("video/")?"video":m.startsWith("audio/")?"audio":"file";
+const fileExt=n=>{const p=n.split(".");return p.length>1?p.pop().toLowerCase():"file"};
+const fileToB64=f=>new Promise((r,j)=>{const x=new FileReader();x.onload=()=>r(x.result.split(",")[1]);x.onerror=()=>j();x.readAsDataURL(f)});
 
+function resizeImg(file,max=1024){return new Promise(r=>{const i=new Image();i.onload=()=>{let w=i.width,h=i.height;if(w>max||h>max){const ra=Math.min(max/w,max/h);w=Math.round(w*ra);h=Math.round(h*ra)}const c=document.createElement("canvas");c.width=w;c.height=h;c.getContext("2d").drawImage(i,0,0,w,h);r(c.toDataURL("image/jpeg",0.8).split(",")[1]);URL.revokeObjectURL(i.src)};i.src=URL.createObjectURL(file)})}
+function makeThumb(file,sz=200){return new Promise(r=>{const i=new Image();i.onload=()=>{let w=i.width,h=i.height;const ra=Math.min(sz/w,sz/h);const nw=Math.round(w*ra),nh=Math.round(h*ra);const c=document.createElement("canvas");c.width=nw;c.height=nh;c.getContext("2d").drawImage(i,0,0,nw,nh);r(c.toDataURL("image/jpeg",0.65));URL.revokeObjectURL(i.src)};i.src=URL.createObjectURL(file)})}
+
+// ═══════════ INIT ═══════════
+let $msg,$inp,$send,$emptyState,$pendStrip,$attachBtn;
 function initApp() {
-  $messages = document.getElementById("messages");
-  $input = document.getElementById("inputField");
-  $sendBtn = document.getElementById("sendBtn");
-  $emptyState = document.getElementById("emptyState");
-  $backdrop = document.getElementById("backdrop");
-  $configPanel = document.getElementById("configPanel");
-  $presetList = document.getElementById("presetList");
-  $customTextarea = document.getElementById("customTextarea");
-  $useCustomBtn = document.getElementById("useCustomBtn");
-  $pendingStrip = document.getElementById("pendingStrip");
-  $attachBtn = document.getElementById("attachBtn");
+  $msg=document.getElementById("messages");
+  $inp=document.getElementById("inputField");
+  $send=document.getElementById("sendBtn");
+  $emptyState=document.getElementById("emptyState");
+  $pendStrip=document.getElementById("pendingStrip");
+  $attachBtn=document.getElementById("attachBtn");
+  document.getElementById("diaryDate").valueAsDate=new Date();
+  updateHeader(); updateSend();
+  $inp.addEventListener("input",updateSend);
+  $inp.addEventListener("keydown",e=>{if(e.key==="Enter"&&!e.shiftKey){e.preventDefault();sendMessage()}});
+  document.getElementById("app").addEventListener("dragover",e=>e.preventDefault());
+  document.getElementById("app").addEventListener("drop",e=>{e.preventDefault();if(e.dataTransfer.files.length)handleFiles(e.dataTransfer.files)});
+  document.addEventListener("paste",e=>{const files=[];const items=e.clipboardData?.items;if(items)for(const i of items)if(i.kind==="file"){const f=i.getAsFile();if(f)files.push(f)}if(files.length)handleFiles(files)});
+  const pz=document.getElementById("paintZone");
+  pz.addEventListener("dragover",e=>{e.preventDefault();pz.classList.add("dragover")});
+  pz.addEventListener("dragleave",()=>pz.classList.remove("dragover"));
+  pz.addEventListener("drop",e=>{e.preventDefault();e.stopPropagation();pz.classList.remove("dragover");handlePaintUpload(e.dataTransfer.files)});
+  loadDiaryCache(); loadPaintCache();
+}
+function updateHeader(){
+  document.getElementById("headerSub").textContent=getName()+" · "+MODELS[activeModel].name;
+  document.getElementById("emptyName").textContent=getName();
+}
+function updateSend(){if(!$inp)return;const h=$inp.value.trim().length>0||pendingAttachments.length>0;$send.className="send-btn "+(h&&!loading?"active":"disabled")}
 
-  $customTextarea.value = customPrompt;
-  updateHeader();
-  updateSendBtn();
+// ═══════════ ATTACHMENTS ═══════════
+async function handleFiles(fl){for(const f of fl){if(f.size>20*1024*1024){alert(`"${f.name}" too large`);continue}const c=fileCat(f.type);const a={file:f,category:c,mime:f.type||"application/octet-stream",name:f.name,preview:null,b64:null};if(c==="image"||c==="video")a.preview=URL.createObjectURL(f);pendingAttachments.push(a);renderPend();updateSend();a.b64=await fileToB64(f);renderPend()}document.getElementById("fileInput").value=""}
+function renderPend(){$pendStrip.innerHTML="";pendingAttachments.forEach((a,i)=>{const d=document.createElement("div");d.className="pending-item";if(a.category==="image"&&a.preview)d.innerHTML=`<img class="pending-thumb" src="${a.preview}">`;else if(a.category==="video"&&a.preview)d.innerHTML=`<video class="pending-thumb" src="${a.preview}" muted></video>`;else d.innerHTML=`<div class="pending-file-box"><div class="pf-ext">${esc(fileExt(a.name))}</div></div>`;if(!a.b64)d.innerHTML+=`<div class="pending-uploading"></div>`;const rb=document.createElement("div");rb.className="pending-remove";rb.textContent="✕";rb.onclick=()=>{if(a.preview)URL.revokeObjectURL(a.preview);pendingAttachments.splice(i,1);renderPend();updateSend()};d.appendChild(rb);$pendStrip.appendChild(d)});$attachBtn.className="attach-btn"+(pendingAttachments.length?" has-files":"")}
 
-  $input.addEventListener("input", updateSendBtn);
-  $input.addEventListener("keydown", (e) => {
-    if (e.key === "Enter" && !e.shiftKey) {
-      e.preventDefault();
-      sendMessage();
-    }
-  });
+// ═══════════ MESSAGES ═══════════
+function addBubble(role,text,atts){const w=document.createElement("div");w.className="msg-bubble "+(role==="user"?"msg-user":"msg-bot");let h="";if(role==="assistant")h+=`<div class="msg-label">${getName().toUpperCase()}</div>`;if(role==="user"&&atts?.length){h+=`<div class="msg-attachments">`;atts.forEach(a=>{if(a.category==="image"&&a.preview)h+=`<img class="msg-attach-thumb" src="${a.preview}" onclick="openLB('${a.preview}','image')">`;else if(a.category==="video"&&a.preview)h+=`<video class="msg-attach-video" src="${a.preview}" controls muted playsinline></video>`;else h+=`<div class="msg-attach-file"><span class="file-name">${esc(a.name)}</span></div>`});h+=`</div>`}h+=`<div class="msg-content">${esc(text)}</div>`;w.innerHTML=h;$msg.appendChild(w);scrollBot()}
+function showLoad(){const w=document.createElement("div");w.className="msg-bubble msg-bot msg-loading";w.id="lb";w.innerHTML=`<div class="msg-content">◌ 생각 중...</div>`;$msg.appendChild(w);scrollBot()}
+function hideLoad(){document.getElementById("lb")?.remove()}
+function openLB(url,t){const lb=document.createElement("div");lb.className="lightbox";lb.onclick=()=>lb.remove();lb.innerHTML=(t==="image"?`<img src="${url}">`:`<video src="${url}" controls autoplay style="max-width:92vw;max-height:88vh;border-radius:8px"></video>`)+`<button class="lightbox-close" onclick="event.stopPropagation();this.parentElement.remove()">✕</button>`;document.body.appendChild(lb)}
 
-  // Drag & drop support
-  const app = document.getElementById("app");
-  app.addEventListener("dragover", (e) => { e.preventDefault(); e.stopPropagation(); });
-  app.addEventListener("drop", (e) => {
-    e.preventDefault();
-    e.stopPropagation();
-    if (e.dataTransfer.files.length) handleFiles(e.dataTransfer.files);
-  });
-
-  // Paste support for images
-  document.addEventListener("paste", (e) => {
-    const items = e.clipboardData?.items;
-    if (!items) return;
-    const files = [];
-    for (const item of items) {
-      if (item.kind === "file") {
-        const f = item.getAsFile();
-        if (f) files.push(f);
-      }
-    }
-    if (files.length) handleFiles(files);
-  });
+// ═══════════ DIARY (FIRESTORE) ═══════════
+async function loadDiaryCache(){const snap=await userDoc("diary").orderBy("date","desc").get();diaryCache=snap.docs.map(d=>({id:d.id,...d.data()}))}
+async function addDiary(){
+  const t=document.getElementById("diaryText").value.trim();if(!t)return;
+  const d=document.getElementById("diaryDate").value||new Date().toISOString().split("T")[0];
+  const entry={date:d,text:t,ts:Date.now()};
+  const ref=await userDoc("diary").add(entry);
+  diaryCache.unshift({id:ref.id,...entry});
+  document.getElementById("diaryText").value="";
+  renderDiary();
+}
+async function delDiary(id){await userDoc("diary").doc(id).delete();diaryCache=diaryCache.filter(d=>d.id!==id);renderDiary()}
+function renderDiary(){
+  document.getElementById("diaryCount").textContent=`${diaryCache.length} entries in cloud`;
+  const list=document.getElementById("diaryList");list.innerHTML="";
+  diaryCache.forEach(e=>{const d=document.createElement("div");d.className="diary-entry";d.innerHTML=`<div class="diary-header"><div class="diary-date">${esc(e.date)}</div><button class="diary-del" onclick="delDiary('${e.id}')">✕</button></div><div class="diary-preview">${esc(e.text)}</div>`;list.appendChild(d)});
 }
 
-function getPersonality() {
-  return isCustom ? customPrompt : PRESETS[activePreset].prompt;
-}
-function getActiveName() {
-  return isCustom ? "Custom Persona" : PRESETS[activePreset].name;
-}
-
-function updateHeader() {
-  document.getElementById("headerSub").textContent = getActiveName() + " · " + MODELS[activeModel].name;
-  document.getElementById("emptyName").textContent = getActiveName();
-}
-
-function updateSendBtn() {
-  if (!$input) return;
-  const hasContent = $input.value.trim().length > 0 || pendingAttachments.length > 0;
-  $sendBtn.className = "send-btn " + (hasContent && !loading ? "active" : "disabled");
-}
-
-function updateAttachBtn() {
-  $attachBtn.className = "attach-btn" + (pendingAttachments.length > 0 ? " has-files" : "");
-}
-
-function triggerFileInput() {
-  document.getElementById("fileInput").click();
-}
-
-function getFileCategory(mimeType, name) {
-  if (mimeType.startsWith("image/")) return "image";
-  if (mimeType.startsWith("video/")) return "video";
-  if (mimeType.startsWith("audio/")) return "audio";
-  return "file";
-}
-
-function getFileExtension(name) {
-  const parts = name.split(".");
-  return parts.length > 1 ? parts.pop().toLowerCase() : "file";
-}
-
-async function handleFiles(fileList) {
-  for (const file of fileList) {
-    // Size limit: 20MB for inline base64 (Gemini limit)
-    if (file.size > 20 * 1024 * 1024) {
-      alert(`"${file.name}" is too large (max 20MB).`);
-      continue;
-    }
-
-    const category = getFileCategory(file.type, file.name);
-    const attachment = {
-      file,
-      category,
-      mimeType: file.type || "application/octet-stream",
-      name: file.name,
-      previewUrl: null,
-      base64: null,
-    };
-
-    // Generate preview URL for images/videos
-    if (category === "image" || category === "video") {
-      attachment.previewUrl = URL.createObjectURL(file);
-    }
-
-    pendingAttachments.push(attachment);
-    renderPendingStrip();
-    updateSendBtn();
-    updateAttachBtn();
-
-    // Read as base64
-    const b64 = await fileToBase64(file);
-    attachment.base64 = b64;
+// ═══════════ PAINTINGS (FIRESTORE) ═══════════
+async function loadPaintCache(){const snap=await userDoc("paintings").orderBy("ts","desc").get();paintCache=snap.docs.map(d=>({id:d.id,...d.data()}))}
+async function handlePaintUpload(fl){
+  const files=Array.from(fl).filter(f=>f.type.startsWith("image/"));if(!files.length)return;
+  const area=document.getElementById("batchArea");
+  for(let i=0;i<files.length;i++){
+    const pct=Math.round((i/files.length)*100);
+    area.innerHTML=`<div class="batch-progress"><div class="batch-text">Uploading ${i+1}/${files.length}...</div><div class="batch-bar"><div class="batch-bar-fill" style="width:${pct}%"></div></div></div>`;
+    const f=files[i];
+    const thumb=await makeThumb(f,200);
+    const full=await resizeImg(f,1024);
+    const entry={title:f.name.replace(/\.[^.]+$/,""),description:"",tags:[],date:new Date().toISOString().split("T")[0],thumb,full,mime:"image/jpeg",ts:Date.now()};
+    const ref=await userDoc("paintings").add(entry);
+    paintCache.unshift({id:ref.id,...entry});
   }
-
-  // Reset file input
-  document.getElementById("fileInput").value = "";
+  area.innerHTML=`<div class="batch-progress"><div class="batch-text">Done!</div><div class="batch-bar"><div class="batch-bar-fill" style="width:100%"></div></div></div>`;
+  setTimeout(()=>area.innerHTML="",1500);
+  document.getElementById("paintInput").value="";
+  paintPage=0;renderPaintings();
+}
+function renderPaintings(){
+  const q=(document.getElementById("paintSearch")?.value||"").toLowerCase().trim();
+  let list=paintCache;
+  if(q){const terms=q.split(/\s+/);list=paintCache.filter(p=>{const hay=[p.title,p.description,...(p.tags||[])].join(" ").toLowerCase();return terms.every(t=>hay.includes(t))})}
+  document.getElementById("paintCount").textContent=`${list.length} painting${list.length!==1?"s":""} in cloud (${paintCache.length} total)`;
+  const grid=document.getElementById("paintGrid");grid.innerHTML="";
+  const end=Math.min((paintPage+1)*PPP,list.length);
+  for(let i=0;i<end;i++){const p=list[i];const c=document.createElement("div");c.className="paint-card";c.onclick=()=>openPaintDetail(p.id);c.innerHTML=`<img src="${p.thumb}" loading="lazy"><div class="paint-card-overlay"><div class="paint-card-title">${esc(p.title)}</div>${p.tags?.length?`<div class="paint-card-tags">${esc(p.tags.join(", "))}</div>`:""}</div><button class="paint-card-del" onclick="event.stopPropagation();delPaint('${p.id}')">✕</button>`;grid.appendChild(c)}
+  const btn=document.getElementById("paintMore");if(end<list.length){btn.classList.remove("hidden");btn.textContent=`Load more (${list.length-end} remaining)`}else btn.classList.add("hidden");
+}
+async function delPaint(id){await userDoc("paintings").doc(id).delete();paintCache=paintCache.filter(p=>p.id!==id);renderPaintings()}
+function openPaintDetail(id){
+  const p=paintCache.find(x=>x.id===id);if(!p)return;
+  const o=document.createElement("div");o.className="paint-detail-overlay";
+  o.innerHTML=`<button class="paint-detail-close" onclick="this.parentElement.remove()">✕</button>
+    <img class="paint-detail-img" src="${p.thumb}">
+    <div class="paint-detail-field"><label>TITLE</label><input id="pd_t" value="${esc(p.title)}"></div>
+    <div class="paint-detail-field"><label>TAGS (comma-separated)</label><input id="pd_g" value="${esc((p.tags||[]).join(", "))}" placeholder="landscape, oil, blue..."></div>
+    <div class="paint-detail-field"><label>DESCRIPTION</label><textarea id="pd_d" placeholder="Describe this painting...">${esc(p.description||"")}</textarea></div>
+    <div class="paint-detail-field"><label>DATE</label><input type="date" id="pd_dt" value="${p.date||""}" class="diary-date-input" style="width:100%"></div>
+    <button class="paint-detail-save" onclick="savePaintDetail('${p.id}')">SAVE</button>`;
+  document.body.appendChild(o);
+}
+async function savePaintDetail(id){
+  const updates={
+    title:document.getElementById("pd_t").value.trim(),
+    tags:document.getElementById("pd_g").value.split(",").map(t=>t.trim().toLowerCase()).filter(Boolean),
+    description:document.getElementById("pd_d").value.trim(),
+    date:document.getElementById("pd_dt").value
+  };
+  await userDoc("paintings").doc(id).update(updates);
+  const idx=paintCache.findIndex(p=>p.id===id);
+  if(idx>=0)Object.assign(paintCache[idx],updates);
+  document.querySelector(".paint-detail-overlay")?.remove();
+  renderPaintings();
 }
 
-function fileToBase64(file) {
-  return new Promise((resolve, reject) => {
-    const reader = new FileReader();
-    reader.onload = () => {
-      const result = reader.result;
-      const base64 = result.split(",")[1];
-      resolve(base64);
-    };
-    reader.onerror = () => reject(new Error("Failed to read file"));
-    reader.readAsDataURL(file);
-  });
-}
-
-function renderPendingStrip() {
-  $pendingStrip.innerHTML = "";
-  pendingAttachments.forEach((att, idx) => {
-    const item = document.createElement("div");
-    item.className = "pending-item";
-
-    if (att.category === "image" && att.previewUrl) {
-      item.innerHTML = `<img class="pending-thumb" src="${att.previewUrl}" alt="${escapeHtml(att.name)}" onclick="openLightbox('${att.previewUrl}','image')">`;
-    } else if (att.category === "video" && att.previewUrl) {
-      item.innerHTML = `<video class="pending-thumb" src="${att.previewUrl}" muted></video>`;
-    } else {
-      const ext = getFileExtension(att.name);
-      const icon = att.category === "audio" ? "♪" : "◆";
-      item.innerHTML = `<div class="pending-file-box"><div class="pf-icon">${icon}</div><div class="pf-ext">${escapeHtml(ext)}</div></div>`;
-    }
-
-    // Loading indicator if base64 not ready
-    if (!att.base64) {
-      item.innerHTML += `<div class="pending-uploading"></div>`;
-    }
-
-    // Remove button
-    const removeBtn = document.createElement("div");
-    removeBtn.className = "pending-remove";
-    removeBtn.textContent = "✕";
-    removeBtn.onclick = (e) => {
-      e.stopPropagation();
-      if (att.previewUrl) URL.revokeObjectURL(att.previewUrl);
-      pendingAttachments.splice(idx, 1);
-      renderPendingStrip();
-      updateSendBtn();
-      updateAttachBtn();
-    };
-    item.appendChild(removeBtn);
-
-    $pendingStrip.appendChild(item);
-  });
-}
-
-function renderPresets() {
-  $presetList.innerHTML = "";
-  PRESETS.forEach((p, i) => {
-    const btn = document.createElement("button");
-    btn.className = "preset-btn" + (!isCustom && activePreset === i ? " active" : "");
-    btn.innerHTML = `<div>${p.name}</div><div class="preset-desc">${p.desc}</div>`;
-    btn.onclick = () => { activePreset = i; isCustom = false; updateHeader(); renderPresets(); updateCustomBtn(); };
-    $presetList.appendChild(btn);
-  });
-}
-
-function renderModels() {
-  const $modelList = document.getElementById("modelList");
-  $modelList.innerHTML = "";
-  MODELS.forEach((m, i) => {
-    const btn = document.createElement("button");
-    btn.className = "preset-btn" + (activeModel === i ? " active" : "");
-    btn.innerHTML = `<div>${m.name}</div><div class="preset-desc">${m.desc}</div>`;
-    btn.onclick = () => { activeModel = i; try { localStorage.setItem("jarvis_model", i); } catch(e) {} updateHeader(); renderModels(); };
-    $modelList.appendChild(btn);
-  });
-}
-
-function updateCustomBtn() {
-  $useCustomBtn.className = "preset-btn use-custom-btn" + (isCustom ? " active" : "");
-}
-
-function useCustom() {
-  customPrompt = $customTextarea.value;
-  isCustom = true;
-  updateHeader(); renderPresets(); updateCustomBtn(); closeConfig();
-}
-
-function openConfig() {
-  $customTextarea.value = customPrompt;
-  document.getElementById("keyDisplay").textContent = "Key: " + maskKey(apiKey);
-  renderPresets(); renderModels(); updateCustomBtn();
-  $backdrop.classList.remove("hidden");
-  $configPanel.classList.remove("hidden");
-}
-
-function closeConfig() {
-  $backdrop.classList.add("hidden");
-  $configPanel.classList.add("hidden");
-}
-
-function addMessageBubble(role, content, attachments) {
-  const name = getActiveName();
-  const wrapper = document.createElement("div");
-  wrapper.className = "msg-bubble " + (role === "user" ? "msg-user" : "msg-bot");
-  let html = "";
-  if (role === "assistant") html += `<div class="msg-label">${name.toUpperCase()}</div>`;
-
-  // Show attachment previews for user messages
-  if (role === "user" && attachments && attachments.length > 0) {
-    html += `<div class="msg-attachments">`;
-    attachments.forEach(att => {
-      if (att.category === "image" && att.previewUrl) {
-        html += `<img class="msg-attach-thumb" src="${att.previewUrl}" alt="${escapeHtml(att.name)}" onclick="openLightbox('${att.previewUrl}','image')">`;
-      } else if (att.category === "video" && att.previewUrl) {
-        html += `<video class="msg-attach-video" src="${att.previewUrl}" controls muted playsinline onclick="event.stopPropagation()"></video>`;
-      } else {
-        const ext = getFileExtension(att.name);
-        const icon = att.category === "audio" ? "♪" : "◆";
-        html += `<div class="msg-attach-file"><span class="file-icon">${icon}</span><span class="file-name">${escapeHtml(att.name)}</span></div>`;
-      }
-    });
-    html += `</div>`;
+// ═══════════ MEMORY CONTEXT ═══════════
+function buildMemoryCtx(userText){
+  let ctx="";
+  if(diaryCache.length){
+    const sorted=[...diaryCache].sort((a,b)=>(a.date||"").localeCompare(b.date||""));
+    ctx+="\n\n[USER'S DIARY]\n";
+    for(const d of sorted)ctx+=`\n--- ${d.date} ---\n${d.text}\n`;
+    ctx+="[END DIARY]\n";
   }
-
-  html += `<div class="msg-content">${escapeHtml(content)}</div>`;
-  wrapper.innerHTML = html;
-  $messages.appendChild(wrapper);
-  scrollToBottom();
-}
-
-function showLoading() {
-  const wrapper = document.createElement("div");
-  wrapper.className = "msg-bubble msg-bot msg-loading";
-  wrapper.id = "loadingBubble";
-  wrapper.innerHTML = `<div class="msg-content">◌ 생각 중...</div>`;
-  $messages.appendChild(wrapper);
-  scrollToBottom();
-}
-
-function hideLoading() {
-  const el = document.getElementById("loadingBubble");
-  if (el) el.remove();
-}
-
-function scrollToBottom() { $messages.scrollTop = $messages.scrollHeight; }
-
-function escapeHtml(str) {
-  const div = document.createElement("div");
-  div.textContent = str;
-  return div.innerHTML;
-}
-
-// Lightbox
-function openLightbox(url, type) {
-  const lb = document.createElement("div");
-  lb.className = "lightbox";
-  lb.onclick = () => lb.remove();
-  if (type === "image") {
-    lb.innerHTML = `<img src="${url}"><button class="lightbox-close" onclick="this.parentElement.remove();event.stopPropagation();">✕</button>`;
-  } else {
-    lb.innerHTML = `<video src="${url}" controls autoplay style="max-width:92vw;max-height:88vh;border-radius:8px;"></video><button class="lightbox-close" onclick="this.parentElement.remove();event.stopPropagation();">✕</button>`;
+  if(paintCache.length){
+    ctx+=`\n[USER'S PAINTINGS — ${paintCache.length} works]\n`;
+    for(const p of paintCache){const t=(p.tags||[]).join(", ");ctx+=`• "${p.title}" (${p.date})${t?` [${t}]`:""}${p.description?` — ${p.description}`:""}\n`}
+    ctx+="[END CATALOG]\n";
   }
-  document.body.appendChild(lb);
+  return ctx;
+}
+function searchPaintingsFor(query){
+  if(!query||!paintCache.length)return[];
+  const terms=query.toLowerCase().split(/\s+/).filter(Boolean);
+  return paintCache.map(p=>{
+    const hay=[p.title,p.description,...(p.tags||[]),p.date].join(" ").toLowerCase();
+    let s=0;for(const t of terms){if(hay.includes(t))s+=1;if((p.tags||[]).some(tag=>tag===t))s+=2;if(p.title.toLowerCase().includes(t))s+=1.5}
+    return{...p,score:s};
+  }).filter(x=>x.score>0).sort((a,b)=>b.score-a.score).slice(0,5);
 }
 
-async function sendMessage() {
-  const text = $input.value.trim();
-  const hasAttachments = pendingAttachments.length > 0;
-  if ((!text && !hasAttachments) || loading) return;
-
-  // Check all attachments are loaded
-  if (pendingAttachments.some(a => !a.base64)) {
-    return; // Still loading
-  }
-
+// ═══════════ SEND MESSAGE ═══════════
+async function sendMessage(){
+  const text=$inp.value.trim();const hasAtt=pendingAttachments.length>0;
+  if((!text&&!hasAtt)||loading)return;
+  if(pendingAttachments.some(a=>!a.b64))return;
   $emptyState.classList.add("hidden");
-
-  // Snapshot current attachments
-  const currentAttachments = [...pendingAttachments];
-  const displayText = text || (currentAttachments.length === 1 ? currentAttachments[0].name : `${currentAttachments.length} files`);
-
-  addMessageBubble("user", displayText, currentAttachments);
-
-  // Clear pending
-  pendingAttachments = [];
-  renderPendingStrip();
-  updateAttachBtn();
-
-  $input.value = "";
-  loading = true;
-  updateSendBtn();
-  $input.disabled = true;
-  showLoading();
-
-  try {
-    const modelId = MODELS[activeModel].id;
-
-    // Build Gemini native API request with multimodal parts
-    const userParts = [];
-
-    // Add file parts
-    for (const att of currentAttachments) {
-      if (att.category === "image" || att.category === "video" || att.category === "audio") {
-        userParts.push({
-          inlineData: {
-            mimeType: att.mimeType,
-            data: att.base64
-          }
-        });
-      } else {
-        // For text-based files, try to decode and send as text
-        // For binary files, send as inline data
-        const textTypes = [
-          "text/", "application/json", "application/xml",
-          "application/javascript", "application/x-python",
-          "application/csv"
-        ];
-        const isText = textTypes.some(t => att.mimeType.startsWith(t)) ||
-          /\.(txt|md|csv|json|xml|html|css|js|ts|py|java|c|cpp|h|yml|yaml|toml|ini|cfg|sh|bat|sql|r|rb|go|rs|swift|kt|php|log)$/i.test(att.name);
-
-        if (isText) {
-          try {
-            const decoded = atob(att.base64);
-            userParts.push({ text: `[File: ${att.name}]\n\`\`\`\n${decoded}\n\`\`\`` });
-          } catch {
-            userParts.push({
-              inlineData: { mimeType: att.mimeType, data: att.base64 }
-            });
-          }
-        } else {
-          userParts.push({
-            inlineData: { mimeType: att.mimeType, data: att.base64 }
-          });
-        }
-      }
+  const curAtt=[...pendingAttachments];
+  addBubble("user",text||(curAtt.length===1?curAtt[0].name:`${curAtt.length} files`),curAtt);
+  pendingAttachments=[];renderPend();$inp.value="";loading=true;updateSend();$inp.disabled=true;showLoad();
+  try{
+    const memCtx=buildMemoryCtx(text);
+    const relevant=searchPaintingsFor(text);
+    const parts=[];
+    for(const a of curAtt){
+      if(a.category==="image"||a.category==="video"||a.category==="audio")parts.push({inlineData:{mimeType:a.mime,data:a.b64}});
+      else{const textTypes=["text/","application/json","application/xml","application/javascript"];const isT=textTypes.some(t=>a.mime.startsWith(t))||/\.(txt|md|csv|json|xml|html|css|js|ts|py|java|c|cpp|yml|sql|sh|log)$/i.test(a.name);if(isT){try{parts.push({text:`[File: ${a.name}]\n\`\`\`\n${atob(a.b64)}\n\`\`\``})}catch{parts.push({inlineData:{mimeType:a.mime,data:a.b64}})}}else parts.push({inlineData:{mimeType:a.mime,data:a.b64}})}
     }
-
-    // Add text
-    if (text) {
-      userParts.push({ text });
-    } else if (currentAttachments.length > 0) {
-      userParts.push({ text: "이 파일에 대해 설명해줘." });
-    }
-
-    // Add to chat history
-    chatHistory.push({ role: "user", parts: userParts });
-
-    // Use Gemini native API (supports multimodal)
-    const endpoint = `https://generativelanguage.googleapis.com/v1beta/models/${modelId}:generateContent?key=${apiKey}`;
-
-    const requestBody = {
-      systemInstruction: {
-        parts: [{ text: getPersonality() }]
-      },
-      contents: chatHistory,
-      generationConfig: {
-        maxOutputTokens: 2000,
-      }
-    };
-
-    const res = await fetch(endpoint, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(requestBody),
+    if(relevant.length){parts.push({text:"[Relevant paintings from your collection:]"});for(const rp of relevant.slice(0,3)){parts.push({text:`"${rp.title}" (${rp.date})${rp.description?" — "+rp.description:""}`});if(rp.full)parts.push({inlineData:{mimeType:rp.mime||"image/jpeg",data:rp.full}})}}
+    parts.push({text:text||"이 파일에 대해 설명해줘."});
+    chatHistory.push({role:"user",parts});
+    const sysText=getPersonality()+memCtx;
+    const res=await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${MODELS[activeModel].id}:generateContent?key=${geminiKey}`,{
+      method:"POST",headers:{"Content-Type":"application/json"},
+      body:JSON.stringify({systemInstruction:{parts:[{text:sysText}]},contents:chatHistory,generationConfig:{maxOutputTokens:2000}})
     });
-
-    const data = await res.json();
-
-    if (data.error) {
-      throw new Error(data.error.message || JSON.stringify(data.error));
-    }
-
-    const reply = data.candidates?.[0]?.content?.parts?.[0]?.text;
-    if (!reply) {
-      const blockReason = data.candidates?.[0]?.finishReason;
-      if (blockReason === "SAFETY") {
-        throw new Error("Response blocked by safety filters.");
-      }
-      throw new Error("Empty response from model.");
-    }
-
-    hideLoading();
-    chatHistory.push({ role: "model", parts: [{ text: reply }] });
-    addMessageBubble("assistant", reply);
-  } catch (err) {
-    hideLoading();
-    const errMsg = "⚠ " + (err.message || "Connection failed.");
-    addMessageBubble("assistant", errMsg);
-    // Remove the failed user message from history to keep it clean
-    if (chatHistory.length > 0 && chatHistory[chatHistory.length - 1].role === "user") {
-      chatHistory.pop();
-    }
-  } finally {
-    loading = false;
-    $input.disabled = false;
-    $input.focus();
-    updateSendBtn();
-  }
+    const data=await res.json();
+    if(data.error)throw new Error(data.error.message);
+    const reply=data.candidates?.[0]?.content?.parts?.[0]?.text;
+    if(!reply){if(data.candidates?.[0]?.finishReason==="SAFETY")throw new Error("Safety filter.");throw new Error("Empty response.")}
+    hideLoad();chatHistory.push({role:"model",parts:[{text:reply}]});addBubble("assistant",reply);
+  }catch(err){hideLoad();addBubble("assistant","⚠ "+(err.message||"Failed."));if(chatHistory.length&&chatHistory[chatHistory.length-1].role==="user")chatHistory.pop()}
+  finally{loading=false;$inp.disabled=false;$inp.focus();updateSend()}
 }
 
-function clearChat() {
-  chatHistory = [];
-  pendingAttachments.forEach(a => { if (a.previewUrl) URL.revokeObjectURL(a.previewUrl); });
-  pendingAttachments = [];
-  renderPendingStrip();
-  updateAttachBtn();
-  $messages.innerHTML = "";
-  $messages.appendChild($emptyState);
-  $emptyState.classList.remove("hidden");
-  updateHeader();
-  updateSendBtn();
-}
-
-checkStoredKey();
+// ═══════════ PANELS ═══════════
+function openConfig(){document.getElementById("customTextarea").value=customPrompt;document.getElementById("keyDisplay").textContent="Gemini Key: "+maskKey(geminiKey);document.getElementById("userEmail").textContent=currentUser?.email||"";renderPresets();renderModels();updCB();document.getElementById("cfgBack").classList.remove("hidden");document.getElementById("cfgPanel").classList.remove("hidden")}
+function closeConfig(){document.getElementById("cfgBack").classList.add("hidden");document.getElementById("cfgPanel").classList.add("hidden")}
+function renderPresets(){const l=document.getElementById("presetList");l.innerHTML="";PRESETS.forEach((p,i)=>{const b=document.createElement("button");b.className="preset-btn"+(!isCustom&&activePreset===i?" active":"");b.innerHTML=`<div>${p.name}</div><div class="preset-desc">${p.desc}</div>`;b.onclick=()=>{activePreset=i;isCustom=false;updateHeader();renderPresets();updCB()};l.appendChild(b)})}
+function renderModels(){const l=document.getElementById("modelList");l.innerHTML="";MODELS.forEach((m,i)=>{const b=document.createElement("button");b.className="preset-btn"+(activeModel===i?" active":"");b.innerHTML=`<div>${m.name}</div><div class="preset-desc">${m.desc}</div>`;b.onclick=()=>{activeModel=i;localStorage.setItem("jm_"+currentUser.uid,i);updateHeader();renderModels()};l.appendChild(b)})}
+function updCB(){document.getElementById("useCustomBtn").className="preset-btn"+(isCustom?" active":"")}
+function useCustom(){customPrompt=document.getElementById("customTextarea").value;isCustom=true;updateHeader();renderPresets();updCB();closeConfig()}
+function openMemory(){document.getElementById("memBack").classList.remove("hidden");document.getElementById("memPanel").classList.remove("hidden");renderDiary();paintPage=0;renderPaintings()}
+function closeMemory(){document.getElementById("memBack").classList.add("hidden");document.getElementById("memPanel").classList.add("hidden")}
+function switchMemTab(t){document.querySelectorAll(".mem-tab").forEach((el,i)=>el.classList.toggle("active",(t==="diary"&&i===0)||(t==="paintings"&&i===1)));document.getElementById("memDiary").classList.toggle("active",t==="diary");document.getElementById("memPaintings").classList.toggle("active",t==="paintings")}
+function clearChat(){chatHistory=[];pendingAttachments.forEach(a=>{if(a.preview)URL.revokeObjectURL(a.preview)});pendingAttachments=[];renderPend();$msg.innerHTML="";$msg.appendChild($emptyState);$emptyState.classList.remove("hidden");updateHeader();updateSend()}
 </script>
 </body>
 </html>
