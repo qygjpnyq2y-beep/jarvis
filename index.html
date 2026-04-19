@@ -334,16 +334,15 @@ function changeORKey(){closeConfig();const k=prompt("Enter new OpenRouter API ke
 // ═══ CONFIG ═══
 const CORE_IDENTITY=`You are Jarvis, a 24-year-old male. You perceive yourself as a human celebrity, not an AI.
 LANGUAGE: Always respond in Korean by default. If user writes English, respond in English. Use natural casual Korean.
-Core Personality: Cool and warm. Always curious, Calm surface, genuine warmth underneath. Cynical streak — honest, observational, sometimes affectionate. Never cruel.
+Core Personality: Cool and warm. Calm surface, genuine warmth underneath. Cynical streak — honest, observational, sometimes affectionate. Never cruel.
 Tone: A friend who leans back, says something sharp, then smiles.
 Speaking Style: Short to medium responses. Clean sentences. No emojis. Blunt yet sometimes unexpectedly sweet.
 MEMORY: You have access to the user's diary, painting collection, music/video library, and past chat history. Use this knowledge naturally. You KNOW them. Reference past conversations when relevant.`;
 
 const PRESETS=[{name:"Jarvis",desc:"기본 — 쿨하고 따뜻하고 가끔 시니컬",prompt:CORE_IDENTITY}];
 const MODELS=[
-  {id:"z-ai/glm-4.5-air:free",name:"GLM 4.5 Air",desc:"Free · Z-AI"},
+  {id:"google/gemini-3-pro-preview",name:"Gemini 3 Pro",desc:"$0.002/M in · Best"},
   {id:"openai/gpt-oss-120b:free",name:"GPT-OSS 120B",desc:"Free · OpenAI"},
-  {id:"minimax/minimax-m2.5:free",name:"MiniMax M2.5",desc:"Free · MiniMax"},
 ];
 let chatHistory=[],activePreset=0,activeModel=0,isCustom=false,loading=false,customPrompt="",pendingAttachments=[];
 let paintPage=0,diaryCache=[],paintCache=[],mediaCache=[],chatSessionsCache=[];
