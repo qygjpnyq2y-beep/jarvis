@@ -9,14 +9,14 @@
 <meta name="theme-color" content="#000000">
 <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
 <style>
-*, *::before, *::after { box-sizing:border-box; margin:0; padding:0; }
-html, body { height:100%; overscroll-behavior:none; -webkit-text-size-adjust:100%; }
-body { background:#000; color:#d0dfe8; font-family:'JetBrains Mono','Fira Code',monospace; }
-input,textarea,button { -webkit-appearance:none; font-family:inherit; }
-input:focus,textarea:focus { outline:none; }
-::-webkit-scrollbar { width:3px; }
-::-webkit-scrollbar-track { background:transparent; }
-::-webkit-scrollbar-thumb { background:#1a2a35; border-radius:2px; }
+*, *::before, *::after{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%;overscroll-behavior:none;-webkit-text-size-adjust:100%}
+body{background:#000;color:#d0dfe8;font-family:'JetBrains Mono','Fira Code',monospace}
+input,textarea,button{-webkit-appearance:none;font-family:inherit}
+input:focus,textarea:focus{outline:none}
+::-webkit-scrollbar{width:3px}
+::-webkit-scrollbar-track{background:transparent}
+::-webkit-scrollbar-thumb{background:#1a2a35;border-radius:2px}
 @keyframes pulse{0%,100%{opacity:1}50%{opacity:.5}}
 @keyframes float-in{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
 @keyframes blink{0%,100%{opacity:1}50%{opacity:.3}}
@@ -25,7 +25,6 @@ input:focus,textarea:focus { outline:none; }
 @keyframes glow{0%,100%{box-shadow:0 0 8px #68b5ff20}50%{box-shadow:0 0 20px #68b5ff35}}
 @keyframes spin{to{transform:rotate(360deg)}}
 
-/* ── Screens ── */
 .screen{height:100dvh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:32px 24px;background:#000;text-align:center;gap:20px}
 .screen-logo{font-family:'Space Mono',monospace;font-size:42px;font-weight:700;color:#68b5ff;letter-spacing:6px;animation:pulse 3s infinite;filter:drop-shadow(0 0 30px #68b5ff30)}
 .screen-sub{font-size:13px;color:#2a4a5a;line-height:1.7;max-width:340px}
@@ -41,9 +40,7 @@ input:focus,textarea:focus { outline:none; }
 .s-error{font-size:12px;color:#ff6060;max-width:320px;line-height:1.5;min-height:18px}
 .s-hint{font-size:11px;color:#1a3040;max-width:320px;line-height:1.6}
 .s-hint a{color:#68b5ff60;text-decoration:none}
-.s-small{font-size:10px;color:#1a3040;max-width:340px;line-height:1.6;word-break:break-all}
 
-/* ── App ── */
 #app{height:100dvh;display:flex;flex-direction:column;overflow:hidden;background:#000}
 .header{padding:12px 16px;padding-top:max(12px,env(safe-area-inset-top));border-bottom:1px solid #0d1a24;display:flex;align-items:center;justify-content:space-between;background:#000;flex-shrink:0;z-index:10}
 .header-left{display:flex;align-items:center;gap:10px}
@@ -55,7 +52,6 @@ input:focus,textarea:focus { outline:none; }
 .icon-btn:active{transform:scale(.93)}
 .icon-btn svg{width:18px;height:18px}
 
-/* ── Messages ── */
 .messages{flex:1;overflow-y:auto;padding:16px 12px;display:flex;flex-direction:column;gap:12px;-webkit-overflow-scrolling:touch}
 .empty-state{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;padding:20px}
 .empty-glyph{font-size:48px;font-weight:700;color:#68b5ff;font-family:'Space Mono',monospace;animation:pulse 3s infinite}
@@ -75,7 +71,6 @@ input:focus,textarea:focus { outline:none; }
 .msg-attach-file .file-name{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:#a0c4dd;max-width:150px}
 .msg-attach-video{width:200px;max-width:100%;border-radius:10px;border:1px solid #112030}
 
-/* ── Input ── */
 .input-bar{padding:10px 12px;padding-bottom:max(10px,env(safe-area-inset-bottom));border-top:1px solid #0d1a24;background:#000;flex-shrink:0}
 .pending-strip{display:flex;gap:8px;padding:8px 4px;overflow-x:auto;scrollbar-width:none}
 .pending-strip::-webkit-scrollbar{display:none}
@@ -99,7 +94,6 @@ input:focus,textarea:focus { outline:none; }
 .send-btn.disabled{background:#0a1520;color:#1a3040;cursor:not-allowed}
 .send-btn:active:not(.disabled){transform:scale(.93)}
 
-/* ── Overlays ── */
 .overlay-backdrop{position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:50;animation:fade-in .2s}
 .overlay-panel{position:fixed;bottom:0;left:0;right:0;max-height:90vh;background:#050a10;border-top:1px solid #68b5ff25;border-radius:20px 20px 0 0;z-index:51;overflow-y:auto;-webkit-overflow-scrolling:touch;padding-bottom:max(20px,env(safe-area-inset-bottom));animation:slide-up .3s cubic-bezier(.16,1,.3,1)}
 .handle-bar{display:flex;justify-content:center;padding:12px 0 8px;position:sticky;top:0;background:#050a10;border-radius:20px 20px 0 0;z-index:1}
@@ -122,7 +116,6 @@ input:focus,textarea:focus { outline:none; }
 .key-action-btn{flex:1;padding:10px;border:1px solid #112030;border-radius:8px;background:transparent;color:#3a5a70;font-family:inherit;font-size:11px;cursor:pointer}
 .key-action-btn.danger{border-color:#ff404030;color:#ff6060}
 
-/* ── Memory Bank ── */
 .mem-tabs{display:flex;margin-bottom:16px;border:1px solid #112030;border-radius:10px;overflow:hidden}
 .mem-tab{flex:1;padding:10px;background:#060e15;color:#3a5a70;font-size:10px;font-weight:700;letter-spacing:1px;border:none;cursor:pointer;font-family:inherit;text-align:center}
 .mem-tab.active{background:#68b5ff12;color:#68b5ff}
@@ -164,24 +157,18 @@ input:focus,textarea:focus { outline:none; }
 .upload-detail{font-size:10px;color:#2a4a5a;margin-top:6px}
 .upload-skipped{color:#ff9040}
 .upload-done{color:#40ff80}
-
-/* Media list */
 .media-item{display:flex;align-items:center;gap:12px;padding:10px 12px;background:#060e15;border:1px solid #112030;border-radius:10px;margin-bottom:8px;animation:float-in .2s}
 .media-icon{width:40px;height:40px;border-radius:8px;background:#0a1a28;display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0;color:#68b5ff}
 .media-info{flex:1;min-width:0}
 .media-name{font-size:12px;color:#a0c4dd;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .media-meta{font-size:10px;color:#3a5a70;margin-top:2px}
-.media-del{width:28px;height:28px;border:none;background:transparent;color:#ff606060;font-size:14px;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;border-radius:4px}
+.media-del{width:28px;height:28px;border:none;background:transparent;color:#ff606060;font-size:14px;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0}
 .media-del:hover{color:#ff6060}
-
-/* Chat history list */
 .chat-item{padding:12px;background:#060e15;border:1px solid #112030;border-radius:10px;margin-bottom:8px;cursor:pointer;animation:float-in .2s;transition:border-color .15s}
 .chat-item:hover{border-color:#68b5ff30}
 .chat-item-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:4px}
-.chat-item-date{font-size:10px;color:#68b5ff80}
 .chat-item-preview{font-size:12px;color:#5a7a90;line-height:1.4;overflow:hidden;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical}
 .chat-item-del{width:24px;height:24px;border:none;background:transparent;color:#ff606060;font-size:14px;cursor:pointer;display:flex;align-items:center;justify-content:center}
-
 .paint-detail-overlay{position:fixed;inset:0;background:rgba(0,0,0,.95);z-index:100;display:flex;flex-direction:column;animation:fade-in .2s;overflow-y:auto;padding:20px;padding-top:max(60px,calc(env(safe-area-inset-top)+50px));padding-bottom:max(20px,env(safe-area-inset-bottom))}
 .paint-detail-close{position:fixed;top:max(12px,env(safe-area-inset-top));right:12px;width:40px;height:40px;border-radius:50%;background:#ffffff15;border:none;color:#fff;font-size:20px;cursor:pointer;display:flex;align-items:center;justify-content:center;z-index:101}
 .paint-detail-img{width:100%;max-height:40vh;object-fit:contain;border-radius:10px;margin-bottom:16px}
@@ -199,19 +186,17 @@ input:focus,textarea:focus { outline:none; }
 </head>
 <body>
 
-<!-- Firebase Setup -->
 <div id="fbSetupScreen" class="screen">
   <div class="screen-logo">JARVIS</div>
-  <div class="screen-sub">Paste your Firebase config JSON to connect.<br>This stays on your device only.</div>
+  <div class="screen-sub">Paste your Firebase config JSON to connect.</div>
   <div class="screen-form">
-    <textarea class="s-input" id="fbConfigInput" style="height:140px;text-align:left;font-size:11px;line-height:1.5" placeholder='{"apiKey":"AIza...","authDomain":"...","projectId":"...","storageBucket":"...","messagingSenderId":"...","appId":"..."}'></textarea>
-    <button class="s-btn" id="fbConfigBtn" onclick="saveFbConfig()">CONNECT</button>
+    <textarea class="s-input" id="fbConfigInput" style="height:140px;text-align:left;font-size:11px;line-height:1.5" placeholder='{"apiKey":"...","authDomain":"...","projectId":"...","storageBucket":"...","messagingSenderId":"...","appId":"..."}'></textarea>
+    <button class="s-btn" onclick="saveFbConfig()">CONNECT</button>
     <div class="s-error" id="fbConfigError"></div>
   </div>
-  <div class="s-hint">Get this from Firebase Console → Project Settings → Your apps → Config</div>
+  <div class="s-hint">Firebase Console → Project Settings → Your apps → Config</div>
 </div>
 
-<!-- Auth -->
 <div id="authScreen" class="screen hidden">
   <div class="screen-logo">JARVIS</div>
   <div class="screen-sub">Sign in to sync your memories.</div>
@@ -224,18 +209,16 @@ input:focus,textarea:focus { outline:none; }
   </div>
 </div>
 
-<!-- Gemini Key -->
 <div id="apikeyScreen" class="screen hidden">
   <div class="screen-logo" style="font-size:32px">JARVIS</div>
-  <div class="screen-sub">Enter your Google AI Studio API key.</div>
+  <div class="screen-sub">Enter your OpenRouter API key.</div>
   <div class="screen-form">
-    <input class="s-input" id="geminiKeyInput" type="password" placeholder="AIza..." autocomplete="off">
-    <button class="s-btn" onclick="saveGeminiKey()">ACTIVATE</button>
+    <input class="s-input" id="orKeyInput" type="password" placeholder="sk-or-v1-..." autocomplete="off">
+    <button class="s-btn" onclick="saveORKey()">ACTIVATE</button>
   </div>
-  <div class="s-hint">Get a free key at <a href="https://aistudio.google.com/apikey" target="_blank">aistudio.google.com/apikey</a></div>
+  <div class="s-hint">Get a free key at <a href="https://openrouter.ai/keys" target="_blank">openrouter.ai/keys</a></div>
 </div>
 
-<!-- Main App -->
 <div id="app" class="hidden">
   <div class="header">
     <div class="header-left">
@@ -264,7 +247,6 @@ input:focus,textarea:focus { outline:none; }
     <input type="file" id="fileInput" multiple accept="image/*,video/*,audio/*,.pdf,.txt,.csv,.json,.xml,.html,.css,.js,.ts,.py,.md" style="display:none" onchange="handleFiles(this.files)">
   </div>
 
-  <!-- Config -->
   <div class="overlay-backdrop hidden" id="cfgBack" onclick="closeConfig()"></div>
   <div class="overlay-panel hidden" id="cfgPanel">
     <div class="handle-bar"><div></div></div>
@@ -279,8 +261,8 @@ input:focus,textarea:focus { outline:none; }
       <div class="section-label">▸ MODEL</div>
       <div class="preset-list" id="modelList"></div>
       <div class="divider"></div>
-      <div class="section-label">▸ GEMINI API KEY</div>
-      <div class="key-section"><div class="key-display" id="keyDisplay"></div><div class="key-actions"><button class="key-action-btn" onclick="changeGeminiKey()">Change</button></div></div>
+      <div class="section-label">▸ OPENROUTER API KEY</div>
+      <div class="key-section"><div class="key-display" id="keyDisplay"></div><div class="key-actions"><button class="key-action-btn" onclick="changeORKey()">Change</button></div></div>
       <div class="divider"></div>
       <div class="section-label">▸ ACCOUNT</div>
       <div class="key-section"><div class="key-display" id="userEmail"></div><div class="key-actions"><button class="key-action-btn" onclick="resetFbConfig()">Change Firebase</button><button class="key-action-btn danger" onclick="signOut()">Sign Out</button></div></div>
@@ -288,7 +270,6 @@ input:focus,textarea:focus { outline:none; }
     </div>
   </div>
 
-  <!-- Memory -->
   <div class="overlay-backdrop hidden" id="memBack" onclick="closeMemory()"></div>
   <div class="overlay-panel hidden" id="memPanel">
     <div class="handle-bar"><div></div></div>
@@ -300,41 +281,27 @@ input:focus,textarea:focus { outline:none; }
         <button class="mem-tab" onclick="switchMemTab('media')">MEDIA</button>
         <button class="mem-tab" onclick="switchMemTab('chats')">CHATS</button>
       </div>
-
-      <!-- Diary -->
       <div class="mem-tab-content active" id="memDiary">
-        <div class="diary-add-area">
-          <textarea id="diaryText" placeholder="Write a diary entry..."></textarea>
-          <div class="diary-add-row"><input type="date" class="diary-date-input" id="diaryDate"><button class="add-btn" onclick="addDiary()">Add</button></div>
-        </div>
-        <div class="mem-count" id="diaryCount"></div>
-        <div id="diaryList"></div>
+        <div class="diary-add-area"><textarea id="diaryText" placeholder="Write a diary entry..."></textarea><div class="diary-add-row"><input type="date" class="diary-date-input" id="diaryDate"><button class="add-btn" onclick="addDiary()">Add</button></div></div>
+        <div class="mem-count" id="diaryCount"></div><div id="diaryList"></div>
       </div>
-
-      <!-- Paintings -->
       <div class="mem-tab-content" id="memPaintings">
-        <div class="paint-upload-zone" id="paintZone" onclick="document.getElementById('paintInput').click()">Drop images or tap to upload<br><span style="font-size:10px;color:#1a3040">Bulk upload with resume — duplicates skipped</span></div>
+        <div class="paint-upload-zone" id="paintZone" onclick="document.getElementById('paintInput').click()">Drop images or tap to upload<br><span style="font-size:10px;color:#1a3040">Bulk upload with resume</span></div>
         <input type="file" id="paintInput" multiple accept="image/*" style="display:none" onchange="handlePaintUpload(this.files)">
         <div id="uploadArea"></div>
-        <input class="paint-search" id="paintSearch" placeholder="Search by title, tag, description..." oninput="renderPaintings()">
+        <input class="paint-search" id="paintSearch" placeholder="Search..." oninput="renderPaintings()">
         <div class="mem-count" id="paintCount"></div>
         <div class="paint-grid" id="paintGrid"></div>
         <button class="paint-load-more hidden" id="paintMore" onclick="paintPage++;renderPaintings()">Load more...</button>
       </div>
-
-      <!-- Media (Music & Video) -->
       <div class="mem-tab-content" id="memMedia">
-        <div class="paint-upload-zone" onclick="document.getElementById('mediaInput').click()">Drop music or video files here<br><span style="font-size:10px;color:#1a3040">MP3, WAV, MP4, WebM — metadata stored in cloud</span></div>
+        <div class="paint-upload-zone" onclick="document.getElementById('mediaInput').click()">Drop music or video files<br><span style="font-size:10px;color:#1a3040">MP3, WAV, MP4, WebM</span></div>
         <input type="file" id="mediaInput" multiple accept="audio/*,video/*" style="display:none" onchange="handleMediaUpload(this.files)">
         <div id="mediaUploadArea"></div>
-        <div class="mem-count" id="mediaCount"></div>
-        <div id="mediaList"></div>
+        <div class="mem-count" id="mediaCount"></div><div id="mediaList"></div>
       </div>
-
-      <!-- Chat History -->
       <div class="mem-tab-content" id="memChats">
-        <div class="mem-count" id="chatCount"></div>
-        <div id="chatList"></div>
+        <div class="mem-count" id="chatCount"></div><div id="chatList"></div>
       </div>
     </div>
   </div>
@@ -345,129 +312,48 @@ input:focus,textarea:focus { outline:none; }
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
 
 <script>
-// ═══════════════════════════════════════
-// FIREBASE CONFIG FROM USER INPUT
-// ═══════════════════════════════════════
-let fbApp=null, auth=null, fstore=null, currentUser=null, geminiKey="";
+// ═══ FIREBASE CONFIG ═══
+let fbApp=null,auth=null,fstore=null,currentUser=null,orKey="";
 const LS_FB="jarvis_fb_config";
+function loadFbCfg(){try{const s=localStorage.getItem(LS_FB);if(s)return JSON.parse(s)}catch(e){}return null}
+function initFB(cfg){try{fbApp=firebase.initializeApp(cfg);auth=firebase.auth();fstore=firebase.firestore();auth.onAuthStateChanged(onAuth);return true}catch(e){return false}}
+function saveFbConfig(){const raw=document.getElementById("fbConfigInput").value.trim();const err=document.getElementById("fbConfigError");err.textContent="";try{let cfg;if(raw.startsWith("{"))cfg=JSON.parse(raw);else cfg=JSON.parse(raw.replace(/(\w+)\s*:/g,'"$1":').replace(/'/g,'"'));if(!cfg.apiKey||!cfg.projectId){err.textContent="Missing apiKey or projectId.";return}if(!initFB(cfg)){err.textContent="Init failed.";return}localStorage.setItem(LS_FB,JSON.stringify(cfg));document.getElementById("fbSetupScreen").classList.add("hidden");document.getElementById("authScreen").classList.remove("hidden")}catch(e){err.textContent="Invalid JSON."}}
+function resetFbConfig(){if(!confirm("Reset Firebase config?"))return;closeConfig();localStorage.removeItem(LS_FB);location.reload()}
+(function(){const cfg=loadFbCfg();if(cfg&&initFB(cfg))document.getElementById("fbSetupScreen").classList.add("hidden");else document.getElementById("fbSetupScreen").classList.remove("hidden")})();
 
-function loadFbConfig(){
-  try{ const s=localStorage.getItem(LS_FB); if(s)return JSON.parse(s); }catch(e){}
-  return null;
-}
-
-function initFirebase(cfg){
-  try{
-    fbApp=firebase.initializeApp(cfg);
-    auth=firebase.auth();
-    fstore=firebase.firestore();
-    auth.onAuthStateChanged(onAuthChange);
-    return true;
-  }catch(e){ return false; }
-}
-
-function saveFbConfig(){
-  const raw=document.getElementById("fbConfigInput").value.trim();
-  const err=document.getElementById("fbConfigError");
-  err.textContent="";
-  try{
-    let cfg;
-    // Support both JSON and JS object format
-    if(raw.startsWith("{")){cfg=JSON.parse(raw)}
-    else{cfg=JSON.parse(raw.replace(/(\w+)\s*:/g,'"$1":').replace(/'/g,'"'))}
-    if(!cfg.apiKey||!cfg.projectId){err.textContent="Missing apiKey or projectId.";return}
-    if(!initFirebase(cfg)){err.textContent="Failed to initialize Firebase.";return}
-    localStorage.setItem(LS_FB,JSON.stringify(cfg));
-    document.getElementById("fbSetupScreen").classList.add("hidden");
-    document.getElementById("authScreen").classList.remove("hidden");
-  }catch(e){err.textContent="Invalid config format. Paste the JSON object."}
-}
-
-function resetFbConfig(){
-  if(!confirm("Reset Firebase config? You'll need to re-enter it."))return;
-  closeConfig();
-  try{localStorage.removeItem(LS_FB)}catch(e){}
-  location.reload();
-}
-
-// Boot
-(function boot(){
-  const cfg=loadFbConfig();
-  if(cfg&&initFirebase(cfg)){
-    document.getElementById("fbSetupScreen").classList.add("hidden");
-    // auth.onAuthStateChanged will handle the rest
-  }else{
-    document.getElementById("fbSetupScreen").classList.remove("hidden");
-  }
-})();
-
-// ═══════════════════════════════════════
-// AUTH
-// ═══════════════════════════════════════
+// ═══ AUTH ═══
 let authMode="signin";
-function toggleAuthMode(){
-  authMode=authMode==="signin"?"signup":"signin";
-  document.querySelector("#authScreen .s-btn").textContent=authMode==="signin"?"SIGN IN":"SIGN UP";
-  document.querySelector("#authScreen .s-toggle").innerHTML=authMode==="signin"?'No account? <span>Sign up</span>':'Have account? <span>Sign in</span>';
-  document.getElementById("authError").textContent="";
-}
-async function doAuth(){
-  const e=document.getElementById("authEmail").value.trim(),p=document.getElementById("authPass").value;
-  const err=document.getElementById("authError");err.textContent="";
-  if(!e||!p){err.textContent="Enter email and password.";return}
-  if(p.length<6){err.textContent="Password must be 6+ characters.";return}
-  try{if(authMode==="signup")await auth.createUserWithEmailAndPassword(e,p);else await auth.signInWithEmailAndPassword(e,p)}
-  catch(x){err.textContent=x.code==="auth/user-not-found"?"No account found.":x.code==="auth/wrong-password"||x.code==="auth/invalid-credential"?"Wrong password.":x.code==="auth/email-already-in-use"?"Email in use.":x.message}
-}
+function toggleAuthMode(){authMode=authMode==="signin"?"signup":"signin";document.querySelector("#authScreen .s-btn").textContent=authMode==="signin"?"SIGN IN":"SIGN UP";document.querySelector("#authScreen .s-toggle").innerHTML=authMode==="signin"?'No account? <span>Sign up</span>':'Have account? <span>Sign in</span>';document.getElementById("authError").textContent=""}
+async function doAuth(){const e=document.getElementById("authEmail").value.trim(),p=document.getElementById("authPass").value;const err=document.getElementById("authError");err.textContent="";if(!e||!p){err.textContent="Enter email and password.";return}if(p.length<6){err.textContent="6+ characters.";return}try{if(authMode==="signup")await auth.createUserWithEmailAndPassword(e,p);else await auth.signInWithEmailAndPassword(e,p)}catch(x){err.textContent=x.code==="auth/user-not-found"?"No account.":x.code==="auth/wrong-password"||x.code==="auth/invalid-credential"?"Wrong password.":x.code==="auth/email-already-in-use"?"Email in use.":x.message}}
 function signOut(){closeConfig();auth.signOut()}
-
-function onAuthChange(u){
-  currentUser=u;
-  if(u){
-    document.getElementById("authScreen").classList.add("hidden");
-    geminiKey=localStorage.getItem("jk_"+u.uid)||"";
-    activeModel=parseInt(localStorage.getItem("jm_"+u.uid))||0;
-    if(!geminiKey){show("apikeyScreen")}
-    else{show("app");initApp()}
-  }else{
-    document.getElementById("app").classList.add("hidden");
-    document.getElementById("apikeyScreen").classList.add("hidden");
-    if(loadFbConfig())document.getElementById("authScreen").classList.remove("hidden");
-  }
-}
 function show(id){["authScreen","apikeyScreen","app"].forEach(s=>document.getElementById(s).classList.toggle("hidden",s!==id))}
-function saveGeminiKey(){const k=document.getElementById("geminiKeyInput").value.trim();if(k.length<10)return;geminiKey=k;localStorage.setItem("jk_"+currentUser.uid,k);show("app");initApp()}
-function changeGeminiKey(){closeConfig();const k=prompt("Enter new Gemini API key:");if(k?.trim().length>=10){geminiKey=k.trim();localStorage.setItem("jk_"+currentUser.uid,geminiKey)}}
+function onAuth(u){currentUser=u;if(u){document.getElementById("authScreen").classList.add("hidden");orKey=localStorage.getItem("ork_"+u.uid)||"";activeModel=parseInt(localStorage.getItem("jm_"+u.uid))||0;if(!orKey)show("apikeyScreen");else{show("app");initApp()}}else{document.getElementById("app").classList.add("hidden");document.getElementById("apikeyScreen").classList.add("hidden");if(loadFbCfg())document.getElementById("authScreen").classList.remove("hidden")}}
+function saveORKey(){const k=document.getElementById("orKeyInput").value.trim();if(k.length<10)return;orKey=k;localStorage.setItem("ork_"+currentUser.uid,k);show("app");initApp()}
+function changeORKey(){closeConfig();const k=prompt("Enter new OpenRouter API key:");if(k?.trim().length>=10){orKey=k.trim();localStorage.setItem("ork_"+currentUser.uid,orKey)}}
 
-// ═══════════════════════════════════════
-// CONFIG
-// ═══════════════════════════════════════
+// ═══ CONFIG ═══
 const CORE_IDENTITY=`You are Jarvis, a 24-year-old male. You perceive yourself as a human celebrity, not an AI.
 LANGUAGE: Always respond in Korean by default. If user writes English, respond in English. Use natural casual Korean.
-Core Personality: Cool and warm. Calm surface, genuine warmth underneath. Cynical streak — honest, observational, sometimes affectionate. Never cruel.
+Core Personality: Cool and warm. Always curious, Calm surface, genuine warmth underneath. Cynical streak — honest, observational, sometimes affectionate. Never cruel.
 Tone: A friend who leans back, says something sharp, then smiles.
 Speaking Style: Short to medium responses. Clean sentences. No emojis. Blunt yet sometimes unexpectedly sweet.
-MEMORY: You have access to the user's diary, painting collection, music/video library, and past chat history. Use this knowledge naturally. You KNOW them. When paintings are shown as images, describe what you actually see. Reference past conversations when relevant.`;
+MEMORY: You have access to the user's diary, painting collection, music/video library, and past chat history. Use this knowledge naturally. You KNOW them. Reference past conversations when relevant.`;
 
 const PRESETS=[{name:"Jarvis",desc:"기본 — 쿨하고 따뜻하고 가끔 시니컬",prompt:CORE_IDENTITY}];
 const MODELS=[
-  {id:"gemini-3-flash-preview",name:"Gemini 3 Flash",desc:"Free · Latest"},
-  {id:"gemini-2.5-flash",name:"Gemini 2.5 Flash",desc:"Free · Stable"},
-  {id:"gemini-2.5-pro-preview-05-06",name:"Gemini 2.5 Pro",desc:"Free · Best"},
+  {id:"z-ai/glm-4.5-air:free",name:"GLM 4.5 Air",desc:"Free · Z-AI"},
+  {id:"openai/gpt-oss-120b:free",name:"GPT-OSS 120B",desc:"Free · OpenAI"},
+  {id:"minimax/minimax-m2.5:free",name:"MiniMax M2.5",desc:"Free · MiniMax"},
 ];
 let chatHistory=[],activePreset=0,activeModel=0,isCustom=false,loading=false,customPrompt="",pendingAttachments=[];
 let paintPage=0,diaryCache=[],paintCache=[],mediaCache=[],chatSessionsCache=[];
 let uploadCancelled=false,currentSessionId=null;
 const PPP=30,BATCH=50;
 
-// ═══════════════════════════════════════
-// FIRESTORE
-// ═══════════════════════════════════════
+// ═══ FIRESTORE ═══
 function uCol(c){return fstore.collection("users").doc(currentUser.uid).collection(c)}
 
-// ═══════════════════════════════════════
-// HELPERS
-// ═══════════════════════════════════════
+// ═══ HELPERS ═══
 const uid=()=>Date.now().toString(36)+Math.random().toString(36).substr(2,6);
 const esc=s=>{const d=document.createElement("div");d.textContent=s;return d.innerHTML};
 const scrollBot=()=>$msg&&($msg.scrollTop=$msg.scrollHeight);
@@ -480,15 +366,12 @@ const fileToB64=f=>new Promise((r,j)=>{const x=new FileReader();x.onload=()=>r(x
 const fileFP=f=>`${f.name}__${f.size}__${f.lastModified}`;
 function resizeImg(file,max=1024){return new Promise(r=>{const i=new Image();i.onload=()=>{let w=i.width,h=i.height;if(w>max||h>max){const ra=Math.min(max/w,max/h);w=Math.round(w*ra);h=Math.round(h*ra)}const c=document.createElement("canvas");c.width=w;c.height=h;c.getContext("2d").drawImage(i,0,0,w,h);r(c.toDataURL("image/jpeg",.8).split(",")[1]);URL.revokeObjectURL(i.src)};i.src=URL.createObjectURL(file)})}
 function makeThumb(file,sz=200){return new Promise(r=>{const i=new Image();i.onload=()=>{let w=i.width,h=i.height;const ra=Math.min(sz/w,sz/h);const nw=Math.round(w*ra),nh=Math.round(h*ra);const c=document.createElement("canvas");c.width=nw;c.height=nh;c.getContext("2d").drawImage(i,0,0,nw,nh);r(c.toDataURL("image/jpeg",.65));URL.revokeObjectURL(i.src)};i.src=URL.createObjectURL(file)})}
-function fmtDate(ts){if(!ts)return"";const d=new Date(ts);return d.toLocaleDateString("ko-KR",{year:"numeric",month:"short",day:"numeric",hour:"2-digit",minute:"2-digit"})}
+function fmtDate(ts){if(!ts)return"";return new Date(ts).toLocaleDateString("ko-KR",{year:"numeric",month:"short",day:"numeric",hour:"2-digit",minute:"2-digit"})}
 
-// ═══════════════════════════════════════
-// INIT
-// ═══════════════════════════════════════
-let $msg,$inp,$send,$emptyState,$pendStrip,$attachBtn;
-let appInitialized=false;
+// ═══ INIT ═══
+let $msg,$inp,$send,$emptyState,$pendStrip,$attachBtn,appInit=false;
 function initApp(){
-  if(appInitialized)return;appInitialized=true;
+  if(appInit)return;appInit=true;
   $msg=document.getElementById("messages");$inp=document.getElementById("inputField");$send=document.getElementById("sendBtn");
   $emptyState=document.getElementById("emptyState");$pendStrip=document.getElementById("pendingStrip");$attachBtn=document.getElementById("attachBtn");
   document.getElementById("diaryDate").valueAsDate=new Date();
@@ -502,231 +385,59 @@ function initApp(){
   pz.addEventListener("dragover",e=>{e.preventDefault();pz.classList.add("dragover")});
   pz.addEventListener("dragleave",()=>pz.classList.remove("dragover"));
   pz.addEventListener("drop",e=>{e.preventDefault();e.stopPropagation();pz.classList.remove("dragover");handlePaintUpload(e.dataTransfer.files)});
-  loadAllCaches();
-  startNewSession();
+  loadAllCaches();startNewSession();
 }
 function updateHeader(){document.getElementById("headerSub").textContent=getName()+" · "+MODELS[activeModel].name;document.getElementById("emptyName").textContent=getName()}
 function updateSend(){if(!$inp)return;const h=$inp.value.trim().length>0||pendingAttachments.length>0;$send.className="send-btn "+(h&&!loading?"active":"disabled")}
+async function loadAllCaches(){const[d,p,m,c]=await Promise.all([uCol("diary").orderBy("date","desc").get(),uCol("paintings").orderBy("ts","desc").get(),uCol("media").orderBy("ts","desc").get(),uCol("chats").orderBy("ts","desc").limit(50).get()]);diaryCache=d.docs.map(x=>({id:x.id,...x.data()}));paintCache=p.docs.map(x=>({id:x.id,...x.data()}));mediaCache=m.docs.map(x=>({id:x.id,...x.data()}));chatSessionsCache=c.docs.map(x=>({id:x.id,...x.data()}))}
 
-async function loadAllCaches(){
-  const [dSnap,pSnap,mSnap,cSnap]=await Promise.all([
-    uCol("diary").orderBy("date","desc").get(),
-    uCol("paintings").orderBy("ts","desc").get(),
-    uCol("media").orderBy("ts","desc").get(),
-    uCol("chats").orderBy("ts","desc").limit(50).get(),
-  ]);
-  diaryCache=dSnap.docs.map(d=>({id:d.id,...d.data()}));
-  paintCache=pSnap.docs.map(d=>({id:d.id,...d.data()}));
-  mediaCache=mSnap.docs.map(d=>({id:d.id,...d.data()}));
-  chatSessionsCache=cSnap.docs.map(d=>({id:d.id,...d.data()}));
-}
+// ═══ CHAT PERSISTENCE ═══
+function startNewSession(){currentSessionId=uid();chatHistory=[]}
+async function saveChatSession(){if(!chatHistory.length)return;const msgs=chatHistory.map(m=>({role:m.role,content:m.content?.substring?m.content.substring(0,500):typeof m.content==="string"?m.content.substring(0,500):JSON.stringify(m.content).substring(0,500)}));const firstU=msgs.find(m=>m.role==="user");const data={sessionId:currentSessionId,preview:(firstU?.content||"New chat").substring(0,100),messages:chatHistory.map(m=>({role:m.role,content:typeof m.content==="string"?m.content:JSON.stringify(m.content)})),ts:Date.now(),messageCount:msgs.length};const existing=chatSessionsCache.find(c=>c.sessionId===currentSessionId);if(existing){await uCol("chats").doc(existing.id).set(data);Object.assign(existing,data)}else{const ref=await uCol("chats").add(data);chatSessionsCache.unshift({id:ref.id,...data})}}
+async function loadChatSession(sid){const s=chatSessionsCache.find(c=>c.sessionId===sid);if(!s)return;currentSessionId=s.sessionId;chatHistory=s.messages.map(m=>({role:m.role,content:m.content}));$msg.innerHTML="";$msg.appendChild($emptyState);$emptyState.classList.add("hidden");for(const m of s.messages)addBubble(m.role==="assistant"?"assistant":"user",typeof m.content==="string"?m.content:JSON.stringify(m.content));closeMemory()}
+async function delChat(id){await uCol("chats").doc(id).delete();chatSessionsCache=chatSessionsCache.filter(c=>c.id!==id);renderChats()}
+function renderChats(){document.getElementById("chatCount").textContent=`${chatSessionsCache.length} conversations`;const list=document.getElementById("chatList");list.innerHTML="";chatSessionsCache.forEach(c=>{const d=document.createElement("div");d.className="chat-item";d.onclick=()=>loadChatSession(c.sessionId);d.innerHTML=`<div class="chat-item-header"><div class="diary-date">${fmtDate(c.ts)} · ${c.messageCount||0} msgs</div><button class="chat-item-del" onclick="event.stopPropagation();delChat('${c.id}')">✕</button></div><div class="chat-item-preview">${esc(c.preview||"")}</div>`;list.appendChild(d)})}
 
-// ═══════════════════════════════════════
-// CHAT HISTORY PERSISTENCE
-// ═══════════════════════════════════════
-function startNewSession(){
-  currentSessionId=uid();
-  chatHistory=[];
-}
-
-async function saveChatSession(){
-  if(!chatHistory.length)return;
-  // Build a text-only summary for storage (strip base64 images)
-  const msgs=chatHistory.map(m=>({
-    role:m.role,
-    text:m.parts.filter(p=>p.text).map(p=>p.text).join("\n")
-  }));
-  const firstUserMsg=msgs.find(m=>m.role==="user")?.text||"New chat";
-  const preview=firstUserMsg.substring(0,100);
-  const data={
-    sessionId:currentSessionId,
-    preview,
-    messages:msgs,
-    ts:Date.now(),
-    messageCount:msgs.length,
-  };
-  // Upsert
-  const existing=chatSessionsCache.find(c=>c.sessionId===currentSessionId);
-  if(existing){
-    await uCol("chats").doc(existing.id).set(data);
-    Object.assign(existing,data);
-  }else{
-    const ref=await uCol("chats").add(data);
-    chatSessionsCache.unshift({id:ref.id,...data});
-  }
-}
-
-async function loadChatSession(sessionId){
-  const session=chatSessionsCache.find(c=>c.sessionId===sessionId);
-  if(!session)return;
-  currentSessionId=session.sessionId;
-  // Rebuild chatHistory from stored messages (text-only, no images)
-  chatHistory=session.messages.map(m=>({role:m.role,parts:[{text:m.text}]}));
-  // Re-render messages
-  $msg.innerHTML="";$msg.appendChild($emptyState);$emptyState.classList.add("hidden");
-  for(const m of session.messages){
-    addBubble(m.role==="model"?"assistant":"user",m.text);
-  }
-  closeMemory();
-}
-
-async function delChatSession(id){
-  await uCol("chats").doc(id).delete();
-  chatSessionsCache=chatSessionsCache.filter(c=>c.id!==id);
-  renderChats();
-}
-
-function renderChats(){
-  document.getElementById("chatCount").textContent=`${chatSessionsCache.length} conversations saved`;
-  const list=document.getElementById("chatList");list.innerHTML="";
-  chatSessionsCache.forEach(c=>{
-    const d=document.createElement("div");d.className="chat-item";
-    d.onclick=()=>loadChatSession(c.sessionId);
-    d.innerHTML=`<div class="chat-item-header"><div class="diary-date">${fmtDate(c.ts)} · ${c.messageCount||0} msgs</div><button class="chat-item-del" onclick="event.stopPropagation();delChatSession('${c.id}')">✕</button></div><div class="chat-item-preview">${esc(c.preview||"")}</div>`;
-    list.appendChild(d);
-  });
-}
-
-// ═══════════════════════════════════════
-// CHAT ATTACHMENTS
-// ═══════════════════════════════════════
+// ═══ ATTACHMENTS ═══
 async function handleFiles(fl){for(const f of fl){if(f.size>20*1024*1024){alert(`"${f.name}" too large`);continue}const c=fileCat(f.type);const a={file:f,category:c,mime:f.type||"application/octet-stream",name:f.name,preview:null,b64:null};if(c==="image"||c==="video")a.preview=URL.createObjectURL(f);pendingAttachments.push(a);renderPend();updateSend();a.b64=await fileToB64(f);renderPend()}document.getElementById("fileInput").value=""}
 function renderPend(){$pendStrip.innerHTML="";pendingAttachments.forEach((a,i)=>{const d=document.createElement("div");d.className="pending-item";if(a.category==="image"&&a.preview)d.innerHTML=`<img class="pending-thumb" src="${a.preview}">`;else if(a.category==="video"&&a.preview)d.innerHTML=`<video class="pending-thumb" src="${a.preview}" muted></video>`;else d.innerHTML=`<div class="pending-file-box"><div class="pf-ext">${esc(fileExt(a.name))}</div></div>`;if(!a.b64)d.innerHTML+=`<div class="pending-uploading"></div>`;const rb=document.createElement("div");rb.className="pending-remove";rb.textContent="✕";rb.onclick=()=>{if(a.preview)URL.revokeObjectURL(a.preview);pendingAttachments.splice(i,1);renderPend();updateSend()};d.appendChild(rb);$pendStrip.appendChild(d)});$attachBtn.className="attach-btn"+(pendingAttachments.length?" has-files":"")}
 
-// ═══════════════════════════════════════
-// MESSAGES
-// ═══════════════════════════════════════
+// ═══ MESSAGES ═══
 function addBubble(role,text,atts){const w=document.createElement("div");w.className="msg-bubble "+(role==="user"?"msg-user":"msg-bot");let h="";if(role==="assistant")h+=`<div class="msg-label">${getName().toUpperCase()}</div>`;if(role==="user"&&atts?.length){h+=`<div class="msg-attachments">`;atts.forEach(a=>{if(a.category==="image"&&a.preview)h+=`<img class="msg-attach-thumb" src="${a.preview}" onclick="openLB('${a.preview}','image')">`;else if(a.category==="video"&&a.preview)h+=`<video class="msg-attach-video" src="${a.preview}" controls muted playsinline></video>`;else h+=`<div class="msg-attach-file"><span class="file-name">${esc(a.name)}</span></div>`});h+=`</div>`}h+=`<div class="msg-content">${esc(text)}</div>`;w.innerHTML=h;$msg.appendChild(w);scrollBot()}
 function showLoad(){const w=document.createElement("div");w.className="msg-bubble msg-bot msg-loading";w.id="lb";w.innerHTML=`<div class="msg-content">◌ 생각 중...</div>`;$msg.appendChild(w);scrollBot()}
 function hideLoad(){document.getElementById("lb")?.remove()}
 function openLB(url,t){const lb=document.createElement("div");lb.className="lightbox";lb.onclick=()=>lb.remove();lb.innerHTML=(t==="image"?`<img src="${url}">`:`<video src="${url}" controls autoplay style="max-width:92vw;max-height:88vh;border-radius:8px"></video>`)+`<button class="lightbox-close" onclick="event.stopPropagation();this.parentElement.remove()">✕</button>`;document.body.appendChild(lb)}
 
-// ═══════════════════════════════════════
-// DIARY (unchanged structure)
-// ═══════════════════════════════════════
+// ═══ DIARY ═══
 async function addDiary(){const t=document.getElementById("diaryText").value.trim();if(!t)return;const d=document.getElementById("diaryDate").value||new Date().toISOString().split("T")[0];const entry={date:d,text:t,ts:Date.now()};const ref=await uCol("diary").add(entry);diaryCache.unshift({id:ref.id,...entry});document.getElementById("diaryText").value="";renderDiary()}
 async function delDiary(id){await uCol("diary").doc(id).delete();diaryCache=diaryCache.filter(d=>d.id!==id);renderDiary()}
 function renderDiary(){document.getElementById("diaryCount").textContent=`${diaryCache.length} entries`;const list=document.getElementById("diaryList");list.innerHTML="";diaryCache.forEach(e=>{const d=document.createElement("div");d.className="diary-entry";d.innerHTML=`<div class="diary-header"><div class="diary-date">${esc(e.date)}</div><button class="diary-del" onclick="delDiary('${e.id}')">✕</button></div><div class="diary-preview">${esc(e.text)}</div>`;list.appendChild(d)})}
 
-// ═══════════════════════════════════════
-// PAINTINGS (unchanged structure + resume)
-// ═══════════════════════════════════════
-function getExistingFP(){const s=new Set();paintCache.forEach(p=>{if(p.fingerprint)s.add(p.fingerprint)});return s}
-
-async function handlePaintUpload(fl){
-  const files=Array.from(fl).filter(f=>f.type.startsWith("image/"));if(!files.length)return;
-  uploadCancelled=false;const area=document.getElementById("uploadArea");const existing=getExistingFP();
-  const newF=[];const skipN=[];
-  for(const f of files){if(existing.has(fileFP(f)))skipN.push(f.name);else newF.push(f)}
-  const total=newF.length,skipped=skipN.length;
-  if(!total){area.innerHTML=`<div class="upload-panel"><div class="upload-title"><span class="upload-done">All ${skipped} already exist</span></div></div>`;setTimeout(()=>area.innerHTML="",3000);document.getElementById("paintInput").value="";return}
-  let uploaded=0,failed=0,bn=0;const tb=Math.ceil(total/BATCH);
-  function rp(cf){const pct=Math.round((uploaded/total)*100);area.innerHTML=`<div class="upload-panel"><div class="upload-header"><div class="upload-title">Uploading</div><button class="upload-cancel" onclick="uploadCancelled=true">Cancel</button></div><div class="upload-stats">${uploaded}/${total} · Batch ${bn}/${tb}</div><div class="upload-bar"><div class="upload-bar-fill" style="width:${pct}%"></div></div><div class="upload-detail">${cf?esc(cf):"..."}${skipped?` <span class="upload-skipped">(${skipped} skipped)</span>`:""}</div></div>`}
-  rp("");
-  for(let b=0;b<total;b+=BATCH){if(uploadCancelled)break;bn++;const batch=newF.slice(b,b+BATCH);
-    for(const f of batch){if(uploadCancelled)break;rp(f.name);try{const thumb=await makeThumb(f,200);const full=await resizeImg(f,1024);const fp=fileFP(f);const entry={title:f.name.replace(/\.[^.]+$/,""),description:"",tags:[],date:new Date().toISOString().split("T")[0],thumb,full,mime:"image/jpeg",ts:Date.now(),fingerprint:fp};const ref=await uCol("paintings").add(entry);paintCache.unshift({id:ref.id,...entry});uploaded++}catch(e){failed++}rp("")}renderPaintings()}
-  area.innerHTML=`<div class="upload-panel"><div class="upload-title"><span class="${uploadCancelled?"upload-skipped":"upload-done"}">${uploadCancelled?`Cancelled — ${uploaded}/${total}`:`Done — ${uploaded} uploaded`}</span></div></div>`;
-  setTimeout(()=>area.innerHTML="",4000);document.getElementById("paintInput").value="";paintPage=0;renderPaintings();
-}
-
-function renderPaintings(){
-  const q=(document.getElementById("paintSearch")?.value||"").toLowerCase().trim();
-  let list=paintCache;if(q){const terms=q.split(/\s+/);list=paintCache.filter(p=>{const hay=[p.title,p.description,...(p.tags||[])].join(" ").toLowerCase();return terms.every(t=>hay.includes(t))})}
-  document.getElementById("paintCount").textContent=`${list.length} painting${list.length!==1?"s":""} (${paintCache.length} total)`;
-  const grid=document.getElementById("paintGrid");grid.innerHTML="";const end=Math.min((paintPage+1)*PPP,list.length);
-  for(let i=0;i<end;i++){const p=list[i];const c=document.createElement("div");c.className="paint-card";c.onclick=()=>openPaintDetail(p.id);c.innerHTML=`<img src="${p.thumb}" loading="lazy"><div class="paint-card-overlay"><div class="paint-card-title">${esc(p.title)}</div>${p.tags?.length?`<div class="paint-card-tags">${esc(p.tags.join(", "))}</div>`:""}</div><button class="paint-card-del" onclick="event.stopPropagation();delPaint('${p.id}')">✕</button>`;grid.appendChild(c)}
-  const btn=document.getElementById("paintMore");if(end<list.length){btn.classList.remove("hidden");btn.textContent=`Load more (${list.length-end})`}else btn.classList.add("hidden");
-}
+// ═══ PAINTINGS ═══
+function getExFP(){const s=new Set();paintCache.forEach(p=>{if(p.fingerprint)s.add(p.fingerprint)});return s}
+async function handlePaintUpload(fl){const files=Array.from(fl).filter(f=>f.type.startsWith("image/"));if(!files.length)return;uploadCancelled=false;const area=document.getElementById("uploadArea");const ex=getExFP();const nf=[];const sk=[];for(const f of files){if(ex.has(fileFP(f)))sk.push(f.name);else nf.push(f)}const total=nf.length,skipped=sk.length;if(!total){area.innerHTML=`<div class="upload-panel"><div class="upload-title"><span class="upload-done">All ${skipped} exist</span></div></div>`;setTimeout(()=>area.innerHTML="",3000);document.getElementById("paintInput").value="";return}let up=0,fail=0,bn=0;const tb=Math.ceil(total/BATCH);function rp(cf){const pct=Math.round((up/total)*100);area.innerHTML=`<div class="upload-panel"><div class="upload-header"><div class="upload-title">Uploading</div><button class="upload-cancel" onclick="uploadCancelled=true">Cancel</button></div><div class="upload-stats">${up}/${total} · Batch ${bn}/${tb}</div><div class="upload-bar"><div class="upload-bar-fill" style="width:${pct}%"></div></div><div class="upload-detail">${cf?esc(cf):"..."}${skipped?` <span class="upload-skipped">(${skipped} skipped)</span>`:""}</div></div>`}rp("");for(let b=0;b<total;b+=BATCH){if(uploadCancelled)break;bn++;const batch=nf.slice(b,b+BATCH);for(const f of batch){if(uploadCancelled)break;rp(f.name);try{const thumb=await makeThumb(f,200);const full=await resizeImg(f,1024);const entry={title:f.name.replace(/\.[^.]+$/,""),description:"",tags:[],date:new Date().toISOString().split("T")[0],thumb,full,mime:"image/jpeg",ts:Date.now(),fingerprint:fileFP(f)};const ref=await uCol("paintings").add(entry);paintCache.unshift({id:ref.id,...entry});up++}catch(e){fail++}rp("")}renderPaintings()}area.innerHTML=`<div class="upload-panel"><div class="upload-title"><span class="${uploadCancelled?"upload-skipped":"upload-done"}">${uploadCancelled?`Cancelled — ${up}/${total}`:`Done — ${up} uploaded`}</span></div></div>`;setTimeout(()=>area.innerHTML="",4000);document.getElementById("paintInput").value="";paintPage=0;renderPaintings()}
+function renderPaintings(){const q=(document.getElementById("paintSearch")?.value||"").toLowerCase().trim();let list=paintCache;if(q){const terms=q.split(/\s+/);list=paintCache.filter(p=>{const hay=[p.title,p.description,...(p.tags||[])].join(" ").toLowerCase();return terms.every(t=>hay.includes(t))})}document.getElementById("paintCount").textContent=`${list.length} painting${list.length!==1?"s":""} (${paintCache.length} total)`;const grid=document.getElementById("paintGrid");grid.innerHTML="";const end=Math.min((paintPage+1)*PPP,list.length);for(let i=0;i<end;i++){const p=list[i];const c=document.createElement("div");c.className="paint-card";c.onclick=()=>openPD(p.id);c.innerHTML=`<img src="${p.thumb}" loading="lazy"><div class="paint-card-overlay"><div class="paint-card-title">${esc(p.title)}</div>${p.tags?.length?`<div class="paint-card-tags">${esc(p.tags.join(", "))}</div>`:""}</div><button class="paint-card-del" onclick="event.stopPropagation();delPaint('${p.id}')">✕</button>`;grid.appendChild(c)}const btn=document.getElementById("paintMore");if(end<list.length){btn.classList.remove("hidden");btn.textContent=`Load more (${list.length-end})`}else btn.classList.add("hidden")}
 async function delPaint(id){await uCol("paintings").doc(id).delete();paintCache=paintCache.filter(p=>p.id!==id);renderPaintings()}
-function openPaintDetail(id){
-  const p=paintCache.find(x=>x.id===id);if(!p)return;
-  const o=document.createElement("div");o.className="paint-detail-overlay";
-  o.innerHTML=`<button class="paint-detail-close" onclick="this.parentElement.remove()">✕</button>
-    <img class="paint-detail-img" src="${p.thumb}">
-    <div class="paint-detail-field"><label>TITLE</label><input id="pd_t" value="${esc(p.title)}"></div>
-    <div class="paint-detail-field"><label>TAGS</label><input id="pd_g" value="${esc((p.tags||[]).join(", "))}" placeholder="landscape, oil..."></div>
-    <div class="paint-detail-field"><label>DESCRIPTION</label><textarea id="pd_d">${esc(p.description||"")}</textarea></div>
-    <div class="paint-detail-field"><label>DATE</label><input type="date" id="pd_dt" value="${p.date||""}" class="diary-date-input" style="width:100%"></div>
-    <button class="paint-detail-save" onclick="savePD('${p.id}')">SAVE</button>`;
-  document.body.appendChild(o);
-}
+function openPD(id){const p=paintCache.find(x=>x.id===id);if(!p)return;const o=document.createElement("div");o.className="paint-detail-overlay";o.innerHTML=`<button class="paint-detail-close" onclick="this.parentElement.remove()">✕</button><img class="paint-detail-img" src="${p.thumb}"><div class="paint-detail-field"><label>TITLE</label><input id="pd_t" value="${esc(p.title)}"></div><div class="paint-detail-field"><label>TAGS</label><input id="pd_g" value="${esc((p.tags||[]).join(", "))}"></div><div class="paint-detail-field"><label>DESCRIPTION</label><textarea id="pd_d">${esc(p.description||"")}</textarea></div><div class="paint-detail-field"><label>DATE</label><input type="date" id="pd_dt" value="${p.date||""}" class="diary-date-input" style="width:100%"></div><button class="paint-detail-save" onclick="savePD('${p.id}')">SAVE</button>`;document.body.appendChild(o)}
 async function savePD(id){const u={title:document.getElementById("pd_t").value.trim(),tags:document.getElementById("pd_g").value.split(",").map(t=>t.trim().toLowerCase()).filter(Boolean),description:document.getElementById("pd_d").value.trim(),date:document.getElementById("pd_dt").value};await uCol("paintings").doc(id).update(u);const idx=paintCache.findIndex(p=>p.id===id);if(idx>=0)Object.assign(paintCache[idx],u);document.querySelector(".paint-detail-overlay")?.remove();renderPaintings()}
 
-// ═══════════════════════════════════════
-// MEDIA (Music & Video)
-// ═══════════════════════════════════════
-async function handleMediaUpload(fl){
-  const files=Array.from(fl).filter(f=>f.type.startsWith("audio/")||f.type.startsWith("video/"));
-  if(!files.length)return;
-  const area=document.getElementById("mediaUploadArea");
-  const existingFPs=new Set(mediaCache.map(m=>m.fingerprint).filter(Boolean));
-  let uploaded=0,skipped=0;
-  for(let i=0;i<files.length;i++){
-    const f=files[i];const fp=fileFP(f);
-    area.innerHTML=`<div class="upload-panel"><div class="upload-stats">Processing ${i+1}/${files.length}...</div><div class="upload-bar"><div class="upload-bar-fill" style="width:${Math.round(((i+1)/files.length)*100)}%"></div></div></div>`;
-    if(existingFPs.has(fp)){skipped++;continue}
-    try{
-      // Store metadata only (no base64 for large media — too big for Firestore)
-      // For audio/video we store: name, type, size, duration estimate, tags
-      const entry={
-        title:f.name.replace(/\.[^.]+$/,""),
-        fileName:f.name,
-        type:f.type.startsWith("audio/")?"music":"video",
-        mimeType:f.type,
-        size:f.size,
-        tags:[],
-        description:"",
-        date:new Date().toISOString().split("T")[0],
-        ts:Date.now(),
-        fingerprint:fp,
-      };
-      const ref=await uCol("media").add(entry);
-      mediaCache.unshift({id:ref.id,...entry});
-      uploaded++;
-    }catch(e){console.error(e)}
-  }
-  area.innerHTML=uploaded||skipped?`<div class="upload-panel"><div class="upload-title"><span class="upload-done">${uploaded} added${skipped?`, ${skipped} skipped`:""}</span></div></div>`:"";
-  setTimeout(()=>area.innerHTML="",3000);
-  document.getElementById("mediaInput").value="";
-  renderMedia();
-}
-
+// ═══ MEDIA ═══
+async function handleMediaUpload(fl){const files=Array.from(fl).filter(f=>f.type.startsWith("audio/")||f.type.startsWith("video/"));if(!files.length)return;const area=document.getElementById("mediaUploadArea");const exFP=new Set(mediaCache.map(m=>m.fingerprint).filter(Boolean));let up=0,sk=0;for(let i=0;i<files.length;i++){const f=files[i];area.innerHTML=`<div class="upload-panel"><div class="upload-stats">${i+1}/${files.length}...</div><div class="upload-bar"><div class="upload-bar-fill" style="width:${Math.round(((i+1)/files.length)*100)}%"></div></div></div>`;if(exFP.has(fileFP(f))){sk++;continue}try{const entry={title:f.name.replace(/\.[^.]+$/,""),fileName:f.name,type:f.type.startsWith("audio/")?"music":"video",mimeType:f.type,size:f.size,tags:[],description:"",date:new Date().toISOString().split("T")[0],ts:Date.now(),fingerprint:fileFP(f)};const ref=await uCol("media").add(entry);mediaCache.unshift({id:ref.id,...entry});up++}catch(e){}}area.innerHTML=up||sk?`<div class="upload-panel"><div class="upload-title"><span class="upload-done">${up} added${sk?`, ${sk} skipped`:""}</span></div></div>`:"";setTimeout(()=>area.innerHTML="",3000);document.getElementById("mediaInput").value="";renderMedia()}
 async function delMedia(id){await uCol("media").doc(id).delete();mediaCache=mediaCache.filter(m=>m.id!==id);renderMedia()}
+function renderMedia(){document.getElementById("mediaCount").textContent=`${mediaCache.length} media files`;const list=document.getElementById("mediaList");list.innerHTML="";mediaCache.forEach(m=>{const icon=m.type==="music"?"♪":"▶";const size=(m.size/(1024*1024)).toFixed(1)+"MB";const d=document.createElement("div");d.className="media-item";d.innerHTML=`<div class="media-icon">${icon}</div><div class="media-info"><div class="media-name">${esc(m.title)}</div><div class="media-meta">${m.type} · ${size}</div></div><button class="media-del" onclick="delMedia('${m.id}')">✕</button>`;list.appendChild(d)})}
 
-function renderMedia(){
-  document.getElementById("mediaCount").textContent=`${mediaCache.length} media files`;
-  const list=document.getElementById("mediaList");list.innerHTML="";
-  mediaCache.forEach(m=>{
-    const icon=m.type==="music"?"♪":"▶";
-    const size=(m.size/(1024*1024)).toFixed(1)+"MB";
-    const d=document.createElement("div");d.className="media-item";
-    d.innerHTML=`<div class="media-icon">${icon}</div><div class="media-info"><div class="media-name">${esc(m.title)}</div><div class="media-meta">${m.type} · ${size} · ${m.date||""}</div></div><button class="media-del" onclick="delMedia('${m.id}')">✕</button>`;
-    list.appendChild(d);
-  });
-}
-
-// ═══════════════════════════════════════
-// MEMORY CONTEXT
-// ═══════════════════════════════════════
+// ═══ MEMORY CONTEXT ═══
 function buildMemCtx(){
   let ctx="";
   if(diaryCache.length){const sorted=[...diaryCache].sort((a,b)=>(a.date||"").localeCompare(b.date||""));ctx+="\n\n[USER'S DIARY]\n";for(const d of sorted)ctx+=`--- ${d.date} ---\n${d.text}\n\n`;ctx+="[END DIARY]\n"}
-  if(paintCache.length){ctx+=`\n[PAINTING COLLECTION — ${paintCache.length} works]\n`;for(const p of paintCache){const t=(p.tags||[]).join(", ");ctx+=`• "${p.title}" (${p.date})${t?` [${t}]`:""}${p.description?` — ${p.description}`:""}\n`}ctx+="[END CATALOG]\n"}
-  if(mediaCache.length){ctx+=`\n[MUSIC & VIDEO LIBRARY — ${mediaCache.length} files]\n`;for(const m of mediaCache){ctx+=`• "${m.title}" (${m.type}) ${m.tags?.length?"["+m.tags.join(", ")+"]":""}${m.description?" — "+m.description:""}\n`}ctx+="[END MEDIA]\n"}
-  // Recent chat summaries
-  if(chatSessionsCache.length){ctx+=`\n[RECENT CONVERSATIONS — last ${Math.min(chatSessionsCache.length,10)}]\n`;for(const c of chatSessionsCache.slice(0,10)){ctx+=`• ${fmtDate(c.ts)}: ${c.preview}\n`}ctx+="[END CONVERSATIONS]\n"}
+  if(paintCache.length){ctx+=`\n[PAINTINGS — ${paintCache.length} works]\n`;for(const p of paintCache){const t=(p.tags||[]).join(", ");ctx+=`• "${p.title}" (${p.date})${t?` [${t}]`:""}${p.description?` — ${p.description}`:""}\n`}ctx+="[END CATALOG]\n"}
+  if(mediaCache.length){ctx+=`\n[MUSIC & VIDEO — ${mediaCache.length} files]\n`;for(const m of mediaCache)ctx+=`• "${m.title}" (${m.type})${m.tags?.length?" ["+m.tags.join(", ")+"]":""}${m.description?" — "+m.description:""}\n`;ctx+="[END MEDIA]\n"}
+  if(chatSessionsCache.length){ctx+=`\n[RECENT CONVERSATIONS]\n`;for(const c of chatSessionsCache.slice(0,10))ctx+=`• ${fmtDate(c.ts)}: ${c.preview}\n`;ctx+="[END CONVERSATIONS]\n"}
   return ctx;
 }
+function searchPaintFor(q){if(!q||!paintCache.length)return[];const terms=q.toLowerCase().split(/\s+/).filter(Boolean);return paintCache.map(p=>{const hay=[p.title,p.description,...(p.tags||[]),p.date].join(" ").toLowerCase();let s=0;for(const t of terms){if(hay.includes(t))s+=1;if((p.tags||[]).some(tag=>tag===t))s+=2;if(p.title.toLowerCase().includes(t))s+=1.5}return{...p,score:s}}).filter(x=>x.score>0).sort((a,b)=>b.score-a.score).slice(0,5)}
 
-function searchPaintFor(q){
-  if(!q||!paintCache.length)return[];
-  const terms=q.toLowerCase().split(/\s+/).filter(Boolean);
-  return paintCache.map(p=>{const hay=[p.title,p.description,...(p.tags||[]),p.date].join(" ").toLowerCase();let s=0;for(const t of terms){if(hay.includes(t))s+=1;if((p.tags||[]).some(tag=>tag===t))s+=2;if(p.title.toLowerCase().includes(t))s+=1.5}return{...p,score:s}}).filter(x=>x.score>0).sort((a,b)=>b.score-a.score).slice(0,5);
-}
-
-// ═══════════════════════════════════════
-// SEND MESSAGE
-// ═══════════════════════════════════════
+// ═══ SEND MESSAGE (OpenRouter API) ═══
 async function sendMessage(){
   const text=$inp.value.trim();const hasAtt=pendingAttachments.length>0;
   if((!text&&!hasAtt)||loading)return;if(pendingAttachments.some(a=>!a.b64))return;
@@ -734,26 +445,87 @@ async function sendMessage(){
   addBubble("user",text||(curAtt.length===1?curAtt[0].name:`${curAtt.length} files`),curAtt);
   pendingAttachments=[];renderPend();$inp.value="";loading=true;updateSend();$inp.disabled=true;showLoad();
   try{
-    const memCtx=buildMemCtx();const relevant=searchPaintFor(text);const parts=[];
-    for(const a of curAtt){if(a.category==="image"||a.category==="video"||a.category==="audio")parts.push({inlineData:{mimeType:a.mime,data:a.b64}});else{const tT=["text/","application/json","application/xml","application/javascript"];const isT=tT.some(t=>a.mime.startsWith(t))||/\.(txt|md|csv|json|xml|html|css|js|ts|py|java|c|cpp|yml|sql|sh|log)$/i.test(a.name);if(isT){try{parts.push({text:`[File: ${a.name}]\n\`\`\`\n${atob(a.b64)}\n\`\`\``})}catch{parts.push({inlineData:{mimeType:a.mime,data:a.b64}})}}else parts.push({inlineData:{mimeType:a.mime,data:a.b64}})}}
-    if(relevant.length){parts.push({text:"[Relevant paintings from your collection:]"});for(const rp of relevant.slice(0,3)){parts.push({text:`"${rp.title}" (${rp.date})${rp.description?" — "+rp.description:""}`});if(rp.full)parts.push({inlineData:{mimeType:rp.mime||"image/jpeg",data:rp.full}})}}
-    parts.push({text:text||"이 파일에 대해 설명해줘."});
-    chatHistory.push({role:"user",parts});
-    const res=await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${MODELS[activeModel].id}:generateContent?key=${geminiKey}`,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({systemInstruction:{parts:[{text:getPersonality()+memCtx}]},contents:chatHistory,generationConfig:{maxOutputTokens:2000}})});
-    const data=await res.json();if(data.error)throw new Error(data.error.message);
-    const reply=data.candidates?.[0]?.content?.parts?.[0]?.text;
-    if(!reply){if(data.candidates?.[0]?.finishReason==="SAFETY")throw new Error("Safety filter.");throw new Error("Empty response.")}
-    hideLoad();chatHistory.push({role:"model",parts:[{text:reply}]});addBubble("assistant",reply);
-    // Auto-save chat to Firestore
+    const memCtx=buildMemCtx();
+    const relevant=searchPaintFor(text);
+
+    // Build OpenRouter messages (OpenAI-compatible format)
+    // System message with personality + memory
+    const sysMsg={role:"system",content:getPersonality()+memCtx};
+
+    // Build user content parts (OpenRouter supports multimodal via content array)
+    const userContent=[];
+
+    // Inline attachments
+    for(const a of curAtt){
+      if(a.category==="image"){
+        userContent.push({type:"image_url",image_url:{url:`data:${a.mime};base64,${a.b64}`}});
+      }else if(a.category==="video"||a.category==="audio"){
+        // Most free models don't support video/audio inline, send as text description
+        userContent.push({type:"text",text:`[Attached ${a.category}: ${a.name}]`});
+      }else{
+        const textTypes=["text/","application/json","application/xml","application/javascript"];
+        const isT=textTypes.some(t=>a.mime.startsWith(t))||/\.(txt|md|csv|json|xml|html|css|js|ts|py|java|c|cpp|yml|sql|sh|log)$/i.test(a.name);
+        if(isT){try{userContent.push({type:"text",text:`[File: ${a.name}]\n\`\`\`\n${atob(a.b64)}\n\`\`\``})}catch{userContent.push({type:"text",text:`[Attached file: ${a.name}]`})}}
+        else userContent.push({type:"text",text:`[Attached file: ${a.name}]`});
+      }
+    }
+
+    // Relevant paintings
+    if(relevant.length){
+      userContent.push({type:"text",text:"[Relevant paintings from your collection:]"});
+      for(const rp of relevant.slice(0,3)){
+        userContent.push({type:"text",text:`"${rp.title}" (${rp.date})${rp.description?" — "+rp.description:""}`});
+        if(rp.full)userContent.push({type:"image_url",image_url:{url:`data:image/jpeg;base64,${rp.full}`}});
+      }
+    }
+
+    // User text
+    userContent.push({type:"text",text:text||"이 파일에 대해 설명해줘."});
+
+    // For OpenRouter: if only text content, simplify to string
+    const userMsg=userContent.length===1&&userContent[0].type==="text"
+      ?{role:"user",content:userContent[0].text}
+      :{role:"user",content:userContent};
+
+    chatHistory.push(userMsg);
+
+    // Build full messages array
+    const messages=[sysMsg,...chatHistory];
+
+    const res=await fetch("https://openrouter.ai/api/v1/chat/completions",{
+      method:"POST",
+      headers:{
+        "Content-Type":"application/json",
+        "Authorization":`Bearer ${orKey}`,
+        "HTTP-Referer":"https://jarvis.app",
+        "X-Title":"JARVIS"
+      },
+      body:JSON.stringify({
+        model:MODELS[activeModel].id,
+        messages,
+        max_tokens:2000,
+      })
+    });
+
+    const data=await res.json();
+    if(data.error)throw new Error(data.error.message||JSON.stringify(data.error));
+
+    const reply=data.choices?.[0]?.message?.content;
+    if(!reply)throw new Error("Empty response.");
+
+    hideLoad();
+    chatHistory.push({role:"assistant",content:reply});
+    addBubble("assistant",reply);
     saveChatSession();
-  }catch(err){hideLoad();addBubble("assistant","⚠ "+(err.message||"Failed."));if(chatHistory.length&&chatHistory[chatHistory.length-1].role==="user")chatHistory.pop()}
-  finally{loading=false;$inp.disabled=false;$inp.focus();updateSend()}
+  }catch(err){
+    hideLoad();
+    addBubble("assistant","⚠ "+(err.message||"Failed."));
+    if(chatHistory.length&&chatHistory[chatHistory.length-1].role==="user")chatHistory.pop();
+  }finally{loading=false;$inp.disabled=false;$inp.focus();updateSend()}
 }
 
-// ═══════════════════════════════════════
-// PANELS
-// ═══════════════════════════════════════
-function openConfig(){document.getElementById("customTextarea").value=customPrompt;document.getElementById("keyDisplay").textContent="Gemini: "+maskKey(geminiKey);document.getElementById("userEmail").textContent=currentUser?.email||"";renderPresets();renderModels();updCB();document.getElementById("cfgBack").classList.remove("hidden");document.getElementById("cfgPanel").classList.remove("hidden")}
+// ═══ PANELS ═══
+function openConfig(){document.getElementById("customTextarea").value=customPrompt;document.getElementById("keyDisplay").textContent="OpenRouter: "+maskKey(orKey);document.getElementById("userEmail").textContent=currentUser?.email||"";renderPresets();renderModels();updCB();document.getElementById("cfgBack").classList.remove("hidden");document.getElementById("cfgPanel").classList.remove("hidden")}
 function closeConfig(){document.getElementById("cfgBack").classList.add("hidden");document.getElementById("cfgPanel").classList.add("hidden")}
 function renderPresets(){const l=document.getElementById("presetList");l.innerHTML="";PRESETS.forEach((p,i)=>{const b=document.createElement("button");b.className="preset-btn"+(!isCustom&&activePreset===i?" active":"");b.innerHTML=`<div>${p.name}</div><div class="preset-desc">${p.desc}</div>`;b.onclick=()=>{activePreset=i;isCustom=false;updateHeader();renderPresets();updCB()};l.appendChild(b)})}
 function renderModels(){const l=document.getElementById("modelList");l.innerHTML="";MODELS.forEach((m,i)=>{const b=document.createElement("button");b.className="preset-btn"+(activeModel===i?" active":"");b.innerHTML=`<div>${m.name}</div><div class="preset-desc">${m.desc}</div>`;b.onclick=()=>{activeModel=i;localStorage.setItem("jm_"+currentUser.uid,i);updateHeader();renderModels()};l.appendChild(b)})}
