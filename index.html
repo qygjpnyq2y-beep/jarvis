@@ -393,10 +393,10 @@ async function loadAllCaches(){const[d,p,m,c]=await Promise.all([uCol("diary").o
 
 // ═══ CHAT PERSISTENCE ═══
 function startNewSession(){currentSessionId=uid();chatHistory=[]}
-async function saveChatSession(){if(!chatHistory.length)return;const msgs=chatHistory.map(m=>({role:m.role,content:m.content?.substring?m.content.substring(0,500):typeof m.content==="string"?m.content.substring(0,500):JSON.stringify(m.content).substring(0,500)}));const firstU=msgs.find(m=>m.role==="user");const data={sessionId:currentSessionId,preview:(firstU?.content||"New chat").substring(0,100),messages:chatHistory.map(m=>({role:m.role,content:typeof m.content==="string"?m.content:JSON.stringify(m.content)})),ts:Date.now(),messageCount:msgs.length};const existing=chatSessionsCache.find(c=>c.sessionId===currentSessionId);if(existing){await uCol("chats").doc(existing.id).set(data);Object.assign(existing,data)}else{const ref=await uCol("chats").add(data);chatSessionsCache.unshift({id:ref.id,...data})}}
+async function saveChatSession(){if(!chatHistory.length)return;const msgs=chatHistory.map(m=>({role:m.role,content:m.content?.substring?m.content.substring(0,500):typeof m.content==="string"?m.content.substring(0,500):JSON.stringify(m.content).substring(0,500)}));const firstU=msgs.find(m=>m.role==="user");const data={sessionId:currentSessionId,preview:(firstU?.content||"New chat").substring(0,100),messages:chatHistory.map(m=>({role:m.role,content:typeof m.content==="string"?m.content:JSON.stringify(m.content)})),ts:Date.now(),messageCount:msgs.length,source:"web"};const existing=chatSessionsCache.find(c=>c.sessionId===currentSessionId);if(existing){await uCol("chats").doc(existing.id).set(data);Object.assign(existing,data)}else{const ref=await uCol("chats").add(data);chatSessionsCache.unshift({id:ref.id,...data})}}
 async function loadChatSession(sid){const s=chatSessionsCache.find(c=>c.sessionId===sid);if(!s)return;currentSessionId=s.sessionId;chatHistory=s.messages.map(m=>({role:m.role,content:m.content}));$msg.innerHTML="";$msg.appendChild($emptyState);$emptyState.classList.add("hidden");for(const m of s.messages)addBubble(m.role==="assistant"?"assistant":"user",typeof m.content==="string"?m.content:JSON.stringify(m.content));closeMemory()}
 async function delChat(id){await uCol("chats").doc(id).delete();chatSessionsCache=chatSessionsCache.filter(c=>c.id!==id);renderChats()}
-function renderChats(){document.getElementById("chatCount").textContent=`${chatSessionsCache.length} conversations`;const list=document.getElementById("chatList");list.innerHTML="";chatSessionsCache.forEach(c=>{const d=document.createElement("div");d.className="chat-item";d.onclick=()=>loadChatSession(c.sessionId);d.innerHTML=`<div class="chat-item-header"><div class="diary-date">${fmtDate(c.ts)} · ${c.messageCount||0} msgs</div><button class="chat-item-del" onclick="event.stopPropagation();delChat('${c.id}')">✕</button></div><div class="chat-item-preview">${esc(c.preview||"")}</div>`;list.appendChild(d)})}
+function renderChats(){document.getElementById("chatCount").textContent=`${chatSessionsCache.length} conversations`;const list=document.getElementById("chatList");list.innerHTML="";chatSessionsCache.forEach(c=>{const d=document.createElement("div");d.className="chat-item";d.onclick=()=>loadChatSession(c.sessionId);const src=c.source||"web";const srcLabel=src==="openclaw"?"OC":src==="voice"?"VC":"WEB";d.innerHTML=`<div class="chat-item-header"><div class="diary-date">${fmtDate(c.ts)} · ${srcLabel} · ${c.messageCount||0} msgs</div><button class="chat-item-del" onclick="event.stopPropagation();delChat('${c.id}')">✕</button></div><div class="chat-item-preview">${esc(c.preview||"")}</div>`;list.appendChild(d)})}
 
 // ═══ ATTACHMENTS ═══
 async function handleFiles(fl){for(const f of fl){if(f.size>20*1024*1024){alert(`"${f.name}" too large`);continue}let c=fileCat(f.type);if(c==="file")c=fileCatByName(f.name);let mime=f.type||"application/octet-stream";if(mime==="application/octet-stream"&&c==="audio"){const e=fileExt(f.name);const mimeMap={mp3:"audio/mpeg",wav:"audio/wav",m4a:"audio/mp4",ogg:"audio/ogg",flac:"audio/flac",aac:"audio/aac",wma:"audio/x-ms-wma",opus:"audio/opus"};mime=mimeMap[e]||"audio/mpeg"}const a={file:f,category:c,mime,name:f.name,preview:null,b64:null};if(c==="image"||c==="video"||c==="audio")a.preview=URL.createObjectURL(f);pendingAttachments.push(a);renderPend();updateSend();a.b64=await fileToB64(f);renderPend()}document.getElementById("fileInput").value=""}
@@ -432,7 +432,32 @@ function buildMemCtx(){
   if(diaryCache.length){const sorted=[...diaryCache].sort((a,b)=>(a.date||"").localeCompare(b.date||""));ctx+="\n\n[USER'S DIARY]\n";for(const d of sorted)ctx+=`--- ${d.date} ---\n${d.text}\n\n`;ctx+="[END DIARY]\n"}
   if(paintCache.length){ctx+=`\n[PAINTINGS — ${paintCache.length} works]\n`;for(const p of paintCache){const t=(p.tags||[]).join(", ");ctx+=`• "${p.title}" (${p.date})${t?` [${t}]`:""}${p.description?` — ${p.description}`:""}\n`}ctx+="[END CATALOG]\n"}
   if(mediaCache.length){ctx+=`\n[MUSIC & VIDEO — ${mediaCache.length} files]\n`;for(const m of mediaCache)ctx+=`• "${m.title}" (${m.type})${m.tags?.length?" ["+m.tags.join(", ")+"]":""}${m.description?" — "+m.description:""}\n`;ctx+="[END MEDIA]\n"}
-  if(chatSessionsCache.length){ctx+=`\n[RECENT CONVERSATIONS]\n`;for(const c of chatSessionsCache.slice(0,10))ctx+=`• ${fmtDate(c.ts)}: ${c.preview}\n`;ctx+="[END CONVERSATIONS]\n"}
+  if(chatSessionsCache.length){
+    // Last 5 conversations with full messages
+    const recent=chatSessionsCache.slice(0,5);
+    ctx+=`\n[RECENT CONVERSATIONS — ${chatSessionsCache.length} total, showing last ${recent.length} in detail]\n`;
+    for(const c of recent){
+      const source=c.source||"web";
+      ctx+=`\n--- ${fmtDate(c.ts)} [${source}] ---\n`;
+      if(c.messages&&c.messages.length){
+        for(const m of c.messages.slice(-20)){
+          const role=m.role==="assistant"?"Jarvis":"User";
+          const content=typeof m.content==="string"?m.content:JSON.stringify(m.content);
+          ctx+=`${role}: ${content.substring(0,300)}\n`;
+        }
+      }else{
+        ctx+=`Preview: ${c.preview||"..."}\n`;
+      }
+    }
+    // Older ones just show preview
+    if(chatSessionsCache.length>5){
+      ctx+="\n--- Older conversations ---\n";
+      for(const c of chatSessionsCache.slice(5,15)){
+        ctx+=`• ${fmtDate(c.ts)}: ${c.preview}\n`;
+      }
+    }
+    ctx+="[END CONVERSATIONS]\n";
+  }
   return ctx;
 }
 function searchPaintFor(q){if(!q||!paintCache.length)return[];const terms=q.toLowerCase().split(/\s+/).filter(Boolean);return paintCache.map(p=>{const hay=[p.title,p.description,...(p.tags||[]),p.date].join(" ").toLowerCase();let s=0;for(const t of terms){if(hay.includes(t))s+=1;if((p.tags||[]).some(tag=>tag===t))s+=2;if(p.title.toLowerCase().includes(t))s+=1.5}return{...p,score:s}}).filter(x=>x.score>0).sort((a,b)=>b.score-a.score).slice(0,5)}
