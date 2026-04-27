@@ -7,6 +7,8 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="theme-color" content="#000000">
+<link rel="manifest" href="manifest.json">
+<link rel="apple-touch-icon" href="icon-192.png">
 <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
 <style>
 *, *::before, *::after{box-sizing:border-box;margin:0;padding:0}
@@ -564,6 +566,21 @@ function openMemory(){document.getElementById("memBack").classList.remove("hidde
 function closeMemory(){document.getElementById("memBack").classList.add("hidden");document.getElementById("memPanel").classList.add("hidden")}
 function switchMemTab(t){const tabs=["diary","paintings","media","chats"];document.querySelectorAll(".mem-tab").forEach((el,i)=>el.classList.toggle("active",tabs[i]===t));document.getElementById("memDiary").classList.toggle("active",t==="diary");document.getElementById("memPaintings").classList.toggle("active",t==="paintings");document.getElementById("memMedia").classList.toggle("active",t==="media");document.getElementById("memChats").classList.toggle("active",t==="chats")}
 function clearChat(){saveChatSession();startNewSession();$msg.innerHTML="";$msg.appendChild($emptyState);$emptyState.classList.remove("hidden");pendingAttachments.forEach(a=>{if(a.preview)URL.revokeObjectURL(a.preview)});pendingAttachments=[];renderPend();updateHeader();updateSend()}
+
+// ═══ SERVICE WORKER & PWA ═══
+if('serviceWorker' in navigator){navigator.serviceWorker.register('sw.js').then(r=>{console.log('SW registered');r.addEventListener('updatefound',()=>{const w=r.installing;if(w)w.addEventListener('statechange',()=>{if(w.state==='activated')console.log('SW updated')})})}).catch(e=>console.log('SW failed:',e))}
+
+// ═══ FIREBASE AUTH PERSISTENCE ═══
+// Save current chat to localStorage so it survives Safari tab kills
+function saveLocalState(){if(!chatHistory.length)return;try{localStorage.setItem('jarvis_chat_state',JSON.stringify({sessionId:currentSessionId,history:chatHistory.map(m=>({role:m.role,content:typeof m.content==='string'?m.content:JSON.stringify(m.content)})),ts:Date.now()}))}catch(e){}}
+function restoreLocalState(){try{const s=localStorage.getItem('jarvis_chat_state');if(!s)return false;const d=JSON.parse(s);if(Date.now()-d.ts>3600000)return false;currentSessionId=d.sessionId;chatHistory=d.history.map(m=>({role:m.role,content:m.content}));if($msg&&$emptyState&&chatHistory.length>0){$emptyState.classList.add('hidden');for(const m of d.history)addBubble(m.role==='assistant'?'assistant':'user',typeof m.content==='string'?m.content:JSON.stringify(m.content))}return true}catch(e){return false}}
+// Auto-save state periodically and on visibility change
+setInterval(saveLocalState,15000);
+document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='hidden')saveLocalState()});
+// Override initApp to try restoring state
+const _origInitApp=initApp;
+appInit=false;
+initApp=function(){_origInitApp();restoreLocalState()};
 </script>
 </body>
 </html>
