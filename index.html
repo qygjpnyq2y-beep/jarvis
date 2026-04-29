@@ -568,7 +568,8 @@ function switchMemTab(t){const tabs=["diary","paintings","media","chats"];docume
 function clearChat(){saveChatSession();startNewSession();$msg.innerHTML="";$msg.appendChild($emptyState);$emptyState.classList.remove("hidden");pendingAttachments.forEach(a=>{if(a.preview)URL.revokeObjectURL(a.preview)});pendingAttachments=[];renderPend();updateHeader();updateSend()}
 
 // ═══ SERVICE WORKER & PWA ═══
-if('serviceWorker' in navigator){navigator.serviceWorker.register('sw.js').then(r=>{console.log('SW registered');r.addEventListener('updatefound',()=>{const w=r.installing;if(w)w.addEventListener('statechange',()=>{if(w.state==='activated')console.log('SW updated')})})}).catch(e=>console.log('SW failed:',e))}
+// Unregister any stuck Service Workers
+if('serviceWorker' in navigator){navigator.serviceWorker.getRegistrations().then(regs=>{regs.forEach(r=>r.unregister())})}.then(r=>{console.log('SW registered');r.addEventListener('updatefound',()=>{const w=r.installing;if(w)w.addEventListener('statechange',()=>{if(w.state==='activated')console.log('SW updated')})})}).catch(e=>console.log('SW failed:',e))}
 
 // ═══ FIREBASE AUTH PERSISTENCE ═══
 // Save current chat to localStorage so it survives Safari tab kills
