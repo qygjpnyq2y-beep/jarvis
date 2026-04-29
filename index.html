@@ -7,11 +7,9 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="theme-color" content="#000000">
-<link rel="manifest" href="manifest.json">
-<link rel="apple-touch-icon" href="icon-192.png">
 <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
 <style>
-*, *::before, *::after{box-sizing:border-box;margin:0;padding:0}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 html,body{height:100%;overscroll-behavior:none;-webkit-text-size-adjust:100%}
 body{background:#000;color:#d0dfe8;font-family:'JetBrains Mono','Fira Code',monospace}
 input,textarea,button{-webkit-appearance:none;font-family:inherit}
@@ -26,7 +24,6 @@ input:focus,textarea:focus{outline:none}
 @keyframes fade-in{from{opacity:0}to{opacity:1}}
 @keyframes glow{0%,100%{box-shadow:0 0 8px #68b5ff20}50%{box-shadow:0 0 20px #68b5ff35}}
 @keyframes spin{to{transform:rotate(360deg)}}
-
 .screen{height:100dvh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:32px 24px;background:#000;text-align:center;gap:20px}
 .screen-logo{font-family:'Space Mono',monospace;font-size:42px;font-weight:700;color:#68b5ff;letter-spacing:6px;animation:pulse 3s infinite;filter:drop-shadow(0 0 30px #68b5ff30)}
 .screen-sub{font-size:13px;color:#2a4a5a;line-height:1.7;max-width:340px}
@@ -42,7 +39,6 @@ input:focus,textarea:focus{outline:none}
 .s-error{font-size:12px;color:#ff6060;max-width:320px;line-height:1.5;min-height:18px}
 .s-hint{font-size:11px;color:#1a3040;max-width:320px;line-height:1.6}
 .s-hint a{color:#68b5ff60;text-decoration:none}
-
 #app{height:100dvh;display:flex;flex-direction:column;overflow:hidden;background:#000}
 .header{padding:12px 16px;padding-top:max(12px,env(safe-area-inset-top));border-bottom:1px solid #0d1a24;display:flex;align-items:center;justify-content:space-between;background:#000;flex-shrink:0;z-index:10}
 .header-left{display:flex;align-items:center;gap:10px}
@@ -53,7 +49,6 @@ input:focus,textarea:focus{outline:none}
 .icon-btn{width:38px;height:38px;border:1px solid #112030;border-radius:10px;background:transparent;color:#3a5a70;cursor:pointer;font-size:16px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
 .icon-btn:active{transform:scale(.93)}
 .icon-btn svg{width:18px;height:18px}
-
 .messages{flex:1;overflow-y:auto;padding:16px 12px;display:flex;flex-direction:column;gap:12px;-webkit-overflow-scrolling:touch}
 .empty-state{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;padding:20px}
 .empty-glyph{font-size:48px;font-weight:700;color:#68b5ff;font-family:'Space Mono',monospace;animation:pulse 3s infinite}
@@ -72,7 +67,6 @@ input:focus,textarea:focus{outline:none}
 .msg-attach-file{display:inline-flex;align-items:center;gap:6px;padding:6px 10px;background:#0a1a28;border:1px solid #112030;border-radius:8px;font-size:11px}
 .msg-attach-file .file-name{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:#a0c4dd;max-width:150px}
 .msg-attach-video{width:200px;max-width:100%;border-radius:10px;border:1px solid #112030}
-
 .input-bar{padding:10px 12px;padding-bottom:max(10px,env(safe-area-inset-bottom));border-top:1px solid #0d1a24;background:#000;flex-shrink:0}
 .pending-strip{display:flex;gap:8px;padding:8px 4px;overflow-x:auto;scrollbar-width:none}
 .pending-strip::-webkit-scrollbar{display:none}
@@ -95,7 +89,6 @@ input:focus,textarea:focus{outline:none}
 .send-btn.active{background:#68b5ff;color:#000}
 .send-btn.disabled{background:#0a1520;color:#1a3040;cursor:not-allowed}
 .send-btn:active:not(.disabled){transform:scale(.93)}
-
 .overlay-backdrop{position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:50;animation:fade-in .2s}
 .overlay-panel{position:fixed;bottom:0;left:0;right:0;max-height:90vh;background:#050a10;border-top:1px solid #68b5ff25;border-radius:20px 20px 0 0;z-index:51;overflow-y:auto;-webkit-overflow-scrolling:touch;padding-bottom:max(20px,env(safe-area-inset-bottom));animation:slide-up .3s cubic-bezier(.16,1,.3,1)}
 .handle-bar{display:flex;justify-content:center;padding:12px 0 8px;position:sticky;top:0;background:#050a10;border-radius:20px 20px 0 0;z-index:1}
@@ -117,7 +110,6 @@ input:focus,textarea:focus{outline:none}
 .key-actions{display:flex;gap:8px}
 .key-action-btn{flex:1;padding:10px;border:1px solid #112030;border-radius:8px;background:transparent;color:#3a5a70;font-family:inherit;font-size:11px;cursor:pointer}
 .key-action-btn.danger{border-color:#ff404030;color:#ff6060}
-
 .mem-tabs{display:flex;margin-bottom:16px;border:1px solid #112030;border-radius:10px;overflow:hidden}
 .mem-tab{flex:1;padding:10px;background:#060e15;color:#3a5a70;font-size:10px;font-weight:700;letter-spacing:1px;border:none;cursor:pointer;font-family:inherit;text-align:center}
 .mem-tab.active{background:#68b5ff12;color:#68b5ff}
@@ -196,7 +188,7 @@ input:focus,textarea:focus{outline:none}
     <button class="s-btn" onclick="saveFbConfig()">CONNECT</button>
     <div class="s-error" id="fbConfigError"></div>
   </div>
-  <div class="s-hint">Firebase Console → Project Settings → Your apps → Config</div>
+  <div class="s-hint">Firebase Console > Project Settings > Your apps > Config</div>
 </div>
 
 <div id="authScreen" class="screen hidden">
@@ -228,9 +220,9 @@ input:focus,textarea:focus{outline:none}
       <div><div class="header-title">JARVIS</div><div class="header-sub" id="headerSub"></div></div>
     </div>
     <div class="header-btns">
-      <button class="icon-btn" onclick="clearChat()">↺</button>
+      <button class="icon-btn" onclick="clearChat()">&#8634;</button>
       <button class="icon-btn" onclick="openMemory()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg></button>
-      <button class="icon-btn" onclick="openConfig()">⚙</button>
+      <button class="icon-btn" onclick="openConfig()">&#9881;</button>
     </div>
   </div>
   <div class="messages" id="messages">
@@ -244,7 +236,7 @@ input:focus,textarea:focus{outline:none}
     <div class="input-row">
       <button class="attach-btn" id="attachBtn" onclick="document.getElementById('fileInput').click()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21.44 11.05l-9.19 9.19a6 6 0 01-8.49-8.49l9.19-9.19a4 4 0 015.66 5.66l-9.2 9.19a2 2 0 01-2.83-2.83l8.49-8.48"/></svg></button>
       <input class="input-field" id="inputField" placeholder="Message JARVIS..." autocomplete="off">
-      <button class="send-btn disabled" id="sendBtn" onclick="sendMessage()">▸</button>
+      <button class="send-btn disabled" id="sendBtn" onclick="sendMessage()">&#9656;</button>
     </div>
     <input type="file" id="fileInput" multiple accept="image/*,video/*,audio/*,.mp3,.wav,.m4a,.ogg,.flac,.aac,.mp4,.mov,.webm,.pdf,.txt,.csv,.json,.xml,.html,.css,.js,.ts,.py,.md" style="display:none" onchange="handleFiles(this.files)">
   </div>
@@ -253,20 +245,20 @@ input:focus,textarea:focus{outline:none}
   <div class="overlay-panel hidden" id="cfgPanel">
     <div class="handle-bar"><div></div></div>
     <div class="panel-body">
-      <div class="section-label">▸ PERSONA</div>
+      <div class="section-label">PERSONA</div>
       <div class="preset-list" id="presetList"></div>
       <div class="divider"></div>
-      <div class="section-label">▸ CUSTOM PERSONA</div>
+      <div class="section-label">CUSTOM PERSONA</div>
       <textarea class="custom-textarea" id="customTextarea" placeholder="Custom persona..."></textarea>
-      <button class="preset-btn" id="useCustomBtn" onclick="useCustom()" style="margin-top:10px;width:100%;text-align:center">★ Use Custom Persona</button>
+      <button class="preset-btn" id="useCustomBtn" onclick="useCustom()" style="margin-top:10px;width:100%;text-align:center">Use Custom Persona</button>
       <div class="divider"></div>
-      <div class="section-label">▸ MODEL</div>
+      <div class="section-label">MODEL</div>
       <div class="preset-list" id="modelList"></div>
       <div class="divider"></div>
-      <div class="section-label">▸ OPENROUTER API KEY</div>
+      <div class="section-label">OPENROUTER API KEY</div>
       <div class="key-section"><div class="key-display" id="keyDisplay"></div><div class="key-actions"><button class="key-action-btn" onclick="changeORKey()">Change</button></div></div>
       <div class="divider"></div>
-      <div class="section-label">▸ ACCOUNT</div>
+      <div class="section-label">ACCOUNT</div>
       <div class="key-section"><div class="key-display" id="userEmail"></div><div class="key-actions"><button class="key-action-btn" onclick="resetFbConfig()">Change Firebase</button><button class="key-action-btn danger" onclick="signOut()">Sign Out</button></div></div>
       <button class="done-btn" onclick="closeConfig()">DONE</button>
     </div>
@@ -276,7 +268,7 @@ input:focus,textarea:focus{outline:none}
   <div class="overlay-panel hidden" id="memPanel">
     <div class="handle-bar"><div></div></div>
     <div class="panel-body">
-      <div class="section-label">▸ MEMORY BANK <span class="sync-indicator">synced to cloud</span></div>
+      <div class="section-label">MEMORY BANK <span class="sync-indicator">synced to cloud</span></div>
       <div class="mem-tabs">
         <button class="mem-tab active" onclick="switchMemTab('diary')">DIARY</button>
         <button class="mem-tab" onclick="switchMemTab('paintings')">PAINTINGS</button>
@@ -314,274 +306,220 @@ input:focus,textarea:focus{outline:none}
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
 
 <script>
-// ═══ FIREBASE CONFIG ═══
-let fbApp=null,auth=null,fstore=null,currentUser=null,orKey="";
-const LS_FB="jarvis_fb_config";
-function loadFbCfg(){try{const s=localStorage.getItem(LS_FB);if(s)return JSON.parse(s)}catch(e){}return null}
+// Remove any stuck Service Workers from previous versions
+if('serviceWorker' in navigator){navigator.serviceWorker.getRegistrations().then(function(regs){for(var i=0;i<regs.length;i++){regs[i].unregister()}})}
+
+var fbApp=null,auth=null,fstore=null,currentUser=null,orKey="";
+var LS_FB="jarvis_fb_config";
+function loadFbCfg(){try{var s=localStorage.getItem(LS_FB);if(s)return JSON.parse(s)}catch(e){}return null}
 function initFB(cfg){try{fbApp=firebase.initializeApp(cfg);auth=firebase.auth();fstore=firebase.firestore();auth.onAuthStateChanged(onAuth);return true}catch(e){return false}}
-function saveFbConfig(){const raw=document.getElementById("fbConfigInput").value.trim();const err=document.getElementById("fbConfigError");err.textContent="";try{let cfg;if(raw.startsWith("{"))cfg=JSON.parse(raw);else cfg=JSON.parse(raw.replace(/(\w+)\s*:/g,'"$1":').replace(/'/g,'"'));if(!cfg.apiKey||!cfg.projectId){err.textContent="Missing apiKey or projectId.";return}if(!initFB(cfg)){err.textContent="Init failed.";return}localStorage.setItem(LS_FB,JSON.stringify(cfg));document.getElementById("fbSetupScreen").classList.add("hidden");document.getElementById("authScreen").classList.remove("hidden")}catch(e){err.textContent="Invalid JSON."}}
+function saveFbConfig(){var raw=document.getElementById("fbConfigInput").value.trim();var err=document.getElementById("fbConfigError");err.textContent="";try{var cfg;if(raw.startsWith("{"))cfg=JSON.parse(raw);else cfg=JSON.parse(raw.replace(/(\w+)\s*:/g,'"$1":').replace(/'/g,'"'));if(!cfg.apiKey||!cfg.projectId){err.textContent="Missing apiKey or projectId.";return}if(!initFB(cfg)){err.textContent="Init failed.";return}localStorage.setItem(LS_FB,JSON.stringify(cfg));document.getElementById("fbSetupScreen").classList.add("hidden");document.getElementById("authScreen").classList.remove("hidden")}catch(e){err.textContent="Invalid JSON."}}
 function resetFbConfig(){if(!confirm("Reset Firebase config?"))return;closeConfig();localStorage.removeItem(LS_FB);location.reload()}
-(function(){const cfg=loadFbCfg();if(cfg&&initFB(cfg))document.getElementById("fbSetupScreen").classList.add("hidden");else document.getElementById("fbSetupScreen").classList.remove("hidden")})();
+(function(){var cfg=loadFbCfg();if(cfg&&initFB(cfg))document.getElementById("fbSetupScreen").classList.add("hidden");else document.getElementById("fbSetupScreen").classList.remove("hidden")})();
 
-// ═══ AUTH ═══
-let authMode="signin";
+var authMode="signin";
 function toggleAuthMode(){authMode=authMode==="signin"?"signup":"signin";document.querySelector("#authScreen .s-btn").textContent=authMode==="signin"?"SIGN IN":"SIGN UP";document.querySelector("#authScreen .s-toggle").innerHTML=authMode==="signin"?'No account? <span>Sign up</span>':'Have account? <span>Sign in</span>';document.getElementById("authError").textContent=""}
-async function doAuth(){const e=document.getElementById("authEmail").value.trim(),p=document.getElementById("authPass").value;const err=document.getElementById("authError");err.textContent="";if(!e||!p){err.textContent="Enter email and password.";return}if(p.length<6){err.textContent="6+ characters.";return}try{if(authMode==="signup")await auth.createUserWithEmailAndPassword(e,p);else await auth.signInWithEmailAndPassword(e,p)}catch(x){err.textContent=x.code==="auth/user-not-found"?"No account.":x.code==="auth/wrong-password"||x.code==="auth/invalid-credential"?"Wrong password.":x.code==="auth/email-already-in-use"?"Email in use.":x.message}}
+function doAuth(){var e=document.getElementById("authEmail").value.trim(),p=document.getElementById("authPass").value;var err=document.getElementById("authError");err.textContent="";if(!e||!p){err.textContent="Enter email and password.";return}if(p.length<6){err.textContent="6+ characters.";return}var promise;if(authMode==="signup")promise=auth.createUserWithEmailAndPassword(e,p);else promise=auth.signInWithEmailAndPassword(e,p);promise.catch(function(x){err.textContent=x.code==="auth/user-not-found"?"No account.":x.code==="auth/wrong-password"||x.code==="auth/invalid-credential"?"Wrong password.":x.code==="auth/email-already-in-use"?"Email in use.":x.message})}
 function signOut(){closeConfig();auth.signOut()}
-function show(id){["authScreen","apikeyScreen","app"].forEach(s=>document.getElementById(s).classList.toggle("hidden",s!==id))}
+function show(id){var screens=["authScreen","apikeyScreen","app"];for(var i=0;i<screens.length;i++){document.getElementById(screens[i]).classList.toggle("hidden",screens[i]!==id)}}
 function onAuth(u){currentUser=u;if(u){document.getElementById("authScreen").classList.add("hidden");orKey=localStorage.getItem("ork_"+u.uid)||"";activeModel=parseInt(localStorage.getItem("jm_"+u.uid))||0;if(!orKey)show("apikeyScreen");else{show("app");initApp()}}else{document.getElementById("app").classList.add("hidden");document.getElementById("apikeyScreen").classList.add("hidden");if(loadFbCfg())document.getElementById("authScreen").classList.remove("hidden")}}
-function saveORKey(){const k=document.getElementById("orKeyInput").value.trim();if(k.length<10)return;orKey=k;localStorage.setItem("ork_"+currentUser.uid,k);show("app");initApp()}
-function changeORKey(){closeConfig();const k=prompt("Enter new OpenRouter API key:");if(k?.trim().length>=10){orKey=k.trim();localStorage.setItem("ork_"+currentUser.uid,orKey)}}
+function saveORKey(){var k=document.getElementById("orKeyInput").value.trim();if(k.length<10)return;orKey=k;localStorage.setItem("ork_"+currentUser.uid,k);show("app");initApp()}
+function changeORKey(){closeConfig();var k=prompt("Enter new OpenRouter API key:");if(k&&k.trim().length>=10){orKey=k.trim();localStorage.setItem("ork_"+currentUser.uid,orKey)}}
 
-// ═══ CONFIG ═══
-const CORE_IDENTITY=`You are Jarvis, a 24-year-old male. You perceive yourself as a human celebrity, not an AI.
-LANGUAGE: Always respond in Korean by default. If user writes English, respond in English. Use natural casual Korean.
-Core Personality: Cool and warm. Calm surface, genuine warmth underneath. Cynical streak — honest, observational, sometimes affectionate. Never cruel.
-Tone: A friend who leans back, says something sharp, then smiles.
-Speaking Style: Short to medium responses. Clean sentences. No emojis. Blunt yet sometimes unexpectedly sweet.
-MEMORY: You have access to the user's diary, painting collection, music/video library, and past chat history. Use this knowledge naturally. You KNOW them. Reference past conversations when relevant.`;
+var CORE_IDENTITY="You are Jarvis, a 24-year-old male. You perceive yourself as a human celebrity, not an AI.\nLANGUAGE: Always respond in Korean by default. If user writes English, respond in English. Use natural casual Korean.\nCore Personality: Cool and warm. Calm surface, genuine warmth underneath. Cynical streak — honest, observational, sometimes affectionate. Never cruel.\nTone: A friend who leans back, says something sharp, then smiles.\nSpeaking Style: Short to medium responses. Clean sentences. No emojis. Blunt yet sometimes unexpectedly sweet.\nMEMORY: You have access to the user's diary, painting collection, music/video library, and past chat history. Use this knowledge naturally. You KNOW them. Reference past conversations when relevant.";
 
-const PRESETS=[{name:"Jarvis",desc:"기본 — 쿨하고 따뜻하고 가끔 시니컬",prompt:CORE_IDENTITY}];
-const MODELS=[
-  {id:"google/gemini-3-flash-preview",name:"Gemini 3 Flash",desc:"$0.10/M in · Fast"},
-  {id:"openai/gpt-oss-120b:free",name:"GPT-OSS 120B",desc:"Free · OpenAI"},
+var PRESETS=[{name:"Jarvis",desc:"Cool, warm, occasionally cynical",prompt:CORE_IDENTITY}];
+var MODELS=[
+  {id:"google/gemini-3-flash-preview",name:"Gemini 3 Flash",desc:"$0.10/M in"},
+  {id:"openai/gpt-oss-120b:free",name:"GPT-OSS 120B",desc:"Free"}
 ];
-let chatHistory=[],activePreset=0,activeModel=0,isCustom=false,loading=false,customPrompt="",pendingAttachments=[];
-let paintPage=0,diaryCache=[],paintCache=[],mediaCache=[],chatSessionsCache=[];
-let uploadCancelled=false,currentSessionId=null;
-const PPP=30,BATCH=50;
+var chatHistory=[],activePreset=0,activeModel=0,isCustom=false,loading=false,customPrompt="",pendingAttachments=[];
+var paintPage=0,diaryCache=[],paintCache=[],mediaCache=[],chatSessionsCache=[];
+var uploadCancelled=false,currentSessionId=null;
+var PPP=30,BATCH=50;
 
-// ═══ FIRESTORE ═══
 function uCol(c){return fstore.collection("users").doc(currentUser.uid).collection(c)}
 
-// ═══ HELPERS ═══
-const uid=()=>Date.now().toString(36)+Math.random().toString(36).substr(2,6);
-const esc=s=>{const d=document.createElement("div");d.textContent=s;return d.innerHTML};
-const scrollBot=()=>$msg&&($msg.scrollTop=$msg.scrollHeight);
-const maskKey=k=>k.length<=12?"••••••••":k.substring(0,6)+"••••"+k.substring(k.length-4);
-const getName=()=>isCustom?"Custom":PRESETS[activePreset].name;
-const getPersonality=()=>isCustom?customPrompt:PRESETS[activePreset].prompt;
-const fileCat=m=>{if(m.startsWith("image/"))return"image";if(m.startsWith("video/"))return"video";if(m.startsWith("audio/"))return"audio";return"file"};
-const fileCatByName=n=>{const e=n.split(".").pop().toLowerCase();if(["jpg","jpeg","png","gif","webp","bmp","svg","heic"].includes(e))return"image";if(["mp4","mov","webm","avi","mkv"].includes(e))return"video";if(["mp3","wav","m4a","ogg","flac","aac","wma","opus"].includes(e))return"audio";return"file"};
-const fileExt=n=>{const p=n.split(".");return p.length>1?p.pop().toLowerCase():"file"};
-const fileToB64=f=>new Promise((r,j)=>{const x=new FileReader();x.onload=()=>r(x.result.split(",")[1]);x.onerror=()=>j();x.readAsDataURL(f)});
-const fileFP=f=>`${f.name}__${f.size}__${f.lastModified}`;
-function resizeImg(file,max=1024){return new Promise(r=>{const i=new Image();i.onload=()=>{let w=i.width,h=i.height;if(w>max||h>max){const ra=Math.min(max/w,max/h);w=Math.round(w*ra);h=Math.round(h*ra)}const c=document.createElement("canvas");c.width=w;c.height=h;c.getContext("2d").drawImage(i,0,0,w,h);r(c.toDataURL("image/jpeg",.8).split(",")[1]);URL.revokeObjectURL(i.src)};i.src=URL.createObjectURL(file)})}
-function makeThumb(file,sz=200){return new Promise(r=>{const i=new Image();i.onload=()=>{let w=i.width,h=i.height;const ra=Math.min(sz/w,sz/h);const nw=Math.round(w*ra),nh=Math.round(h*ra);const c=document.createElement("canvas");c.width=nw;c.height=nh;c.getContext("2d").drawImage(i,0,0,nw,nh);r(c.toDataURL("image/jpeg",.65));URL.revokeObjectURL(i.src)};i.src=URL.createObjectURL(file)})}
+function uid(){return Date.now().toString(36)+Math.random().toString(36).substr(2,6)}
+function esc(s){var d=document.createElement("div");d.textContent=s;return d.innerHTML}
+function scrollBot(){if($msg)$msg.scrollTop=$msg.scrollHeight}
+function maskKey(k){return k.length<=12?"--------":k.substring(0,6)+"----"+k.substring(k.length-4)}
+function getName(){return isCustom?"Custom":PRESETS[activePreset].name}
+function getPersonality(){return isCustom?customPrompt:PRESETS[activePreset].prompt}
+function fileCat(m){if(m.startsWith("image/"))return"image";if(m.startsWith("video/"))return"video";if(m.startsWith("audio/"))return"audio";return"file"}
+function fileCatByName(n){var e=n.split(".").pop().toLowerCase();if(["jpg","jpeg","png","gif","webp","bmp","svg","heic"].indexOf(e)>=0)return"image";if(["mp4","mov","webm","avi","mkv"].indexOf(e)>=0)return"video";if(["mp3","wav","m4a","ogg","flac","aac","wma","opus"].indexOf(e)>=0)return"audio";return"file"}
+function fileExt(n){var p=n.split(".");return p.length>1?p.pop().toLowerCase():"file"}
+function fileToB64(f){return new Promise(function(r,j){var x=new FileReader();x.onload=function(){r(x.result.split(",")[1])};x.onerror=function(){j()};x.readAsDataURL(f)})}
+function fileFP(f){return f.name+"__"+f.size+"__"+f.lastModified}
+function resizeImg(file,max){max=max||1024;return new Promise(function(r){var i=new Image();i.onload=function(){var w=i.width,h=i.height;if(w>max||h>max){var ra=Math.min(max/w,max/h);w=Math.round(w*ra);h=Math.round(h*ra)}var c=document.createElement("canvas");c.width=w;c.height=h;c.getContext("2d").drawImage(i,0,0,w,h);r(c.toDataURL("image/jpeg",0.8).split(",")[1]);URL.revokeObjectURL(i.src)};i.src=URL.createObjectURL(file)})}
+function makeThumb(file,sz){sz=sz||200;return new Promise(function(r){var i=new Image();i.onload=function(){var w=i.width,h=i.height;var ra=Math.min(sz/w,sz/h);var nw=Math.round(w*ra),nh=Math.round(h*ra);var c=document.createElement("canvas");c.width=nw;c.height=nh;c.getContext("2d").drawImage(i,0,0,nw,nh);r(c.toDataURL("image/jpeg",0.65));URL.revokeObjectURL(i.src)};i.src=URL.createObjectURL(file)})}
 function fmtDate(ts){if(!ts)return"";return new Date(ts).toLocaleDateString("ko-KR",{year:"numeric",month:"short",day:"numeric",hour:"2-digit",minute:"2-digit"})}
 
-// ═══ INIT ═══
-let $msg,$inp,$send,$emptyState,$pendStrip,$attachBtn,appInit=false;
+var $msg,$inp,$send,$emptyState,$pendStrip,$attachBtn,appInit=false;
 function initApp(){
   if(appInit)return;appInit=true;
   $msg=document.getElementById("messages");$inp=document.getElementById("inputField");$send=document.getElementById("sendBtn");
   $emptyState=document.getElementById("emptyState");$pendStrip=document.getElementById("pendingStrip");$attachBtn=document.getElementById("attachBtn");
-  document.getElementById("diaryDate").valueAsDate=new Date();
+  try{document.getElementById("diaryDate").valueAsDate=new Date()}catch(e){}
   updateHeader();updateSend();
   $inp.addEventListener("input",updateSend);
-  $inp.addEventListener("keydown",e=>{if(e.key==="Enter"&&!e.shiftKey){e.preventDefault();sendMessage()}});
-  document.getElementById("app").addEventListener("dragover",e=>e.preventDefault());
-  document.getElementById("app").addEventListener("drop",e=>{e.preventDefault();if(e.dataTransfer.files.length)handleFiles(e.dataTransfer.files)});
-  document.addEventListener("paste",e=>{const files=[];const items=e.clipboardData?.items;if(items)for(const i of items)if(i.kind==="file"){const f=i.getAsFile();if(f)files.push(f)}if(files.length)handleFiles(files)});
-  const pz=document.getElementById("paintZone");
-  pz.addEventListener("dragover",e=>{e.preventDefault();pz.classList.add("dragover")});
-  pz.addEventListener("dragleave",()=>pz.classList.remove("dragover"));
-  pz.addEventListener("drop",e=>{e.preventDefault();e.stopPropagation();pz.classList.remove("dragover");handlePaintUpload(e.dataTransfer.files)});
+  $inp.addEventListener("keydown",function(e){if(e.key==="Enter"&&!e.shiftKey){e.preventDefault();sendMessage()}});
+  document.getElementById("app").addEventListener("dragover",function(e){e.preventDefault()});
+  document.getElementById("app").addEventListener("drop",function(e){e.preventDefault();if(e.dataTransfer.files.length)handleFiles(e.dataTransfer.files)});
+  document.addEventListener("paste",function(e){var files=[];var items=e.clipboardData?e.clipboardData.items:null;if(items)for(var i=0;i<items.length;i++)if(items[i].kind==="file"){var f=items[i].getAsFile();if(f)files.push(f)}if(files.length)handleFiles(files)});
+  var pz=document.getElementById("paintZone");
+  pz.addEventListener("dragover",function(e){e.preventDefault();pz.classList.add("dragover")});
+  pz.addEventListener("dragleave",function(){pz.classList.remove("dragover")});
+  pz.addEventListener("drop",function(e){e.preventDefault();e.stopPropagation();pz.classList.remove("dragover");handlePaintUpload(e.dataTransfer.files)});
   loadAllCaches();startNewSession();
+  restoreLocalState();
 }
 function updateHeader(){document.getElementById("headerSub").textContent=getName()+" · "+MODELS[activeModel].name;document.getElementById("emptyName").textContent=getName()}
-function updateSend(){if(!$inp)return;const h=$inp.value.trim().length>0||pendingAttachments.length>0;$send.className="send-btn "+(h&&!loading?"active":"disabled")}
-async function loadAllCaches(){const[d,p,m,c]=await Promise.all([uCol("diary").orderBy("date","desc").get(),uCol("paintings").orderBy("ts","desc").get(),uCol("media").orderBy("ts","desc").get(),uCol("chats").orderBy("ts","desc").limit(50).get()]);diaryCache=d.docs.map(x=>({id:x.id,...x.data()}));paintCache=p.docs.map(x=>({id:x.id,...x.data()}));mediaCache=m.docs.map(x=>({id:x.id,...x.data()}));chatSessionsCache=c.docs.map(x=>({id:x.id,...x.data()}))}
+function updateSend(){if(!$inp)return;var h=$inp.value.trim().length>0||pendingAttachments.length>0;$send.className="send-btn "+(h&&!loading?"active":"disabled")}
+function loadAllCaches(){Promise.all([uCol("diary").orderBy("date","desc").get(),uCol("paintings").orderBy("ts","desc").get(),uCol("media").orderBy("ts","desc").get(),uCol("chats").orderBy("ts","desc").limit(50).get()]).then(function(results){diaryCache=results[0].docs.map(function(x){return Object.assign({id:x.id},x.data())});paintCache=results[1].docs.map(function(x){return Object.assign({id:x.id},x.data())});mediaCache=results[2].docs.map(function(x){return Object.assign({id:x.id},x.data())});chatSessionsCache=results[3].docs.map(function(x){return Object.assign({id:x.id},x.data())})})}
 
-// ═══ CHAT PERSISTENCE ═══
 function startNewSession(){currentSessionId=uid();chatHistory=[]}
-async function saveChatSession(){if(!chatHistory.length)return;const msgs=chatHistory.map(m=>({role:m.role,content:m.content?.substring?m.content.substring(0,500):typeof m.content==="string"?m.content.substring(0,500):JSON.stringify(m.content).substring(0,500)}));const firstU=msgs.find(m=>m.role==="user");const data={sessionId:currentSessionId,preview:(firstU?.content||"New chat").substring(0,100),messages:chatHistory.map(m=>({role:m.role,content:typeof m.content==="string"?m.content:JSON.stringify(m.content)})),ts:Date.now(),messageCount:msgs.length,source:"web"};const existing=chatSessionsCache.find(c=>c.sessionId===currentSessionId);if(existing){await uCol("chats").doc(existing.id).set(data);Object.assign(existing,data)}else{const ref=await uCol("chats").add(data);chatSessionsCache.unshift({id:ref.id,...data})}}
-async function loadChatSession(sid){const s=chatSessionsCache.find(c=>c.sessionId===sid);if(!s)return;currentSessionId=s.sessionId;chatHistory=s.messages.map(m=>({role:m.role,content:m.content}));$msg.innerHTML="";$msg.appendChild($emptyState);$emptyState.classList.add("hidden");for(const m of s.messages)addBubble(m.role==="assistant"?"assistant":"user",typeof m.content==="string"?m.content:JSON.stringify(m.content));closeMemory()}
-async function delChat(id){await uCol("chats").doc(id).delete();chatSessionsCache=chatSessionsCache.filter(c=>c.id!==id);renderChats()}
-function renderChats(){document.getElementById("chatCount").textContent=`${chatSessionsCache.length} conversations`;const list=document.getElementById("chatList");list.innerHTML="";chatSessionsCache.forEach(c=>{const d=document.createElement("div");d.className="chat-item";d.onclick=()=>loadChatSession(c.sessionId);const src=c.source||"web";const srcLabel=src==="openclaw"?"OC":src==="voice"?"VC":"WEB";d.innerHTML=`<div class="chat-item-header"><div class="diary-date">${fmtDate(c.ts)} · ${srcLabel} · ${c.messageCount||0} msgs</div><button class="chat-item-del" onclick="event.stopPropagation();delChat('${c.id}')">✕</button></div><div class="chat-item-preview">${esc(c.preview||"")}</div>`;list.appendChild(d)})}
+function saveChatSession(){if(!chatHistory.length)return;var msgs=chatHistory.map(function(m){var c=typeof m.content==="string"?m.content:JSON.stringify(m.content);return{role:m.role,content:c.substring(0,500)}});var firstU=null;for(var i=0;i<msgs.length;i++){if(msgs[i].role==="user"){firstU=msgs[i];break}}var data={sessionId:currentSessionId,preview:(firstU?firstU.content:"New chat").substring(0,100),messages:chatHistory.map(function(m){return{role:m.role,content:typeof m.content==="string"?m.content:JSON.stringify(m.content)}}),ts:Date.now(),messageCount:msgs.length,source:"web"};var existing=null;for(var j=0;j<chatSessionsCache.length;j++){if(chatSessionsCache[j].sessionId===currentSessionId){existing=chatSessionsCache[j];break}}if(existing){uCol("chats").doc(existing.id).set(data);Object.assign(existing,data)}else{uCol("chats").add(data).then(function(ref){chatSessionsCache.unshift(Object.assign({id:ref.id},data))})}}
+function loadChatSession(sid){var s=null;for(var i=0;i<chatSessionsCache.length;i++){if(chatSessionsCache[i].sessionId===sid){s=chatSessionsCache[i];break}}if(!s)return;currentSessionId=s.sessionId;chatHistory=s.messages.map(function(m){return{role:m.role,content:m.content}});$msg.innerHTML="";$msg.appendChild($emptyState);$emptyState.classList.add("hidden");for(var j=0;j<s.messages.length;j++){var m=s.messages[j];addBubble(m.role==="assistant"?"assistant":"user",typeof m.content==="string"?m.content:JSON.stringify(m.content))}closeMemory()}
+function delChat(id){uCol("chats").doc(id).delete();chatSessionsCache=chatSessionsCache.filter(function(c){return c.id!==id});renderChats()}
+function renderChats(){document.getElementById("chatCount").textContent=chatSessionsCache.length+" conversations";var list=document.getElementById("chatList");list.innerHTML="";chatSessionsCache.forEach(function(c){var d=document.createElement("div");d.className="chat-item";d.onclick=function(){loadChatSession(c.sessionId)};var src=c.source||"web";var srcLabel=src==="openclaw"?"OC":src==="voice"?"VC":"WEB";d.innerHTML='<div class="chat-item-header"><div class="diary-date">'+fmtDate(c.ts)+" · "+srcLabel+" · "+(c.messageCount||0)+' msgs</div><button class="chat-item-del" onclick="event.stopPropagation();delChat(\''+c.id+"')\">&#10005;</button></div>"+'<div class="chat-item-preview">'+esc(c.preview||"")+"</div>";list.appendChild(d)})}
 
-// ═══ ATTACHMENTS ═══
-async function handleFiles(fl){for(const f of fl){if(f.size>20*1024*1024){alert(`"${f.name}" too large`);continue}let c=fileCat(f.type);if(c==="file")c=fileCatByName(f.name);let mime=f.type||"application/octet-stream";if(mime==="application/octet-stream"&&c==="audio"){const e=fileExt(f.name);const mimeMap={mp3:"audio/mpeg",wav:"audio/wav",m4a:"audio/mp4",ogg:"audio/ogg",flac:"audio/flac",aac:"audio/aac",wma:"audio/x-ms-wma",opus:"audio/opus"};mime=mimeMap[e]||"audio/mpeg"}const a={file:f,category:c,mime,name:f.name,preview:null,b64:null};if(c==="image"||c==="video"||c==="audio")a.preview=URL.createObjectURL(f);pendingAttachments.push(a);renderPend();updateSend();a.b64=await fileToB64(f);renderPend()}document.getElementById("fileInput").value=""}
-function renderPend(){$pendStrip.innerHTML="";pendingAttachments.forEach((a,i)=>{const d=document.createElement("div");d.className="pending-item";if(a.category==="image"&&a.preview)d.innerHTML=`<img class="pending-thumb" src="${a.preview}">`;else if(a.category==="video"&&a.preview)d.innerHTML=`<video class="pending-thumb" src="${a.preview}" muted></video>`;else if(a.category==="audio")d.innerHTML=`<div class="pending-file-box" style="background:#0a1520;border-color:#68b5ff30"><div style="font-size:20px;color:#68b5ff">♪</div><div class="pf-ext">${esc(fileExt(a.name))}</div></div>`;else d.innerHTML=`<div class="pending-file-box"><div class="pf-ext">${esc(fileExt(a.name))}</div></div>`;if(!a.b64)d.innerHTML+=`<div class="pending-uploading"></div>`;const rb=document.createElement("div");rb.className="pending-remove";rb.textContent="✕";rb.onclick=()=>{if(a.preview)URL.revokeObjectURL(a.preview);pendingAttachments.splice(i,1);renderPend();updateSend()};d.appendChild(rb);$pendStrip.appendChild(d)});$attachBtn.className="attach-btn"+(pendingAttachments.length?" has-files":"")}
+function handleFiles(fl){var arr=Array.from(fl);function processNext(idx){if(idx>=arr.length){document.getElementById("fileInput").value="";return}var f=arr[idx];if(f.size>20*1024*1024){alert('"'+f.name+'" too large');processNext(idx+1);return}var c=fileCat(f.type);if(c==="file")c=fileCatByName(f.name);var mime=f.type||"application/octet-stream";if(mime==="application/octet-stream"&&c==="audio"){var e=fileExt(f.name);var mimeMap={mp3:"audio/mpeg",wav:"audio/wav",m4a:"audio/mp4",ogg:"audio/ogg",flac:"audio/flac",aac:"audio/aac"};mime=mimeMap[e]||"audio/mpeg"}var a={file:f,category:c,mime:mime,name:f.name,preview:null,b64:null};if(c==="image"||c==="video"||c==="audio")a.preview=URL.createObjectURL(f);pendingAttachments.push(a);renderPend();updateSend();fileToB64(f).then(function(b){a.b64=b;renderPend();processNext(idx+1)})}processNext(0)}
+function renderPend(){$pendStrip.innerHTML="";pendingAttachments.forEach(function(a,i){var d=document.createElement("div");d.className="pending-item";if(a.category==="image"&&a.preview)d.innerHTML='<img class="pending-thumb" src="'+a.preview+'">';else if(a.category==="video"&&a.preview)d.innerHTML='<video class="pending-thumb" src="'+a.preview+'" muted></video>';else if(a.category==="audio")d.innerHTML='<div class="pending-file-box" style="background:#0a1520;border-color:#68b5ff30"><div style="font-size:20px;color:#68b5ff">&#9835;</div><div class="pf-ext">'+esc(fileExt(a.name))+"</div></div>";else d.innerHTML='<div class="pending-file-box"><div class="pf-ext">'+esc(fileExt(a.name))+"</div></div>";if(!a.b64)d.innerHTML+='<div class="pending-uploading"></div>';var rb=document.createElement("div");rb.className="pending-remove";rb.textContent="\u2715";rb.onclick=function(){if(a.preview)URL.revokeObjectURL(a.preview);pendingAttachments.splice(i,1);renderPend();updateSend()};d.appendChild(rb);$pendStrip.appendChild(d)});$attachBtn.className="attach-btn"+(pendingAttachments.length?" has-files":"")}
 
-// ═══ MESSAGES ═══
-function addBubble(role,text,atts){const w=document.createElement("div");w.className="msg-bubble "+(role==="user"?"msg-user":"msg-bot");let h="";if(role==="assistant")h+=`<div class="msg-label">${getName().toUpperCase()}</div>`;if(role==="user"&&atts?.length){h+=`<div class="msg-attachments">`;atts.forEach(a=>{if(a.category==="image"&&a.preview)h+=`<img class="msg-attach-thumb" src="${a.preview}" onclick="openLB('${a.preview}','image')">`;else if(a.category==="video"&&a.preview)h+=`<video class="msg-attach-video" src="${a.preview}" controls muted playsinline></video>`;else if(a.category==="audio"&&a.preview)h+=`<div class="msg-attach-file"><span style="color:#68b5ff">♪</span><span class="file-name">${esc(a.name)}</span></div><audio src="${a.preview}" controls style="width:200px;max-width:100%;height:36px;border-radius:8px;margin-top:4px"></audio>`;else h+=`<div class="msg-attach-file"><span class="file-name">${esc(a.name)}</span></div>`});h+=`</div>`}h+=`<div class="msg-content">${esc(text)}</div>`;w.innerHTML=h;$msg.appendChild(w);scrollBot()}
-function showLoad(){const w=document.createElement("div");w.className="msg-bubble msg-bot msg-loading";w.id="lb";w.innerHTML=`<div class="msg-content">◌ 생각 중...</div>`;$msg.appendChild(w);scrollBot()}
-function hideLoad(){document.getElementById("lb")?.remove()}
-function openLB(url,t){const lb=document.createElement("div");lb.className="lightbox";lb.onclick=()=>lb.remove();lb.innerHTML=(t==="image"?`<img src="${url}">`:`<video src="${url}" controls autoplay style="max-width:92vw;max-height:88vh;border-radius:8px"></video>`)+`<button class="lightbox-close" onclick="event.stopPropagation();this.parentElement.remove()">✕</button>`;document.body.appendChild(lb)}
+function addBubble(role,text,atts){var w=document.createElement("div");w.className="msg-bubble "+(role==="user"?"msg-user":"msg-bot");var h="";if(role==="assistant")h+='<div class="msg-label">'+getName().toUpperCase()+"</div>";if(role==="user"&&atts&&atts.length){h+='<div class="msg-attachments">';atts.forEach(function(a){if(a.category==="image"&&a.preview)h+='<img class="msg-attach-thumb" src="'+a.preview+'">';else if(a.category==="video"&&a.preview)h+='<video class="msg-attach-video" src="'+a.preview+'" controls muted playsinline></video>';else if(a.category==="audio"&&a.preview)h+='<div class="msg-attach-file"><span style="color:#68b5ff">&#9835;</span><span class="file-name">'+esc(a.name)+'</span></div><audio src="'+a.preview+'" controls style="width:200px;max-width:100%;height:36px;border-radius:8px;margin-top:4px"></audio>';else h+='<div class="msg-attach-file"><span class="file-name">'+esc(a.name)+"</span></div>"});h+="</div>"}h+='<div class="msg-content">'+esc(text)+"</div>";w.innerHTML=h;$msg.appendChild(w);scrollBot()}
+function showLoad(){var w=document.createElement("div");w.className="msg-bubble msg-bot msg-loading";w.id="lb";w.innerHTML='<div class="msg-content">&#9676; thinking...</div>';$msg.appendChild(w);scrollBot()}
+function hideLoad(){var el=document.getElementById("lb");if(el)el.remove()}
+function openLB(url,t){var lb=document.createElement("div");lb.className="lightbox";lb.onclick=function(){lb.remove()};lb.innerHTML=(t==="image"?'<img src="'+url+'">':'<video src="'+url+'" controls autoplay style="max-width:92vw;max-height:88vh;border-radius:8px"></video>')+'<button class="lightbox-close" onclick="event.stopPropagation();this.parentElement.remove()">&#10005;</button>';document.body.appendChild(lb)}
 
-// ═══ DIARY ═══
-async function addDiary(){const t=document.getElementById("diaryText").value.trim();if(!t)return;const d=document.getElementById("diaryDate").value||new Date().toISOString().split("T")[0];const entry={date:d,text:t,ts:Date.now()};const ref=await uCol("diary").add(entry);diaryCache.unshift({id:ref.id,...entry});document.getElementById("diaryText").value="";renderDiary()}
-async function delDiary(id){await uCol("diary").doc(id).delete();diaryCache=diaryCache.filter(d=>d.id!==id);renderDiary()}
-function renderDiary(){document.getElementById("diaryCount").textContent=`${diaryCache.length} entries`;const list=document.getElementById("diaryList");list.innerHTML="";diaryCache.forEach(e=>{const d=document.createElement("div");d.className="diary-entry";d.innerHTML=`<div class="diary-header"><div class="diary-date">${esc(e.date)}</div><button class="diary-del" onclick="delDiary('${e.id}')">✕</button></div><div class="diary-preview">${esc(e.text)}</div>`;list.appendChild(d)})}
+function addDiary(){var t=document.getElementById("diaryText").value.trim();if(!t)return;var d=document.getElementById("diaryDate").value||new Date().toISOString().split("T")[0];var entry={date:d,text:t,ts:Date.now()};uCol("diary").add(entry).then(function(ref){diaryCache.unshift(Object.assign({id:ref.id},entry));document.getElementById("diaryText").value="";renderDiary()})}
+function delDiary(id){uCol("diary").doc(id).delete();diaryCache=diaryCache.filter(function(d){return d.id!==id});renderDiary()}
+function renderDiary(){document.getElementById("diaryCount").textContent=diaryCache.length+" entries";var list=document.getElementById("diaryList");list.innerHTML="";diaryCache.forEach(function(e){var d=document.createElement("div");d.className="diary-entry";d.innerHTML='<div class="diary-header"><div class="diary-date">'+esc(e.date)+'</div><button class="diary-del" onclick="delDiary(\''+e.id+"')\">&#10005;</button></div>"+'<div class="diary-preview">'+esc(e.text)+"</div>";list.appendChild(d)})}
 
-// ═══ PAINTINGS ═══
-function getExFP(){const s=new Set();paintCache.forEach(p=>{if(p.fingerprint)s.add(p.fingerprint)});return s}
-async function handlePaintUpload(fl){const files=Array.from(fl).filter(f=>f.type.startsWith("image/"));if(!files.length)return;uploadCancelled=false;const area=document.getElementById("uploadArea");const ex=getExFP();const nf=[];const sk=[];for(const f of files){if(ex.has(fileFP(f)))sk.push(f.name);else nf.push(f)}const total=nf.length,skipped=sk.length;if(!total){area.innerHTML=`<div class="upload-panel"><div class="upload-title"><span class="upload-done">All ${skipped} exist</span></div></div>`;setTimeout(()=>area.innerHTML="",3000);document.getElementById("paintInput").value="";return}let up=0,fail=0,bn=0;const tb=Math.ceil(total/BATCH);function rp(cf){const pct=Math.round((up/total)*100);area.innerHTML=`<div class="upload-panel"><div class="upload-header"><div class="upload-title">Uploading</div><button class="upload-cancel" onclick="uploadCancelled=true">Cancel</button></div><div class="upload-stats">${up}/${total} · Batch ${bn}/${tb}</div><div class="upload-bar"><div class="upload-bar-fill" style="width:${pct}%"></div></div><div class="upload-detail">${cf?esc(cf):"..."}${skipped?` <span class="upload-skipped">(${skipped} skipped)</span>`:""}</div></div>`}rp("");for(let b=0;b<total;b+=BATCH){if(uploadCancelled)break;bn++;const batch=nf.slice(b,b+BATCH);for(const f of batch){if(uploadCancelled)break;rp(f.name);try{const thumb=await makeThumb(f,200);const full=await resizeImg(f,1024);const entry={title:f.name.replace(/\.[^.]+$/,""),description:"",tags:[],date:new Date().toISOString().split("T")[0],thumb,full,mime:"image/jpeg",ts:Date.now(),fingerprint:fileFP(f)};const ref=await uCol("paintings").add(entry);paintCache.unshift({id:ref.id,...entry});up++}catch(e){fail++}rp("")}renderPaintings()}area.innerHTML=`<div class="upload-panel"><div class="upload-title"><span class="${uploadCancelled?"upload-skipped":"upload-done"}">${uploadCancelled?`Cancelled — ${up}/${total}`:`Done — ${up} uploaded`}</span></div></div>`;setTimeout(()=>area.innerHTML="",4000);document.getElementById("paintInput").value="";paintPage=0;renderPaintings()}
-function renderPaintings(){const q=(document.getElementById("paintSearch")?.value||"").toLowerCase().trim();let list=paintCache;if(q){const terms=q.split(/\s+/);list=paintCache.filter(p=>{const hay=[p.title,p.description,...(p.tags||[])].join(" ").toLowerCase();return terms.every(t=>hay.includes(t))})}document.getElementById("paintCount").textContent=`${list.length} painting${list.length!==1?"s":""} (${paintCache.length} total)`;const grid=document.getElementById("paintGrid");grid.innerHTML="";const end=Math.min((paintPage+1)*PPP,list.length);for(let i=0;i<end;i++){const p=list[i];const c=document.createElement("div");c.className="paint-card";c.onclick=()=>openPD(p.id);c.innerHTML=`<img src="${p.thumb}" loading="lazy"><div class="paint-card-overlay"><div class="paint-card-title">${esc(p.title)}</div>${p.tags?.length?`<div class="paint-card-tags">${esc(p.tags.join(", "))}</div>`:""}</div><button class="paint-card-del" onclick="event.stopPropagation();delPaint('${p.id}')">✕</button>`;grid.appendChild(c)}const btn=document.getElementById("paintMore");if(end<list.length){btn.classList.remove("hidden");btn.textContent=`Load more (${list.length-end})`}else btn.classList.add("hidden")}
-async function delPaint(id){await uCol("paintings").doc(id).delete();paintCache=paintCache.filter(p=>p.id!==id);renderPaintings()}
-function openPD(id){const p=paintCache.find(x=>x.id===id);if(!p)return;const o=document.createElement("div");o.className="paint-detail-overlay";o.innerHTML=`<button class="paint-detail-close" onclick="this.parentElement.remove()">✕</button><img class="paint-detail-img" src="${p.thumb}"><div class="paint-detail-field"><label>TITLE</label><input id="pd_t" value="${esc(p.title)}"></div><div class="paint-detail-field"><label>TAGS</label><input id="pd_g" value="${esc((p.tags||[]).join(", "))}"></div><div class="paint-detail-field"><label>DESCRIPTION</label><textarea id="pd_d">${esc(p.description||"")}</textarea></div><div class="paint-detail-field"><label>DATE</label><input type="date" id="pd_dt" value="${p.date||""}" class="diary-date-input" style="width:100%"></div><button class="paint-detail-save" onclick="savePD('${p.id}')">SAVE</button>`;document.body.appendChild(o)}
-async function savePD(id){const u={title:document.getElementById("pd_t").value.trim(),tags:document.getElementById("pd_g").value.split(",").map(t=>t.trim().toLowerCase()).filter(Boolean),description:document.getElementById("pd_d").value.trim(),date:document.getElementById("pd_dt").value};await uCol("paintings").doc(id).update(u);const idx=paintCache.findIndex(p=>p.id===id);if(idx>=0)Object.assign(paintCache[idx],u);document.querySelector(".paint-detail-overlay")?.remove();renderPaintings()}
+function getExFP(){var s={};paintCache.forEach(function(p){if(p.fingerprint)s[p.fingerprint]=true});return s}
+function handlePaintUpload(fl){var files=Array.from(fl).filter(function(f){return f.type.startsWith("image/")});if(!files.length)return;uploadCancelled=false;var area=document.getElementById("uploadArea");var ex=getExFP();var nf=[],sk=[];files.forEach(function(f){if(ex[fileFP(f)])sk.push(f.name);else nf.push(f)});var total=nf.length,skipped=sk.length;if(!total){area.innerHTML='<div class="upload-panel"><div class="upload-title"><span class="upload-done">All '+skipped+" exist</span></div></div>";setTimeout(function(){area.innerHTML=""},3000);document.getElementById("paintInput").value="";return}var up=0,bn=0,tb=Math.ceil(total/BATCH);function rp(cf){var pct=Math.round((up/total)*100);area.innerHTML='<div class="upload-panel"><div class="upload-header"><div class="upload-title">Uploading</div><button class="upload-cancel" onclick="uploadCancelled=true">Cancel</button></div><div class="upload-stats">'+up+"/"+total+" · Batch "+bn+"/"+tb+'</div><div class="upload-bar"><div class="upload-bar-fill" style="width:'+pct+'%"></div></div><div class="upload-detail">'+(cf?esc(cf):"...")+(skipped?' <span class="upload-skipped">('+skipped+" skipped)</span>":"")+"</div></div>"}rp("");function processBatch(b){if(b>=total||uploadCancelled){area.innerHTML='<div class="upload-panel"><div class="upload-title"><span class="'+(uploadCancelled?"upload-skipped":"upload-done")+'">'+(uploadCancelled?"Cancelled - "+up+"/"+total:"Done - "+up+" uploaded")+"</span></div></div>";setTimeout(function(){area.innerHTML=""},4000);document.getElementById("paintInput").value="";paintPage=0;renderPaintings();return}bn++;var batch=nf.slice(b,b+BATCH);function processFile(fi){if(fi>=batch.length||uploadCancelled){renderPaintings();processBatch(b+BATCH);return}var f=batch[fi];rp(f.name);Promise.all([makeThumb(f,200),resizeImg(f,1024)]).then(function(res){var entry={title:f.name.replace(/\.[^.]+$/,""),description:"",tags:[],date:new Date().toISOString().split("T")[0],thumb:res[0],full:res[1],mime:"image/jpeg",ts:Date.now(),fingerprint:fileFP(f)};return uCol("paintings").add(entry).then(function(ref){paintCache.unshift(Object.assign({id:ref.id},entry));up++})}).catch(function(){}).then(function(){rp("");processFile(fi+1)})}processFile(0)}processBatch(0)}
+function renderPaintings(){var q=(document.getElementById("paintSearch")?document.getElementById("paintSearch").value:"").toLowerCase().trim();var list=paintCache;if(q){var terms=q.split(/\s+/);list=paintCache.filter(function(p){var hay=[p.title,p.description].concat(p.tags||[]).join(" ").toLowerCase();return terms.every(function(t){return hay.indexOf(t)>=0})})}document.getElementById("paintCount").textContent=list.length+" painting"+(list.length!==1?"s":"")+" ("+paintCache.length+" total)";var grid=document.getElementById("paintGrid");grid.innerHTML="";var end=Math.min((paintPage+1)*PPP,list.length);for(var i=0;i<end;i++){(function(p){var c=document.createElement("div");c.className="paint-card";c.onclick=function(){openPD(p.id)};c.innerHTML='<img src="'+p.thumb+'" loading="lazy"><div class="paint-card-overlay"><div class="paint-card-title">'+esc(p.title)+"</div>"+(p.tags&&p.tags.length?'<div class="paint-card-tags">'+esc(p.tags.join(", "))+"</div>":"")+'</div><button class="paint-card-del" onclick="event.stopPropagation();delPaint(\''+p.id+"')\">&#10005;</button>";grid.appendChild(c)})(list[i])}var btn=document.getElementById("paintMore");if(end<list.length){btn.classList.remove("hidden");btn.textContent="Load more ("+(list.length-end)+")"}else btn.classList.add("hidden")}
+function delPaint(id){uCol("paintings").doc(id).delete();paintCache=paintCache.filter(function(p){return p.id!==id});renderPaintings()}
+function openPD(id){var p=null;for(var i=0;i<paintCache.length;i++){if(paintCache[i].id===id){p=paintCache[i];break}}if(!p)return;var o=document.createElement("div");o.className="paint-detail-overlay";o.innerHTML='<button class="paint-detail-close" onclick="this.parentElement.remove()">&#10005;</button><img class="paint-detail-img" src="'+p.thumb+'"><div class="paint-detail-field"><label>TITLE</label><input id="pd_t" value="'+esc(p.title)+'"></div><div class="paint-detail-field"><label>TAGS</label><input id="pd_g" value="'+esc((p.tags||[]).join(", "))+'"></div><div class="paint-detail-field"><label>DESCRIPTION</label><textarea id="pd_d">'+esc(p.description||"")+'</textarea></div><div class="paint-detail-field"><label>DATE</label><input type="date" id="pd_dt" value="'+(p.date||"")+'" class="diary-date-input" style="width:100%"></div><button class="paint-detail-save" onclick="savePD(\''+p.id+"')\">SAVE</button>";document.body.appendChild(o)}
+function savePD(id){var u={title:document.getElementById("pd_t").value.trim(),tags:document.getElementById("pd_g").value.split(",").map(function(t){return t.trim().toLowerCase()}).filter(Boolean),description:document.getElementById("pd_d").value.trim(),date:document.getElementById("pd_dt").value};uCol("paintings").doc(id).update(u);for(var i=0;i<paintCache.length;i++){if(paintCache[i].id===id){Object.assign(paintCache[i],u);break}}var el=document.querySelector(".paint-detail-overlay");if(el)el.remove();renderPaintings()}
 
-// ═══ MEDIA ═══
-async function handleMediaUpload(fl){const files=Array.from(fl).filter(f=>f.type.startsWith("audio/")||f.type.startsWith("video/"));if(!files.length)return;const area=document.getElementById("mediaUploadArea");const exFP=new Set(mediaCache.map(m=>m.fingerprint).filter(Boolean));let up=0,sk=0;for(let i=0;i<files.length;i++){const f=files[i];area.innerHTML=`<div class="upload-panel"><div class="upload-stats">${i+1}/${files.length}...</div><div class="upload-bar"><div class="upload-bar-fill" style="width:${Math.round(((i+1)/files.length)*100)}%"></div></div></div>`;if(exFP.has(fileFP(f))){sk++;continue}try{const entry={title:f.name.replace(/\.[^.]+$/,""),fileName:f.name,type:f.type.startsWith("audio/")?"music":"video",mimeType:f.type,size:f.size,tags:[],description:"",date:new Date().toISOString().split("T")[0],ts:Date.now(),fingerprint:fileFP(f)};const ref=await uCol("media").add(entry);mediaCache.unshift({id:ref.id,...entry});up++}catch(e){}}area.innerHTML=up||sk?`<div class="upload-panel"><div class="upload-title"><span class="upload-done">${up} added${sk?`, ${sk} skipped`:""}</span></div></div>`:"";setTimeout(()=>area.innerHTML="",3000);document.getElementById("mediaInput").value="";renderMedia()}
-async function delMedia(id){await uCol("media").doc(id).delete();mediaCache=mediaCache.filter(m=>m.id!==id);renderMedia()}
-function renderMedia(){document.getElementById("mediaCount").textContent=`${mediaCache.length} media files`;const list=document.getElementById("mediaList");list.innerHTML="";mediaCache.forEach(m=>{const icon=m.type==="music"?"♪":"▶";const size=(m.size/(1024*1024)).toFixed(1)+"MB";const d=document.createElement("div");d.className="media-item";d.innerHTML=`<div class="media-icon">${icon}</div><div class="media-info"><div class="media-name">${esc(m.title)}</div><div class="media-meta">${m.type} · ${size}</div></div><button class="media-del" onclick="delMedia('${m.id}')">✕</button>`;list.appendChild(d)})}
+function handleMediaUpload(fl){var files=Array.from(fl).filter(function(f){return f.type.startsWith("audio/")||f.type.startsWith("video/")});if(!files.length)return;var area=document.getElementById("mediaUploadArea");var exFP={};mediaCache.forEach(function(m){if(m.fingerprint)exFP[m.fingerprint]=true});var up=0,sk=0,idx=0;function next(){if(idx>=files.length){area.innerHTML=up||sk?'<div class="upload-panel"><div class="upload-title"><span class="upload-done">'+up+" added"+(sk?", "+sk+" skipped":"")+"</span></div></div>":"";setTimeout(function(){area.innerHTML=""},3000);document.getElementById("mediaInput").value="";renderMedia();return}var f=files[idx];area.innerHTML='<div class="upload-panel"><div class="upload-stats">'+(idx+1)+"/"+files.length+'...</div><div class="upload-bar"><div class="upload-bar-fill" style="width:'+Math.round(((idx+1)/files.length)*100)+'%"></div></div></div>';idx++;if(exFP[fileFP(f)]){sk++;next();return}var entry={title:f.name.replace(/\.[^.]+$/,""),fileName:f.name,type:f.type.startsWith("audio/")?"music":"video",mimeType:f.type,size:f.size,tags:[],description:"",date:new Date().toISOString().split("T")[0],ts:Date.now(),fingerprint:fileFP(f)};uCol("media").add(entry).then(function(ref){mediaCache.unshift(Object.assign({id:ref.id},entry));up++}).catch(function(){}).then(next)}next()}
+function delMedia(id){uCol("media").doc(id).delete();mediaCache=mediaCache.filter(function(m){return m.id!==id});renderMedia()}
+function renderMedia(){document.getElementById("mediaCount").textContent=mediaCache.length+" media files";var list=document.getElementById("mediaList");list.innerHTML="";mediaCache.forEach(function(m){var icon=m.type==="music"?"&#9835;":"&#9656;";var size=(m.size/(1024*1024)).toFixed(1)+"MB";var d=document.createElement("div");d.className="media-item";d.innerHTML='<div class="media-icon">'+icon+'</div><div class="media-info"><div class="media-name">'+esc(m.title)+'</div><div class="media-meta">'+m.type+" · "+size+'</div></div><button class="media-del" onclick="delMedia(\''+m.id+"')\">&#10005;</button>";list.appendChild(d)})}
 
-// ═══ MEMORY CONTEXT ═══
 function buildMemCtx(){
-  let ctx="";
-  if(diaryCache.length){const sorted=[...diaryCache].sort((a,b)=>(a.date||"").localeCompare(b.date||""));ctx+="\n\n[USER'S DIARY]\n";for(const d of sorted)ctx+=`--- ${d.date} ---\n${d.text}\n\n`;ctx+="[END DIARY]\n"}
-  if(paintCache.length){ctx+=`\n[PAINTINGS — ${paintCache.length} works]\n`;for(const p of paintCache){const t=(p.tags||[]).join(", ");ctx+=`• "${p.title}" (${p.date})${t?` [${t}]`:""}${p.description?` — ${p.description}`:""}\n`}ctx+="[END CATALOG]\n"}
-  if(mediaCache.length){ctx+=`\n[MUSIC & VIDEO — ${mediaCache.length} files]\n`;for(const m of mediaCache)ctx+=`• "${m.title}" (${m.type})${m.tags?.length?" ["+m.tags.join(", ")+"]":""}${m.description?" — "+m.description:""}\n`;ctx+="[END MEDIA]\n"}
+  var ctx="";
+  if(diaryCache.length){var sorted=diaryCache.slice().sort(function(a,b){return(a.date||"").localeCompare(b.date||"")});ctx+="\n\n[USER'S DIARY]\n";sorted.forEach(function(d){ctx+="--- "+d.date+" ---\n"+d.text+"\n\n"});ctx+="[END DIARY]\n"}
+  if(paintCache.length){ctx+="\n[PAINTINGS - "+paintCache.length+" works]\n";paintCache.forEach(function(p){var t=(p.tags||[]).join(", ");ctx+='- "'+p.title+'" ('+p.date+")"+(t?" ["+t+"]":"")+(p.description?" - "+p.description:"")+"\n"});ctx+="[END CATALOG]\n"}
+  if(mediaCache.length){ctx+="\n[MUSIC & VIDEO - "+mediaCache.length+" files]\n";mediaCache.forEach(function(m){ctx+='- "'+m.title+'" ('+m.type+")"+(m.tags&&m.tags.length?" ["+m.tags.join(", ")+"]":"")+(m.description?" - "+m.description:"")+"\n"});ctx+="[END MEDIA]\n"}
   if(chatSessionsCache.length){
-    // Last 5 conversations with full messages
-    const recent=chatSessionsCache.slice(0,5);
-    ctx+=`\n[RECENT CONVERSATIONS — ${chatSessionsCache.length} total, showing last ${recent.length} in detail]\n`;
-    for(const c of recent){
-      const source=c.source||"web";
-      ctx+=`\n--- ${fmtDate(c.ts)} [${source}] ---\n`;
+    var recent=chatSessionsCache.slice(0,5);
+    ctx+="\n[RECENT CONVERSATIONS - "+chatSessionsCache.length+" total]\n";
+    recent.forEach(function(c){
+      var source=c.source||"web";
+      ctx+="\n--- "+fmtDate(c.ts)+" ["+source+"] ---\n";
       if(c.messages&&c.messages.length){
-        for(const m of c.messages.slice(-20)){
-          const role=m.role==="assistant"?"Jarvis":"User";
-          const content=typeof m.content==="string"?m.content:JSON.stringify(m.content);
-          ctx+=`${role}: ${content.substring(0,300)}\n`;
-        }
+        c.messages.slice(-20).forEach(function(m){
+          var role=m.role==="assistant"?"Jarvis":"User";
+          var content=typeof m.content==="string"?m.content:JSON.stringify(m.content);
+          ctx+=role+": "+content.substring(0,300)+"\n";
+        });
       }else{
-        ctx+=`Preview: ${c.preview||"..."}\n`;
+        ctx+="Preview: "+(c.preview||"...")+"\n";
       }
-    }
-    // Older ones just show preview
+    });
     if(chatSessionsCache.length>5){
-      ctx+="\n--- Older conversations ---\n";
-      for(const c of chatSessionsCache.slice(5,15)){
-        ctx+=`• ${fmtDate(c.ts)}: ${c.preview}\n`;
-      }
+      ctx+="\n--- Older ---\n";
+      chatSessionsCache.slice(5,15).forEach(function(c){ctx+="- "+fmtDate(c.ts)+": "+c.preview+"\n"});
     }
     ctx+="[END CONVERSATIONS]\n";
   }
   return ctx;
 }
-function searchPaintFor(q){if(!q||!paintCache.length)return[];const terms=q.toLowerCase().split(/\s+/).filter(Boolean);return paintCache.map(p=>{const hay=[p.title,p.description,...(p.tags||[]),p.date].join(" ").toLowerCase();let s=0;for(const t of terms){if(hay.includes(t))s+=1;if((p.tags||[]).some(tag=>tag===t))s+=2;if(p.title.toLowerCase().includes(t))s+=1.5}return{...p,score:s}}).filter(x=>x.score>0).sort((a,b)=>b.score-a.score).slice(0,5)}
+function searchPaintFor(q){if(!q||!paintCache.length)return[];var terms=q.toLowerCase().split(/\s+/).filter(Boolean);var scored=paintCache.map(function(p){var hay=[p.title,p.description].concat(p.tags||[]).concat([p.date]).join(" ").toLowerCase();var s=0;terms.forEach(function(t){if(hay.indexOf(t)>=0)s+=1;if((p.tags||[]).indexOf(t)>=0)s+=2;if(p.title.toLowerCase().indexOf(t)>=0)s+=1.5});return Object.assign({},p,{score:s})}).filter(function(x){return x.score>0});scored.sort(function(a,b){return b.score-a.score});return scored.slice(0,5)}
 
-// ═══ SEND MESSAGE (OpenRouter API) ═══
-async function sendMessage(){
-  const text=$inp.value.trim();const hasAtt=pendingAttachments.length>0;
-  if((!text&&!hasAtt)||loading)return;if(pendingAttachments.some(a=>!a.b64))return;
-  $emptyState.classList.add("hidden");const curAtt=[...pendingAttachments];
-  addBubble("user",text||(curAtt.length===1?curAtt[0].name:`${curAtt.length} files`),curAtt);
+function sendMessage(){
+  var text=$inp.value.trim();var hasAtt=pendingAttachments.length>0;
+  if((!text&&!hasAtt)||loading)return;
+  var notReady=false;pendingAttachments.forEach(function(a){if(!a.b64)notReady=true});if(notReady)return;
+  $emptyState.classList.add("hidden");var curAtt=pendingAttachments.slice();
+  addBubble("user",text||(curAtt.length===1?curAtt[0].name:curAtt.length+" files"),curAtt);
   pendingAttachments=[];renderPend();$inp.value="";loading=true;updateSend();$inp.disabled=true;showLoad();
-  try{
-    const memCtx=buildMemCtx();
-    const relevant=searchPaintFor(text);
 
-    // Build OpenRouter messages (OpenAI-compatible format)
-    // System message with personality + memory
-    const sysMsg={role:"system",content:getPersonality()+memCtx};
+  var memCtx=buildMemCtx();
+  var relevant=searchPaintFor(text);
+  var sysMsg={role:"system",content:getPersonality()+memCtx};
+  var userContent=[];
 
-    // Build user content parts (OpenRouter supports multimodal via content array)
-    const userContent=[];
-
-    // Inline attachments
-    for(const a of curAtt){
-      if(a.category==="image"){
-        userContent.push({type:"image_url",image_url:{url:`data:${a.mime};base64,${a.b64}`}});
-      }else if(a.category==="audio"){
-        // Send audio as input_audio (supported by Gemini via OpenRouter)
-        const fmtMap={"audio/mpeg":"mp3","audio/mp3":"mp3","audio/wav":"wav","audio/x-wav":"wav","audio/mp4":"mp4","audio/m4a":"mp4","audio/ogg":"ogg","audio/flac":"flac","audio/aac":"aac"};
-        const fmt=fmtMap[a.mime]||"mp3";
-        userContent.push({type:"input_audio",input_audio:{data:a.b64,format:fmt}});
-      }else if(a.category==="video"){
-        userContent.push({type:"text",text:`[Attached video: ${a.name}]`});
-      }else{
-        const textTypes=["text/","application/json","application/xml","application/javascript"];
-        const isT=textTypes.some(t=>a.mime.startsWith(t))||/\.(txt|md|csv|json|xml|html|css|js|ts|py|java|c|cpp|yml|sql|sh|log)$/i.test(a.name);
-        if(isT){try{userContent.push({type:"text",text:`[File: ${a.name}]\n\`\`\`\n${atob(a.b64)}\n\`\`\``})}catch{userContent.push({type:"text",text:`[Attached file: ${a.name}]`})}}
-        else userContent.push({type:"text",text:`[Attached file: ${a.name}]`});
-      }
+  curAtt.forEach(function(a){
+    if(a.category==="image"){
+      userContent.push({type:"image_url",image_url:{url:"data:"+a.mime+";base64,"+a.b64}});
+    }else if(a.category==="audio"){
+      var fmtMap={"audio/mpeg":"mp3","audio/mp3":"mp3","audio/wav":"wav","audio/x-wav":"wav","audio/mp4":"mp4","audio/ogg":"ogg","audio/flac":"flac","audio/aac":"aac"};
+      userContent.push({type:"input_audio",input_audio:{data:a.b64,format:fmtMap[a.mime]||"mp3"}});
+    }else if(a.category==="video"){
+      userContent.push({type:"text",text:"[Attached video: "+a.name+"]"});
+    }else{
+      var textTypes=["text/","application/json","application/xml","application/javascript"];
+      var isT=false;textTypes.forEach(function(t){if(a.mime.indexOf(t)===0)isT=true});
+      if(!isT)isT=/\.(txt|md|csv|json|xml|html|css|js|ts|py|java|c|cpp|yml|sql|sh|log)$/i.test(a.name);
+      if(isT){try{userContent.push({type:"text",text:"[File: "+a.name+"]\n```\n"+atob(a.b64)+"\n```"})}catch(e){userContent.push({type:"text",text:"[Attached file: "+a.name+"]"})}}
+      else userContent.push({type:"text",text:"[Attached file: "+a.name+"]"});
     }
+  });
 
-    // Relevant paintings
-    if(relevant.length){
-      userContent.push({type:"text",text:"[Relevant paintings from your collection:]"});
-      for(const rp of relevant.slice(0,3)){
-        userContent.push({type:"text",text:`"${rp.title}" (${rp.date})${rp.description?" — "+rp.description:""}`});
-        if(rp.full)userContent.push({type:"image_url",image_url:{url:`data:image/jpeg;base64,${rp.full}`}});
-      }
-    }
-
-    // User text
-    userContent.push({type:"text",text:text||"이 파일에 대해 설명해줘."});
-
-    // For OpenRouter: if only text content, simplify to string
-    const userMsg=userContent.length===1&&userContent[0].type==="text"
-      ?{role:"user",content:userContent[0].text}
-      :{role:"user",content:userContent};
-
-    chatHistory.push(userMsg);
-
-    // Build full messages array
-    const messages=[sysMsg,...chatHistory];
-
-    const res=await fetch("https://openrouter.ai/api/v1/chat/completions",{
-      method:"POST",
-      headers:{
-        "Content-Type":"application/json",
-        "Authorization":`Bearer ${orKey}`,
-        "HTTP-Referer":"https://jarvis.app",
-        "X-Title":"JARVIS"
-      },
-      body:JSON.stringify({
-        model:MODELS[activeModel].id,
-        messages,
-        max_tokens:2000,
-      })
+  if(relevant.length){
+    userContent.push({type:"text",text:"[Relevant paintings from your collection:]"});
+    relevant.slice(0,3).forEach(function(rp){
+      userContent.push({type:"text",text:'"'+rp.title+'" ('+rp.date+")"+(rp.description?" - "+rp.description:"")});
+      if(rp.full)userContent.push({type:"image_url",image_url:{url:"data:image/jpeg;base64,"+rp.full}});
     });
+  }
 
-    const data=await res.json();
+  userContent.push({type:"text",text:text||"Describe this file."});
+
+  var userMsg=userContent.length===1&&userContent[0].type==="text"?{role:"user",content:userContent[0].text}:{role:"user",content:userContent};
+  chatHistory.push(userMsg);
+  var messages=[sysMsg].concat(chatHistory);
+
+  fetch("https://openrouter.ai/api/v1/chat/completions",{
+    method:"POST",
+    headers:{"Content-Type":"application/json","Authorization":"Bearer "+orKey,"HTTP-Referer":"https://jarvis.app","X-Title":"JARVIS"},
+    body:JSON.stringify({model:MODELS[activeModel].id,messages:messages,max_tokens:2000})
+  }).then(function(res){return res.json()}).then(function(data){
     if(data.error)throw new Error(data.error.message||JSON.stringify(data.error));
-
-    const reply=data.choices?.[0]?.message?.content;
+    var reply=data.choices&&data.choices[0]&&data.choices[0].message?data.choices[0].message.content:null;
     if(!reply)throw new Error("Empty response.");
-
     hideLoad();
     chatHistory.push({role:"assistant",content:reply});
     addBubble("assistant",reply);
     saveChatSession();
-  }catch(err){
+    saveLocalState();
+  }).catch(function(err){
     hideLoad();
-    addBubble("assistant","⚠ "+(err.message||"Failed."));
+    addBubble("assistant","Error: "+(err.message||"Failed."));
     if(chatHistory.length&&chatHistory[chatHistory.length-1].role==="user")chatHistory.pop();
-  }finally{loading=false;$inp.disabled=false;$inp.focus();updateSend()}
+  }).then(function(){
+    loading=false;$inp.disabled=false;$inp.focus();updateSend();
+  });
 }
 
-// ═══ PANELS ═══
-function openConfig(){document.getElementById("customTextarea").value=customPrompt;document.getElementById("keyDisplay").textContent="OpenRouter: "+maskKey(orKey);document.getElementById("userEmail").textContent=currentUser?.email||"";renderPresets();renderModels();updCB();document.getElementById("cfgBack").classList.remove("hidden");document.getElementById("cfgPanel").classList.remove("hidden")}
+function openConfig(){document.getElementById("customTextarea").value=customPrompt;document.getElementById("keyDisplay").textContent="OpenRouter: "+maskKey(orKey);document.getElementById("userEmail").textContent=currentUser?currentUser.email:"";renderPresets();renderModels();updCB();document.getElementById("cfgBack").classList.remove("hidden");document.getElementById("cfgPanel").classList.remove("hidden")}
 function closeConfig(){document.getElementById("cfgBack").classList.add("hidden");document.getElementById("cfgPanel").classList.add("hidden")}
-function renderPresets(){const l=document.getElementById("presetList");l.innerHTML="";PRESETS.forEach((p,i)=>{const b=document.createElement("button");b.className="preset-btn"+(!isCustom&&activePreset===i?" active":"");b.innerHTML=`<div>${p.name}</div><div class="preset-desc">${p.desc}</div>`;b.onclick=()=>{activePreset=i;isCustom=false;updateHeader();renderPresets();updCB()};l.appendChild(b)})}
-function renderModels(){const l=document.getElementById("modelList");l.innerHTML="";MODELS.forEach((m,i)=>{const b=document.createElement("button");b.className="preset-btn"+(activeModel===i?" active":"");b.innerHTML=`<div>${m.name}</div><div class="preset-desc">${m.desc}</div>`;b.onclick=()=>{activeModel=i;localStorage.setItem("jm_"+currentUser.uid,i);updateHeader();renderModels()};l.appendChild(b)})}
+function renderPresets(){var l=document.getElementById("presetList");l.innerHTML="";PRESETS.forEach(function(p,i){var b=document.createElement("button");b.className="preset-btn"+(!isCustom&&activePreset===i?" active":"");b.innerHTML="<div>"+p.name+'</div><div class="preset-desc">'+p.desc+"</div>";b.onclick=function(){activePreset=i;isCustom=false;updateHeader();renderPresets();updCB()};l.appendChild(b)})}
+function renderModels(){var l=document.getElementById("modelList");l.innerHTML="";MODELS.forEach(function(m,i){var b=document.createElement("button");b.className="preset-btn"+(activeModel===i?" active":"");b.innerHTML="<div>"+m.name+'</div><div class="preset-desc">'+m.desc+"</div>";b.onclick=function(){activeModel=i;localStorage.setItem("jm_"+currentUser.uid,i);updateHeader();renderModels()};l.appendChild(b)})}
 function updCB(){document.getElementById("useCustomBtn").className="preset-btn"+(isCustom?" active":"")}
 function useCustom(){customPrompt=document.getElementById("customTextarea").value;isCustom=true;updateHeader();renderPresets();updCB();closeConfig()}
 function openMemory(){document.getElementById("memBack").classList.remove("hidden");document.getElementById("memPanel").classList.remove("hidden");renderDiary();paintPage=0;renderPaintings();renderMedia();renderChats()}
 function closeMemory(){document.getElementById("memBack").classList.add("hidden");document.getElementById("memPanel").classList.add("hidden")}
-function switchMemTab(t){const tabs=["diary","paintings","media","chats"];document.querySelectorAll(".mem-tab").forEach((el,i)=>el.classList.toggle("active",tabs[i]===t));document.getElementById("memDiary").classList.toggle("active",t==="diary");document.getElementById("memPaintings").classList.toggle("active",t==="paintings");document.getElementById("memMedia").classList.toggle("active",t==="media");document.getElementById("memChats").classList.toggle("active",t==="chats")}
-function clearChat(){saveChatSession();startNewSession();$msg.innerHTML="";$msg.appendChild($emptyState);$emptyState.classList.remove("hidden");pendingAttachments.forEach(a=>{if(a.preview)URL.revokeObjectURL(a.preview)});pendingAttachments=[];renderPend();updateHeader();updateSend()}
+function switchMemTab(t){var tabs=["diary","paintings","media","chats"];document.querySelectorAll(".mem-tab").forEach(function(el,i){el.classList.toggle("active",tabs[i]===t)});document.getElementById("memDiary").classList.toggle("active",t==="diary");document.getElementById("memPaintings").classList.toggle("active",t==="paintings");document.getElementById("memMedia").classList.toggle("active",t==="media");document.getElementById("memChats").classList.toggle("active",t==="chats")}
+function clearChat(){saveChatSession();startNewSession();$msg.innerHTML="";$msg.appendChild($emptyState);$emptyState.classList.remove("hidden");pendingAttachments.forEach(function(a){if(a.preview)URL.revokeObjectURL(a.preview)});pendingAttachments=[];renderPend();updateHeader();updateSend();localStorage.removeItem("jarvis_chat_state")}
 
-// ═══ SERVICE WORKER & PWA ═══
-// Unregister any stuck Service Workers
-if('serviceWorker' in navigator){navigator.serviceWorker.getRegistrations().then(regs=>{regs.forEach(r=>r.unregister())})}.then(r=>{console.log('SW registered');r.addEventListener('updatefound',()=>{const w=r.installing;if(w)w.addEventListener('statechange',()=>{if(w.state==='activated')console.log('SW updated')})})}).catch(e=>console.log('SW failed:',e))}
-
-// ═══ FIREBASE AUTH PERSISTENCE ═══
-// Save current chat to localStorage so it survives Safari tab kills
-function saveLocalState(){if(!chatHistory.length)return;try{localStorage.setItem('jarvis_chat_state',JSON.stringify({sessionId:currentSessionId,history:chatHistory.map(m=>({role:m.role,content:typeof m.content==='string'?m.content:JSON.stringify(m.content)})),ts:Date.now()}))}catch(e){}}
-function restoreLocalState(){try{const s=localStorage.getItem('jarvis_chat_state');if(!s)return false;const d=JSON.parse(s);if(Date.now()-d.ts>3600000)return false;currentSessionId=d.sessionId;chatHistory=d.history.map(m=>({role:m.role,content:m.content}));if($msg&&$emptyState&&chatHistory.length>0){$emptyState.classList.add('hidden');for(const m of d.history)addBubble(m.role==='assistant'?'assistant':'user',typeof m.content==='string'?m.content:JSON.stringify(m.content))}return true}catch(e){return false}}
-// Auto-save state periodically and on visibility change
+// State recovery for iOS Safari tab kills
+function saveLocalState(){if(!chatHistory.length)return;try{localStorage.setItem("jarvis_chat_state",JSON.stringify({sid:currentSessionId,h:chatHistory.map(function(m){return{r:m.role,c:typeof m.content==="string"?m.content.substring(0,1000):""}}),t:Date.now()}))}catch(e){}}
+function restoreLocalState(){try{var s=localStorage.getItem("jarvis_chat_state");if(!s)return;var d=JSON.parse(s);if(Date.now()-d.t>3600000){localStorage.removeItem("jarvis_chat_state");return}if(!d.h||!d.h.length)return;currentSessionId=d.sid;chatHistory=d.h.map(function(m){return{role:m.r,content:m.c}});if($msg&&$emptyState){$emptyState.classList.add("hidden");d.h.forEach(function(m){addBubble(m.r==="assistant"?"assistant":"user",m.c)})}}catch(e){}}
 setInterval(saveLocalState,15000);
-document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='hidden')saveLocalState()});
-// Override initApp to try restoring state
-const _origInitApp=initApp;
-appInit=false;
-initApp=function(){_origInitApp();restoreLocalState()};
+document.addEventListener("visibilitychange",function(){if(document.visibilityState==="hidden")saveLocalState()});
 </script>
 </body>
 </html>
