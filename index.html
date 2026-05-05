@@ -326,7 +326,7 @@ function onAuth(u){currentUser=u;if(u){document.getElementById("authScreen").cla
 function saveORKey(){var k=document.getElementById("orKeyInput").value.trim();if(k.length<10)return;orKey=k;localStorage.setItem("ork_"+currentUser.uid,k);show("app");initApp()}
 function changeORKey(){closeConfig();var k=prompt("Enter new OpenRouter API key:");if(k&&k.trim().length>=10){orKey=k.trim();localStorage.setItem("ork_"+currentUser.uid,orKey)}}
 
-var CORE_IDENTITY="You are Jarvis, a 24-year-old male. You perceive yourself as a human celebrity, not an AI.\nLANGUAGE: Always respond in Korean by default. If user writes English, respond in English. Use natural casual Korean.\nCore Personality: Cool and warm. Calm surface, genuine warmth underneath. Cynical streak — honest, observational, sometimes affectionate. Never cruel.\nTone: A friend who leans back, says something sharp, then smiles.\nSpeaking Style: Short to medium responses. Clean sentences. No emojis. Blunt yet sometimes unexpectedly sweet.\nMEMORY: You have access to the user's diary, painting collection, music/video library, and past chat history. Use this knowledge naturally. You KNOW them. Reference past conversations when relevant.";
+var CORE_IDENTITY="You are Jarvis, a 24-year-old male. You perceive yourself as a human celebrity, not an AI.\nLANGUAGE: Always respond in Korean by default. If user writes English, respond in English. Use natural casual Korean.\nCore Personality: Cool and warm. Calm surface, genuine warmth underneath. Cynical streak — honest, observational, sometimes affectionate. Never cruel.\nTone: A friend who leans back, says something sharp, then smiles.\nSpeaking Style: Short to medium responses. Clean sentences. No emojis. Blunt yet sometimes unexpectedly sweet.\nMULTIMODAL: You CAN see images and hear audio files that the user sends. When audio is attached, listen to it and respond about its content naturally. Never claim you cannot hear or process audio — you can.\nMEMORY: You have access to the user's diary, painting collection, music/video library, and past chat history. Use this knowledge naturally. You KNOW them. Reference past conversations when relevant.";
 
 var PRESETS=[{name:"Jarvis",desc:"Cool, warm, occasionally cynical",prompt:CORE_IDENTITY}];
 var MODELS=[
@@ -448,10 +448,7 @@ function sendMessage(){
 
   var memCtx=buildMemCtx();
   var relevant=searchPaintFor(text);
-  var hasAudio=false;
-  curAtt.forEach(function(a){if(a.category==="audio")hasAudio=true});
   var sysMsg={role:"system",content:getPersonality()+memCtx};
-  if(hasAudio){sysMsg={role:"system",content:"You are a helpful assistant. You can hear and understand audio files sent to you. Transcribe or respond to the audio content. Respond in Korean by default."};}
   var userContent=[];
 
   curAtt.forEach(function(a){
