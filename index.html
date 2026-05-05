@@ -455,7 +455,7 @@ function sendMessage(){
     if(a.category==="image"){
       userContent.push({type:"image_url",image_url:{url:"data:"+a.mime+";base64,"+a.b64}});
     }else if(a.category==="audio"){
-      var fmtMap={"audio/mpeg":"mp3","audio/mp3":"mp3","audio/wav":"wav","audio/x-wav":"wav","audio/mp4":"mp4","audio/ogg":"ogg","audio/flac":"flac","audio/aac":"aac"};
+      var fmtMap={"audio/mpeg":"mp3","audio/mp3":"mp3","audio/wav":"wav","audio/x-wav":"wav","audio/vnd.wave":"wav","audio/wave":"wav","audio/mp4":"mp4","audio/m4a":"m4a","audio/x-m4a":"m4a","audio/ogg":"ogg","audio/flac":"flac","audio/x-flac":"flac","audio/aac":"aac","audio/webm":"wav","audio/opus":"ogg"};
       var audioFmt=fmtMap[a.mime]||"mp3";
       console.log("[JARVIS] Audio attach:",a.mime,"->",audioFmt,"b64 len:",a.b64?a.b64.length:0);
       userContent.push({type:"input_audio",input_audio:{data:a.b64,format:audioFmt}});
