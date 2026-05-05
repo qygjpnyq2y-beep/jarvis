@@ -176,6 +176,27 @@ input:focus,textarea:focus{outline:none}
 .lightbox-close{position:absolute;top:max(16px,env(safe-area-inset-top));right:16px;width:40px;height:40px;border-radius:50%;background:#ffffff15;border:none;color:#fff;font-size:20px;cursor:pointer;display:flex;align-items:center;justify-content:center}
 .sync-indicator{font-size:9px;color:#68b5ff60;letter-spacing:.5px}
 .hidden{display:none !important}
+
+/* ===== NOTIFICATION SETTINGS ===== */
+.notif-section{margin-top:4px}
+.notif-status{display:flex;align-items:center;gap:10px;padding:12px 14px;background:#060e15;border:1px solid #112030;border-radius:10px;margin-bottom:10px}
+.notif-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+.notif-dot.on{background:#40ff80}
+.notif-dot.off{background:#ff6060}
+.notif-dot.default{background:#3a5a70}
+.notif-status-text{font-size:12px;color:#5a7a90;flex:1}
+.notif-enable-btn{padding:10px 16px;background:#68b5ff;border:none;border-radius:8px;color:#000;font-family:'Space Mono',monospace;font-weight:700;font-size:11px;cursor:pointer;white-space:nowrap}
+.notif-enable-btn:active{transform:scale(.97)}
+.notif-enable-btn.secondary{background:transparent;border:1px solid #112030;color:#3a5a70}
+.notif-toggle-row{display:flex;align-items:center;justify-content:space-between;padding:12px 14px;background:#060e15;border:1px solid #112030;border-radius:10px;margin-bottom:8px}
+.notif-toggle-label{font-size:12px;color:#a0c4dd}
+.notif-toggle-desc{font-size:10px;color:#3a5a70;margin-top:2px}
+.notif-toggle{position:relative;width:44px;height:24px;flex-shrink:0}
+.notif-toggle input{opacity:0;width:0;height:0}
+.notif-toggle .slider{position:absolute;inset:0;background:#1a2a35;border-radius:12px;cursor:pointer;transition:all .2s}
+.notif-toggle .slider::before{content:'';position:absolute;width:18px;height:18px;left:3px;top:3px;background:#3a5a70;border-radius:50%;transition:all .2s}
+.notif-toggle input:checked+.slider{background:#68b5ff30}
+.notif-toggle input:checked+.slider::before{transform:translateX(20px);background:#68b5ff}
 </style>
 </head>
 <body>
@@ -255,6 +276,9 @@ input:focus,textarea:focus{outline:none}
       <div class="section-label">MODEL</div>
       <div class="preset-list" id="modelList"></div>
       <div class="divider"></div>
+      <div class="section-label">NOTIFICATIONS</div>
+      <div class="notif-section" id="notifSection"></div>
+      <div class="divider"></div>
       <div class="section-label">OPENROUTER API KEY</div>
       <div class="key-section"><div class="key-display" id="keyDisplay"></div><div class="key-actions"><button class="key-action-btn" onclick="changeORKey()">Change</button></div></div>
       <div class="divider"></div>
@@ -304,16 +328,31 @@ input:focus,textarea:focus{outline:none}
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-messaging-compat.js"></script>
 
 <script>
-// Remove any stuck Service Workers from previous versions
-if('serviceWorker' in navigator){navigator.serviceWorker.getRegistrations().then(function(regs){for(var i=0;i<regs.length;i++){regs[i].unregister()}})}
+// ===== SERVICE WORKER: Keep FCM SW, remove others =====
+if('serviceWorker' in navigator){
+  navigator.serviceWorker.getRegistrations().then(function(regs){
+    for(var i=0;i<regs.length;i++){
+      // Only unregister non-FCM service workers
+      if(regs[i].active && regs[i].active.scriptURL && regs[i].active.scriptURL.indexOf('firebase-messaging-sw.js')===-1){
+        regs[i].unregister();
+      }
+    }
+  });
+}
 
-var fbApp=null,auth=null,fstore=null,currentUser=null,orKey="";
+var VAPID_KEY="BBIUA4HAkibFF2uU84nT8Gm-XrHJVcn7F9i0YU2X7Jj0ABd4E7jxnyWcWh99gteXG1R2HSaGjN5P-GB0b33cJO8";
+
+var fbApp=null,auth=null,fstore=null,currentUser=null,orKey="",fcmMessaging=null;
 var R2_WORKER="https://jarvis-r2.willow8769.workers.dev";
 var LS_FB="jarvis_fb_config";
 function loadFbCfg(){try{var s=localStorage.getItem(LS_FB);if(s)return JSON.parse(s)}catch(e){}return null}
-function initFB(cfg){try{fbApp=firebase.initializeApp(cfg);auth=firebase.auth();fstore=firebase.firestore();auth.onAuthStateChanged(onAuth);return true}catch(e){return false}}
+function initFB(cfg){try{fbApp=firebase.initializeApp(cfg);auth=firebase.auth();fstore=firebase.firestore();
+  // Initialize FCM
+  try{fcmMessaging=firebase.messaging()}catch(e){console.warn("[JARVIS] FCM init skipped:",e)}
+  auth.onAuthStateChanged(onAuth);return true}catch(e){return false}}
 function saveFbConfig(){var raw=document.getElementById("fbConfigInput").value.trim();var err=document.getElementById("fbConfigError");err.textContent="";try{var cfg;if(raw.startsWith("{"))cfg=JSON.parse(raw);else cfg=JSON.parse(raw.replace(/(\w+)\s*:/g,'"$1":').replace(/'/g,'"'));if(!cfg.apiKey||!cfg.projectId){err.textContent="Missing apiKey or projectId.";return}if(!initFB(cfg)){err.textContent="Init failed.";return}localStorage.setItem(LS_FB,JSON.stringify(cfg));document.getElementById("fbSetupScreen").classList.add("hidden");document.getElementById("authScreen").classList.remove("hidden")}catch(e){err.textContent="Invalid JSON."}}
 function resetFbConfig(){if(!confirm("Reset Firebase config?"))return;closeConfig();localStorage.removeItem(LS_FB);location.reload()}
 (function(){var cfg=loadFbCfg();if(cfg&&initFB(cfg))document.getElementById("fbSetupScreen").classList.add("hidden");else document.getElementById("fbSetupScreen").classList.remove("hidden")})();
@@ -326,6 +365,177 @@ function show(id){var screens=["authScreen","apikeyScreen","app"];for(var i=0;i<
 function onAuth(u){currentUser=u;if(u){document.getElementById("authScreen").classList.add("hidden");orKey=localStorage.getItem("ork_"+u.uid)||"";activeModel=parseInt(localStorage.getItem("jm_"+u.uid))||0;if(!orKey)show("apikeyScreen");else{show("app");initApp()}}else{document.getElementById("app").classList.add("hidden");document.getElementById("apikeyScreen").classList.add("hidden");if(loadFbCfg())document.getElementById("authScreen").classList.remove("hidden")}}
 function saveORKey(){var k=document.getElementById("orKeyInput").value.trim();if(k.length<10)return;orKey=k;localStorage.setItem("ork_"+currentUser.uid,k);show("app");initApp()}
 function changeORKey(){closeConfig();var k=prompt("Enter new OpenRouter API key:");if(k&&k.trim().length>=10){orKey=k.trim();localStorage.setItem("ork_"+currentUser.uid,orKey)}}
+
+// ===== FCM PUSH NOTIFICATION SYSTEM =====
+var notifSettings={inactivity:true,diary_reminder:true,weekly_summary:true};
+var fcmToken=null;
+
+function registerFCMServiceWorker(){
+  if(!('serviceWorker' in navigator)||!fcmMessaging)return Promise.reject('No SW support or FCM');
+  return navigator.serviceWorker.register('/firebase-messaging-sw.js').then(function(reg){
+    console.log('[JARVIS] FCM SW registered, scope:',reg.scope);
+    // Send Firebase config to SW
+    var cfg=loadFbCfg();
+    if(cfg&&reg.active){
+      reg.active.postMessage({type:'FIREBASE_CONFIG',config:cfg});
+    }
+    // Also send config when SW activates
+    reg.addEventListener('updatefound',function(){
+      var newWorker=reg.installing;
+      if(newWorker){
+        newWorker.addEventListener('statechange',function(){
+          if(newWorker.state==='activated'&&cfg){
+            newWorker.postMessage({type:'FIREBASE_CONFIG',config:cfg});
+          }
+        });
+      }
+    });
+    return reg;
+  });
+}
+
+function requestNotifPermission(){
+  if(!('Notification' in window)){
+    console.warn('[JARVIS] Notifications not supported');
+    return;
+  }
+  Notification.requestPermission().then(function(perm){
+    console.log('[JARVIS] Notification permission:',perm);
+    if(perm==='granted'){
+      getFCMToken();
+    }
+    renderNotifUI();
+  });
+}
+
+function getFCMToken(){
+  if(!fcmMessaging)return;
+  registerFCMServiceWorker().then(function(reg){
+    return fcmMessaging.getToken({
+      vapidKey:VAPID_KEY,
+      serviceWorkerRegistration:reg
+    });
+  }).then(function(token){
+    if(token){
+      fcmToken=token;
+      console.log('[JARVIS] FCM token:',token.substring(0,20)+'...');
+      saveFCMToken(token);
+    }else{
+      console.warn('[JARVIS] No FCM token received');
+    }
+  }).catch(function(err){
+    console.error('[JARVIS] FCM token error:',err);
+  });
+}
+
+function saveFCMToken(token){
+  if(!currentUser)return;
+  // Save token + notification settings to Firestore
+  fstore.collection("users").doc(currentUser.uid).set({
+    fcmTokens:firebase.firestore.FieldValue.arrayUnion(token),
+    fcmUpdatedAt:Date.now(),
+    notifSettings:notifSettings
+  },{merge:true}).then(function(){
+    console.log('[JARVIS] FCM token saved to Firestore');
+  }).catch(function(e){
+    console.error('[JARVIS] FCM token save error:',e);
+  });
+}
+
+function loadNotifSettings(){
+  if(!currentUser)return;
+  fstore.collection("users").doc(currentUser.uid).get().then(function(doc){
+    if(doc.exists&&doc.data().notifSettings){
+      notifSettings=Object.assign(notifSettings,doc.data().notifSettings);
+    }
+    renderNotifUI();
+  }).catch(function(){renderNotifUI()});
+}
+
+function saveNotifSettings(){
+  if(!currentUser)return;
+  fstore.collection("users").doc(currentUser.uid).set({
+    notifSettings:notifSettings
+  },{merge:true});
+}
+
+function toggleNotifSetting(key){
+  notifSettings[key]=!notifSettings[key];
+  saveNotifSettings();
+  renderNotifUI();
+}
+
+function renderNotifUI(){
+  var sec=document.getElementById("notifSection");
+  if(!sec)return;
+  
+  var perm='Notification' in window?Notification.permission:'unsupported';
+  var html='';
+  
+  if(perm==='unsupported'){
+    html+='<div class="notif-status"><div class="notif-dot off"></div><div class="notif-status-text">Push notifications not supported in this browser.</div></div>';
+  }else if(perm==='default'){
+    html+='<div class="notif-status"><div class="notif-dot default"></div><div class="notif-status-text">Push notifications are not enabled.</div><button class="notif-enable-btn" onclick="requestNotifPermission()">Enable</button></div>';
+  }else if(perm==='denied'){
+    html+='<div class="notif-status"><div class="notif-dot off"></div><div class="notif-status-text">Notifications blocked. Please enable in browser settings.</div></div>';
+  }else if(perm==='granted'){
+    html+='<div class="notif-status"><div class="notif-dot on"></div><div class="notif-status-text">Push notifications active'+(fcmToken?' · token synced':'')+'</div></div>';
+    
+    // Toggle options
+    html+='<div class="notif-toggle-row"><div><div class="notif-toggle-label">Inactivity Reminder</div><div class="notif-toggle-desc">Remind me if I haven\'t chatted in a while</div></div><label class="notif-toggle"><input type="checkbox" '+(notifSettings.inactivity?'checked':'')+' onchange="toggleNotifSetting(\'inactivity\')"><span class="slider"></span></label></div>';
+    
+    html+='<div class="notif-toggle-row"><div><div class="notif-toggle-label">Diary Reminder</div><div class="notif-toggle-desc">Daily reminder to write a diary entry</div></div><label class="notif-toggle"><input type="checkbox" '+(notifSettings.diary_reminder?'checked':'')+' onchange="toggleNotifSetting(\'diary_reminder\')"><span class="slider"></span></label></div>';
+    
+    html+='<div class="notif-toggle-row"><div><div class="notif-toggle-label">Weekly Summary</div><div class="notif-toggle-desc">Weekly recap of your activity</div></div><label class="notif-toggle"><input type="checkbox" '+(notifSettings.weekly_summary?'checked':'')+' onchange="toggleNotifSetting(\'weekly_summary\')"><span class="slider"></span></label></div>';
+    
+    html+='<button class="notif-enable-btn secondary" style="width:100%;margin-top:8px" onclick="testNotification()">Send Test Notification</button>';
+  }
+  
+  sec.innerHTML=html;
+}
+
+function testNotification(){
+  if(Notification.permission==='granted'){
+    new Notification('JARVIS',{
+      body:'Push notifications are working!',
+      icon:'/favicon.ico',
+      tag:'jarvis-test'
+    });
+  }
+}
+
+function initFCM(){
+  if(!fcmMessaging)return;
+  // Load saved settings
+  loadNotifSettings();
+  
+  // If permission already granted, get token
+  if('Notification' in window&&Notification.permission==='granted'){
+    getFCMToken();
+  }
+  
+  // Listen for foreground messages
+  try{
+    fcmMessaging.onMessage(function(payload){
+      console.log('[JARVIS] Foreground message:',payload);
+      var title=payload.notification?payload.notification.title:'JARVIS';
+      var body=payload.notification?payload.notification.body:'';
+      // Show in-app notification (don't use browser Notification for foreground)
+      showInAppNotif(title,body);
+    });
+  }catch(e){console.warn('[JARVIS] onMessage setup failed:',e)}
+}
+
+function showInAppNotif(title,body){
+  var el=document.createElement('div');
+  el.style.cssText='position:fixed;top:max(16px,env(safe-area-inset-top));left:16px;right:16px;padding:14px 16px;background:#0a1a28;border:1px solid #68b5ff30;border-radius:12px;z-index:200;animation:float-in .3s;cursor:pointer';
+  el.innerHTML='<div style="font-size:11px;color:#68b5ff;font-weight:700;margin-bottom:4px">'+esc(title)+'</div><div style="font-size:12px;color:#a0c4dd;line-height:1.4">'+esc(body)+'</div>';
+  el.onclick=function(){el.remove()};
+  document.body.appendChild(el);
+  setTimeout(function(){if(el.parentNode)el.remove()},5000);
+}
+
+// ===== END FCM SYSTEM =====
 
 var CORE_IDENTITY="You are Jarvis, a 24-year-old male. You perceive yourself as a human celebrity, not an AI.\nLANGUAGE: Always respond in Korean by default. If user writes English, respond in English. Use natural casual Korean.\nCore Personality: Cool and warm. Calm surface, genuine warmth underneath. Cynical streak — honest, observational, sometimes affectionate. Never cruel.\nTone: A friend who leans back, says something sharp, then smiles.\nSpeaking Style: Short to medium responses. Clean sentences. No emojis. Blunt yet sometimes unexpectedly sweet.\nMULTIMODAL: You CAN see images and hear audio files that the user sends. When audio is attached, listen to it and respond about its content naturally. Never claim you cannot hear or process audio — you can.\nMEMORY: You have access to the user's diary, painting collection, music/video library, and past chat history. Use this knowledge naturally. You KNOW them. Reference past conversations when relevant.";
 
@@ -374,6 +584,8 @@ function initApp(){
   pz.addEventListener("drop",function(e){e.preventDefault();e.stopPropagation();pz.classList.remove("dragover");handlePaintUpload(e.dataTransfer.files)});
   loadAllCaches();startNewSession();
   restoreLocalState();
+  // Initialize FCM after app is ready
+  initFCM();
 }
 function updateHeader(){document.getElementById("headerSub").textContent=getName()+" · "+MODELS[activeModel].name;document.getElementById("emptyName").textContent=getName()}
 function updateSend(){if(!$inp)return;var h=$inp.value.trim().length>0||pendingAttachments.length>0;$send.className="send-btn "+(h&&!loading?"active":"disabled")}
@@ -438,7 +650,7 @@ function buildMemCtx(){
   }
   return ctx;
 }
-function searchPaintFor(q){if(!q||!paintCache.length)return[];var terms=q.toLowerCase().split(/\s+/).filter(Boolean);var scored=paintCache.map(function(p){var hay=[p.title,p.description].concat(p.tags||[]).concat([p.date]).join(" ").toLowerCase();var s=0;terms.forEach(function(t){if(hay.indexOf(t)>=0)s+=1;if((p.tags||[]).indexOf(t)>=0)s+=2;if(p.title.toLowerCase().indexOf(t)>=0)s+=1.5});return Object.assign({},p,{score:s})}).filter(function(x){return x.score>0});scored.sort(function(a,b){return b.score-a.score});return scored.slice(0,5)}
+function searchPaintFor(q){if(!q||!paintCache.length)return[];var terms=q.toLowerCase().split(/\s+/).filter(Boolean);var scored=paintCache.map(function(p){var hay=[p.title,p.description].concat(p.tags||[]).join(" ").toLowerCase();var s=0;terms.forEach(function(t){if(hay.indexOf(t)>=0)s+=1;if((p.tags||[]).indexOf(t)>=0)s+=2;if(p.title.toLowerCase().indexOf(t)>=0)s+=1.5});return Object.assign({},p,{score:s})}).filter(function(x){return x.score>0});scored.sort(function(a,b){return b.score-a.score});return scored.slice(0,5)}
 function searchMediaFor(q){if(!q||!mediaCache.length)return[];var terms=q.toLowerCase().split(/\s+/).filter(Boolean);var scored=mediaCache.map(function(m){var hay=[m.title,m.description||"",m.fileName||""].concat(m.tags||[]).join(" ").toLowerCase();var s=0;terms.forEach(function(t){if(hay.indexOf(t)>=0)s+=1;if((m.tags||[]).indexOf(t)>=0)s+=2;if(m.title.toLowerCase().indexOf(t)>=0)s+=1.5});return Object.assign({},m,{score:s})}).filter(function(x){return x.score>0&&x.storageUrl});scored.sort(function(a,b){return b.score-a.score});return scored.slice(0,2)}
 function fetchUrlAsB64(url){return fetch(url).then(function(r){return r.blob()}).then(function(b){return new Promise(function(res,rej){var reader=new FileReader();reader.onload=function(){res(reader.result.split(",")[1])};reader.onerror=rej;reader.readAsDataURL(b)})})}
 
@@ -485,7 +697,6 @@ function sendMessage(){
 
   userContent.push({type:"text",text:text||"Describe this file."});
 
-  // Fetch relevant media audio from Storage before sending
   var mediaFetchPromise=Promise.resolve();
   if(relevantMedia.length){
     userContent.push({type:"text",text:"[Relevant audio/video from your library:]"});
@@ -536,10 +747,10 @@ function sendMessage(){
   }).then(function(){
     loading=false;$inp.disabled=false;$inp.focus();updateSend();
   });
-  }); // end mediaFetchPromise.then
+  });
 }
 
-function openConfig(){document.getElementById("customTextarea").value=customPrompt;document.getElementById("keyDisplay").textContent="OpenRouter: "+maskKey(orKey);document.getElementById("userEmail").textContent=currentUser?currentUser.email:"";renderPresets();renderModels();updCB();document.getElementById("cfgBack").classList.remove("hidden");document.getElementById("cfgPanel").classList.remove("hidden")}
+function openConfig(){document.getElementById("customTextarea").value=customPrompt;document.getElementById("keyDisplay").textContent="OpenRouter: "+maskKey(orKey);document.getElementById("userEmail").textContent=currentUser?currentUser.email:"";renderPresets();renderModels();updCB();renderNotifUI();document.getElementById("cfgBack").classList.remove("hidden");document.getElementById("cfgPanel").classList.remove("hidden")}
 function closeConfig(){document.getElementById("cfgBack").classList.add("hidden");document.getElementById("cfgPanel").classList.add("hidden")}
 function renderPresets(){var l=document.getElementById("presetList");l.innerHTML="";PRESETS.forEach(function(p,i){var b=document.createElement("button");b.className="preset-btn"+(!isCustom&&activePreset===i?" active":"");b.innerHTML="<div>"+p.name+'</div><div class="preset-desc">'+p.desc+"</div>";b.onclick=function(){activePreset=i;isCustom=false;updateHeader();renderPresets();updCB()};l.appendChild(b)})}
 function renderModels(){var l=document.getElementById("modelList");l.innerHTML="";MODELS.forEach(function(m,i){var b=document.createElement("button");b.className="preset-btn"+(activeModel===i?" active":"");b.innerHTML="<div>"+m.name+'</div><div class="preset-desc">'+m.desc+"</div>";b.onclick=function(){activeModel=i;localStorage.setItem("jm_"+currentUser.uid,i);updateHeader();renderModels()};l.appendChild(b)})}
@@ -550,7 +761,6 @@ function closeMemory(){document.getElementById("memBack").classList.add("hidden"
 function switchMemTab(t){var tabs=["diary","paintings","media","chats"];document.querySelectorAll(".mem-tab").forEach(function(el,i){el.classList.toggle("active",tabs[i]===t)});document.getElementById("memDiary").classList.toggle("active",t==="diary");document.getElementById("memPaintings").classList.toggle("active",t==="paintings");document.getElementById("memMedia").classList.toggle("active",t==="media");document.getElementById("memChats").classList.toggle("active",t==="chats")}
 function clearChat(){saveChatSession();startNewSession();$msg.innerHTML="";$msg.appendChild($emptyState);$emptyState.classList.remove("hidden");pendingAttachments.forEach(function(a){if(a.preview)URL.revokeObjectURL(a.preview)});pendingAttachments=[];renderPend();updateHeader();updateSend();localStorage.removeItem("jarvis_chat_state")}
 
-// State recovery for iOS Safari tab kills
 function saveLocalState(){if(!chatHistory.length)return;try{localStorage.setItem("jarvis_chat_state",JSON.stringify({sid:currentSessionId,h:chatHistory.map(function(m){return{r:m.role,c:typeof m.content==="string"?m.content.substring(0,1000):""}}),t:Date.now()}))}catch(e){}}
 function restoreLocalState(){try{var s=localStorage.getItem("jarvis_chat_state");if(!s)return;var d=JSON.parse(s);if(Date.now()-d.t>3600000){localStorage.removeItem("jarvis_chat_state");return}if(!d.h||!d.h.length)return;currentSessionId=d.sid;chatHistory=d.h.map(function(m){return{role:m.r,content:m.c}});if($msg&&$emptyState){$emptyState.classList.add("hidden");d.h.forEach(function(m){addBubble(m.r==="assistant"?"assistant":"user",m.c)})}}catch(e){}}
 setInterval(saveLocalState,15000);
