@@ -448,7 +448,10 @@ function sendMessage(){
 
   var memCtx=buildMemCtx();
   var relevant=searchPaintFor(text);
+  var hasAudio=false;
+  curAtt.forEach(function(a){if(a.category==="audio")hasAudio=true});
   var sysMsg={role:"system",content:getPersonality()+memCtx};
+  if(hasAudio){sysMsg={role:"system",content:"You are a helpful assistant. You can hear and understand audio files sent to you. Transcribe or respond to the audio content. Respond in Korean by default."};}
   var userContent=[];
 
   curAtt.forEach(function(a){
