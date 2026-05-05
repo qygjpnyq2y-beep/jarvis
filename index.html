@@ -310,6 +310,7 @@ input:focus,textarea:focus{outline:none}
 if('serviceWorker' in navigator){navigator.serviceWorker.getRegistrations().then(function(regs){for(var i=0;i<regs.length;i++){regs[i].unregister()}})}
 
 var fbApp=null,auth=null,fstore=null,currentUser=null,orKey="";
+var R2_WORKER="https://jarvis-r2.willow8769.workers.dev";
 var LS_FB="jarvis_fb_config";
 function loadFbCfg(){try{var s=localStorage.getItem(LS_FB);if(s)return JSON.parse(s)}catch(e){}return null}
 function initFB(cfg){try{fbApp=firebase.initializeApp(cfg);auth=firebase.auth();fstore=firebase.firestore();auth.onAuthStateChanged(onAuth);return true}catch(e){return false}}
@@ -403,15 +404,16 @@ function delPaint(id){uCol("paintings").doc(id).delete();paintCache=paintCache.f
 function openPD(id){var p=null;for(var i=0;i<paintCache.length;i++){if(paintCache[i].id===id){p=paintCache[i];break}}if(!p)return;var o=document.createElement("div");o.className="paint-detail-overlay";o.innerHTML='<button class="paint-detail-close" onclick="this.parentElement.remove()">&#10005;</button><img class="paint-detail-img" src="'+p.thumb+'"><div class="paint-detail-field"><label>TITLE</label><input id="pd_t" value="'+esc(p.title)+'"></div><div class="paint-detail-field"><label>TAGS</label><input id="pd_g" value="'+esc((p.tags||[]).join(", "))+'"></div><div class="paint-detail-field"><label>DESCRIPTION</label><textarea id="pd_d">'+esc(p.description||"")+'</textarea></div><div class="paint-detail-field"><label>DATE</label><input type="date" id="pd_dt" value="'+(p.date||"")+'" class="diary-date-input" style="width:100%"></div><button class="paint-detail-save" onclick="savePD(\''+p.id+"')\">SAVE</button>";document.body.appendChild(o)}
 function savePD(id){var u={title:document.getElementById("pd_t").value.trim(),tags:document.getElementById("pd_g").value.split(",").map(function(t){return t.trim().toLowerCase()}).filter(Boolean),description:document.getElementById("pd_d").value.trim(),date:document.getElementById("pd_dt").value};uCol("paintings").doc(id).update(u);for(var i=0;i<paintCache.length;i++){if(paintCache[i].id===id){Object.assign(paintCache[i],u);break}}var el=document.querySelector(".paint-detail-overlay");if(el)el.remove();renderPaintings()}
 
-function handleMediaUpload(fl){var files=Array.from(fl).filter(function(f){return f.type.startsWith("audio/")||f.type.startsWith("video/")});if(!files.length)return;var area=document.getElementById("mediaUploadArea");var exFP={};mediaCache.forEach(function(m){if(m.fingerprint)exFP[m.fingerprint]=true});var up=0,sk=0,idx=0;function next(){if(idx>=files.length){area.innerHTML=up||sk?'<div class="upload-panel"><div class="upload-title"><span class="upload-done">'+up+" added"+(sk?", "+sk+" skipped":"")+"</span></div></div>":"";setTimeout(function(){area.innerHTML=""},3000);document.getElementById("mediaInput").value="";renderMedia();return}var f=files[idx];area.innerHTML='<div class="upload-panel"><div class="upload-stats">'+(idx+1)+"/"+files.length+'...</div><div class="upload-bar"><div class="upload-bar-fill" style="width:'+Math.round(((idx+1)/files.length)*100)+'%"></div></div></div>';idx++;if(exFP[fileFP(f)]){sk++;next();return}var entry={title:f.name.replace(/\.[^.]+$/,""),fileName:f.name,type:f.type.startsWith("audio/")?"music":"video",mimeType:f.type,size:f.size,tags:[],description:"",date:new Date().toISOString().split("T")[0],ts:Date.now(),fingerprint:fileFP(f)};uCol("media").add(entry).then(function(ref){mediaCache.unshift(Object.assign({id:ref.id},entry));up++}).catch(function(){}).then(next)}next()}
-function delMedia(id){uCol("media").doc(id).delete();mediaCache=mediaCache.filter(function(m){return m.id!==id});renderMedia()}
-function renderMedia(){document.getElementById("mediaCount").textContent=mediaCache.length+" media files";var list=document.getElementById("mediaList");list.innerHTML="";mediaCache.forEach(function(m){var icon=m.type==="music"?"&#9835;":"&#9656;";var size=(m.size/(1024*1024)).toFixed(1)+"MB";var d=document.createElement("div");d.className="media-item";d.innerHTML='<div class="media-icon">'+icon+'</div><div class="media-info"><div class="media-name">'+esc(m.title)+'</div><div class="media-meta">'+m.type+" · "+size+'</div></div><button class="media-del" onclick="delMedia(\''+m.id+"')\">&#10005;</button>";list.appendChild(d)})}
+function handleMediaUpload(fl){var files=Array.from(fl).filter(function(f){return f.type.startsWith("audio/")||f.type.startsWith("video/")});if(!files.length)return;var area=document.getElementById("mediaUploadArea");var exFP={};mediaCache.forEach(function(m){if(m.fingerprint)exFP[m.fingerprint]=true});var up=0,sk=0,idx=0;function next(){if(idx>=files.length){area.innerHTML=up||sk?'<div class="upload-panel"><div class="upload-title"><span class="upload-done">'+up+" added"+(sk?", "+sk+" skipped":"")+"</span></div></div>":"";setTimeout(function(){area.innerHTML=""},3000);document.getElementById("mediaInput").value="";renderMedia();return}var f=files[idx];area.innerHTML='<div class="upload-panel"><div class="upload-stats">'+(idx+1)+"/"+files.length+'...</div><div class="upload-bar"><div class="upload-bar-fill" style="width:'+Math.round(((idx+1)/files.length)*100)+'%"></div></div></div>';idx++;if(exFP[fileFP(f)]){sk++;next();return}var r2Key=currentUser.uid+"/"+uid()+"_"+f.name;fetch(R2_WORKER+"/presign",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({key:r2Key,contentType:f.type})}).then(function(r){return r.json()}).then(function(data){if(!data.uploadUrl)throw new Error("No upload URL");return fetch(data.uploadUrl,{method:"PUT",body:f}).then(function(res){if(!res.ok)throw new Error("Upload failed: "+res.status);var entry={title:f.name.replace(/\.[^.]+$/,""),fileName:f.name,type:f.type.startsWith("audio/")?"music":"video",mimeType:f.type,size:f.size,tags:[],description:"",date:new Date().toISOString().split("T")[0],ts:Date.now(),fingerprint:fileFP(f),r2Key:r2Key,storageUrl:data.downloadUrl};return uCol("media").add(entry).then(function(ref){mediaCache.unshift(Object.assign({id:ref.id},entry));up++})})}).catch(function(e){console.error("[JARVIS] R2 upload error:",e)}).then(next)}next()}
+function delMedia(id){var m=null;for(var i=0;i<mediaCache.length;i++){if(mediaCache[i].id===id){m=mediaCache[i];break}}if(m&&m.r2Key){fetch(R2_WORKER+"/delete",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({key:m.r2Key})}).catch(function(){})}uCol("media").doc(id).delete();mediaCache=mediaCache.filter(function(x){return x.id!==id});renderMedia()}
+function renderMedia(){document.getElementById("mediaCount").textContent=mediaCache.length+" media files";var list=document.getElementById("mediaList");list.innerHTML="";var noUrl=mediaCache.filter(function(m){return!m.storageUrl}).length;if(noUrl){var notice=document.createElement("div");notice.style.cssText="font-size:11px;color:#ff9040;margin-bottom:10px;padding:8px 12px;background:#ff904010;border:1px solid #ff904030;border-radius:8px";notice.textContent=noUrl+" file"+(noUrl>1?"s":"")+" without audio data. Tap \u2191 to re-upload.";list.appendChild(notice)}mediaCache.forEach(function(m){var icon=m.type==="music"?"&#9835;":"&#9656;";var size=(m.size/(1024*1024)).toFixed(1)+"MB";var hasUrl=!!m.storageUrl;var d=document.createElement("div");d.className="media-item";d.innerHTML='<div class="media-icon"'+(hasUrl?"":" style=\"opacity:.4\"")+'>'+icon+'</div><div class="media-info"><div class="media-name">'+esc(m.title)+(hasUrl?'<span style="color:#40ff80;font-size:9px;margin-left:6px">\u266B</span>':'')+'</div><div class="media-meta">'+m.type+" · "+size+(hasUrl?"":" · no audio")+'</div></div>'+(hasUrl?'':'<button class="icon-btn" style="width:28px;height:28px;font-size:12px;color:#68b5ff;border-color:#68b5ff40" onclick="event.stopPropagation();reuploadMedia(\''+m.id+"')\">\u2191</button>")+'<button class="media-del" onclick="delMedia(\''+m.id+"')\">&#10005;</button>";list.appendChild(d)})}
+function reuploadMedia(id){var m=null;for(var i=0;i<mediaCache.length;i++){if(mediaCache[i].id===id){m=mediaCache[i];break}}if(!m)return;var inp=document.createElement("input");inp.type="file";inp.accept="audio/*,video/*,.mp3,.wav,.m4a,.ogg,.flac,.aac,.mp4,.mov,.webm";inp.onchange=function(){var f=inp.files[0];if(!f)return;var r2Key=currentUser.uid+"/"+uid()+"_"+f.name;fetch(R2_WORKER+"/presign",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({key:r2Key,contentType:f.type})}).then(function(r){return r.json()}).then(function(data){if(!data.uploadUrl)throw new Error("No upload URL");return fetch(data.uploadUrl,{method:"PUT",body:f}).then(function(res){if(!res.ok)throw new Error("Upload failed: "+res.status);var update={r2Key:r2Key,storageUrl:data.downloadUrl,mimeType:f.type,size:f.size,fileName:f.name};uCol("media").doc(id).update(update);Object.assign(m,update);renderMedia();console.log("[JARVIS] Re-uploaded:",m.title)})}).catch(function(e){alert("Upload failed: "+e.message)})};inp.click()}
 
 function buildMemCtx(){
   var ctx="";
   if(diaryCache.length){var sorted=diaryCache.slice().sort(function(a,b){return(a.date||"").localeCompare(b.date||"")});ctx+="\n\n[USER'S DIARY]\n";sorted.forEach(function(d){ctx+="--- "+d.date+" ---\n"+d.text+"\n\n"});ctx+="[END DIARY]\n"}
   if(paintCache.length){ctx+="\n[PAINTINGS - "+paintCache.length+" works]\n";paintCache.forEach(function(p){var t=(p.tags||[]).join(", ");ctx+='- "'+p.title+'" ('+p.date+")"+(t?" ["+t+"]":"")+(p.description?" - "+p.description:"")+"\n"});ctx+="[END CATALOG]\n"}
-  if(mediaCache.length){ctx+="\n[MUSIC & VIDEO - "+mediaCache.length+" files]\n";mediaCache.forEach(function(m){ctx+='- "'+m.title+'" ('+m.type+")"+(m.tags&&m.tags.length?" ["+m.tags.join(", ")+"]":"")+(m.description?" - "+m.description:"")+"\n"});ctx+="[END MEDIA]\n"}
+  if(mediaCache.length){ctx+="\n[MUSIC & VIDEO - "+mediaCache.length+" files]\n";mediaCache.forEach(function(m){ctx+='- "'+m.title+'" ('+m.type+")"+(m.storageUrl?" [audio available]":"")+(m.tags&&m.tags.length?" ["+m.tags.join(", ")+"]":"")+(m.description?" - "+m.description:"")+"\n"});ctx+="When user asks about a specific song or audio, you can hear it. [END MEDIA]\n"}
   if(chatSessionsCache.length){
     var recent=chatSessionsCache.slice(0,5);
     ctx+="\n[RECENT CONVERSATIONS - "+chatSessionsCache.length+" total]\n";
@@ -437,6 +439,8 @@ function buildMemCtx(){
   return ctx;
 }
 function searchPaintFor(q){if(!q||!paintCache.length)return[];var terms=q.toLowerCase().split(/\s+/).filter(Boolean);var scored=paintCache.map(function(p){var hay=[p.title,p.description].concat(p.tags||[]).concat([p.date]).join(" ").toLowerCase();var s=0;terms.forEach(function(t){if(hay.indexOf(t)>=0)s+=1;if((p.tags||[]).indexOf(t)>=0)s+=2;if(p.title.toLowerCase().indexOf(t)>=0)s+=1.5});return Object.assign({},p,{score:s})}).filter(function(x){return x.score>0});scored.sort(function(a,b){return b.score-a.score});return scored.slice(0,5)}
+function searchMediaFor(q){if(!q||!mediaCache.length)return[];var terms=q.toLowerCase().split(/\s+/).filter(Boolean);var scored=mediaCache.map(function(m){var hay=[m.title,m.description||"",m.fileName||""].concat(m.tags||[]).join(" ").toLowerCase();var s=0;terms.forEach(function(t){if(hay.indexOf(t)>=0)s+=1;if((m.tags||[]).indexOf(t)>=0)s+=2;if(m.title.toLowerCase().indexOf(t)>=0)s+=1.5});return Object.assign({},m,{score:s})}).filter(function(x){return x.score>0&&x.storageUrl});scored.sort(function(a,b){return b.score-a.score});return scored.slice(0,2)}
+function fetchUrlAsB64(url){return fetch(url).then(function(r){return r.blob()}).then(function(b){return new Promise(function(res,rej){var reader=new FileReader();reader.onload=function(){res(reader.result.split(",")[1])};reader.onerror=rej;reader.readAsDataURL(b)})})}
 
 function sendMessage(){
   var text=$inp.value.trim();var hasAtt=pendingAttachments.length>0;
@@ -448,6 +452,7 @@ function sendMessage(){
 
   var memCtx=buildMemCtx();
   var relevant=searchPaintFor(text);
+  var relevantMedia=searchMediaFor(text);
   var sysMsg={role:"system",content:getPersonality()+memCtx};
   var userContent=[];
 
@@ -480,6 +485,32 @@ function sendMessage(){
 
   userContent.push({type:"text",text:text||"Describe this file."});
 
+  // Fetch relevant media audio from Storage before sending
+  var mediaFetchPromise=Promise.resolve();
+  if(relevantMedia.length){
+    userContent.push({type:"text",text:"[Relevant audio/video from your library:]"});
+    var mediaPromises=relevantMedia.map(function(rm){
+      userContent.push({type:"text",text:'"'+rm.title+'" ('+rm.type+", "+rm.fileName+")"});
+      if((rm.r2Key||rm.storageUrl)&&rm.type==="music"){
+        var getUrl;
+        if(rm.r2Key){
+          getUrl=fetch(R2_WORKER+"/read",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({key:rm.r2Key})}).then(function(r){return r.json()}).then(function(d){return d.downloadUrl});
+        }else{
+          getUrl=Promise.resolve(rm.storageUrl);
+        }
+        return getUrl.then(function(url){return fetchUrlAsB64(url)}).then(function(b64){
+          var mime=rm.mimeType||"audio/mpeg";
+          if(mime==="audio/vnd.wave"||mime==="audio/wave"||mime==="audio/x-wav")mime="audio/wav";
+          console.log("[JARVIS] Media fetch:",rm.title,"mime:",mime,"b64 len:",b64.length);
+          userContent.push({type:"image_url",image_url:{url:"data:"+mime+";base64,"+b64}});
+        }).catch(function(e){console.error("[JARVIS] Media fetch error:",rm.title,e)});
+      }
+      return Promise.resolve();
+    });
+    mediaFetchPromise=Promise.all(mediaPromises);
+  }
+
+  mediaFetchPromise.then(function(){
   var userMsg=userContent.length===1&&userContent[0].type==="text"?{role:"user",content:userContent[0].text}:{role:"user",content:userContent};
   chatHistory.push(userMsg);
   var messages=[sysMsg].concat(chatHistory);
@@ -505,6 +536,7 @@ function sendMessage(){
   }).then(function(){
     loading=false;$inp.disabled=false;$inp.focus();updateSend();
   });
+  }); // end mediaFetchPromise.then
 }
 
 function openConfig(){document.getElementById("customTextarea").value=customPrompt;document.getElementById("keyDisplay").textContent="OpenRouter: "+maskKey(orKey);document.getElementById("userEmail").textContent=currentUser?currentUser.email:"";renderPresets();renderModels();updCB();document.getElementById("cfgBack").classList.remove("hidden");document.getElementById("cfgPanel").classList.remove("hidden")}
