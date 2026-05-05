@@ -455,7 +455,8 @@ function sendMessage(){
     if(a.category==="image"){
       userContent.push({type:"image_url",image_url:{url:"data:"+a.mime+";base64,"+a.b64}});
     }else if(a.category==="audio"){
-      userContent.push({type:"image_url",image_url:{url:"data:"+a.mime+";base64,"+a.b64}});
+      var fmtMap={"audio/mpeg":"mp3","audio/mp3":"mp3","audio/wav":"wav","audio/x-wav":"wav","audio/mp4":"mp4","audio/ogg":"ogg","audio/flac":"flac","audio/aac":"aac"};
+      userContent.push({type:"input_audio",input_audio:{data:a.b64,format:fmtMap[a.mime]||"mp3"}});
     }else if(a.category==="video"){
       userContent.push({type:"text",text:"[Attached video: "+a.name+"]"});
     }else{
