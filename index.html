@@ -372,7 +372,10 @@ var fcmToken=null;
 
 function registerFCMServiceWorker(){
   if(!('serviceWorker' in navigator)||!fcmMessaging)return Promise.reject('No SW support or FCM');
-  return navigator.serviceWorker.register('/firebase-messaging-sw.js').then(function(reg){
+  // Auto-detect base path for GitHub Pages subdirectory hosting
+  var basePath = new URL(document.baseURI).pathname.replace(/\/[^\/]*$/, '/');
+  var swPath = basePath + 'firebase-messaging-sw.js';
+  return navigator.serviceWorker.register(swPath).then(function(reg){
     console.log('[JARVIS] FCM SW registered, scope:',reg.scope);
     // Send Firebase config to SW
     var cfg=loadFbCfg();
