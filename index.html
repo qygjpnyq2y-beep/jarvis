@@ -367,7 +367,8 @@ function saveORKey(){var k=document.getElementById("orKeyInput").value.trim();if
 function changeORKey(){closeConfig();var k=prompt("Enter new OpenRouter API key:");if(k&&k.trim().length>=10){orKey=k.trim();localStorage.setItem("ork_"+currentUser.uid,orKey)}}
 
 // ===== FCM PUSH NOTIFICATION SYSTEM =====
-var notifSettings={inactivity:true,diary_reminder:true,weekly_summary:true};
+var notifSettings={inactivity:true,diary_reminder:true,weekly_summary:true,birthday:true,holidays:true};
+var userBirthday=""; // MM-DD format
 var fcmToken=null;
 
 function registerFCMServiceWorker(){
@@ -448,8 +449,9 @@ function saveFCMToken(token){
 function loadNotifSettings(){
   if(!currentUser)return;
   fstore.collection("users").doc(currentUser.uid).get().then(function(doc){
-    if(doc.exists&&doc.data().notifSettings){
-      notifSettings=Object.assign(notifSettings,doc.data().notifSettings);
+    if(doc.exists){
+      if(doc.data().notifSettings) notifSettings=Object.assign(notifSettings,doc.data().notifSettings);
+      if(doc.data().birthday) userBirthday=doc.data().birthday;
     }
     renderNotifUI();
   }).catch(function(){renderNotifUI()});
@@ -458,8 +460,14 @@ function loadNotifSettings(){
 function saveNotifSettings(){
   if(!currentUser)return;
   fstore.collection("users").doc(currentUser.uid).set({
-    notifSettings:notifSettings
+    notifSettings:notifSettings,
+    birthday:userBirthday
   },{merge:true});
+}
+
+function saveBirthday(val){
+  userBirthday=val;
+  saveNotifSettings();
 }
 
 function toggleNotifSetting(key){
@@ -490,6 +498,12 @@ function renderNotifUI(){
     html+='<div class="notif-toggle-row"><div><div class="notif-toggle-label">Diary Reminder</div><div class="notif-toggle-desc">Daily reminder to write a diary entry</div></div><label class="notif-toggle"><input type="checkbox" '+(notifSettings.diary_reminder?'checked':'')+' onchange="toggleNotifSetting(\'diary_reminder\')"><span class="slider"></span></label></div>';
     
     html+='<div class="notif-toggle-row"><div><div class="notif-toggle-label">Weekly Summary</div><div class="notif-toggle-desc">Weekly recap of your activity</div></div><label class="notif-toggle"><input type="checkbox" '+(notifSettings.weekly_summary?'checked':'')+' onchange="toggleNotifSetting(\'weekly_summary\')"><span class="slider"></span></label></div>';
+    
+    html+='<div class="notif-toggle-row"><div><div class="notif-toggle-label">Birthday</div><div class="notif-toggle-desc">Birthday greeting from Jarvis</div></div><label class="notif-toggle"><input type="checkbox" '+(notifSettings.birthday?'checked':'')+' onchange="toggleNotifSetting(\'birthday\')"><span class="slider"></span></label></div>';
+    
+    html+='<div class="notif-toggle-row" style="flex-direction:column;align-items:stretch;gap:8px"><div style="display:flex;align-items:center;justify-content:space-between"><div><div class="notif-toggle-label">My Birthday</div></div><input type="date" style="padding:6px 10px;background:#0a1520;border:1px solid #112030;border-radius:6px;color:#a0c4dd;font-size:11px;font-family:inherit" value="'+(userBirthday||'')+'" onchange="saveBirthday(this.value)"></div></div>';
+    
+    html+='<div class="notif-toggle-row"><div><div class="notif-toggle-label">Holiday Greetings</div><div class="notif-toggle-desc">Korean holidays & special days</div></div><label class="notif-toggle"><input type="checkbox" '+(notifSettings.holidays?'checked':'')+' onchange="toggleNotifSetting(\'holidays\')"><span class="slider"></span></label></div>';
     
     html+='<button class="notif-enable-btn secondary" style="width:100%;margin-top:8px" onclick="testNotification()">Send Test Notification</button>';
   }
