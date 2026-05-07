@@ -641,7 +641,7 @@ function reuploadMedia(id){var m=null;for(var i=0;i<mediaCache.length;i++){if(me
 
 function buildMemCtx(){
   var ctx="";
-  if(diaryCache.length){var sorted=diaryCache.slice().sort(function(a,b){return(a.date||"").localeCompare(b.date||"")});ctx+="\n\n[USER'S DIARY]\n";sorted.forEach(function(d){ctx+="--- "+d.date+" ---\n"+d.text+"\n\n"});ctx+="[END DIARY]\n"}
+  if(diaryCache.length){var sorted=diaryCache.slice().sort(function(a,b){return(a.date||"").localeCompare(b.date||"")});ctx+="\n\n[USER'S DIARY]\n";sorted.forEach(function(d){var timeInfo=d.ts?(" ("+fmtDate(d.ts)+")"):"";ctx+="--- "+d.date+timeInfo+" ---\n"+d.text+"\n\n"});ctx+="[END DIARY]\n"}
   if(paintCache.length){ctx+="\n[PAINTINGS - "+paintCache.length+" works]\n";paintCache.forEach(function(p){var t=(p.tags||[]).join(", ");ctx+='- "'+p.title+'" ('+p.date+")"+(t?" ["+t+"]":"")+(p.description?" - "+p.description:"")+"\n"});ctx+="[END CATALOG]\n"}
   if(mediaCache.length){ctx+="\n[MUSIC & VIDEO - "+mediaCache.length+" files]\n";mediaCache.forEach(function(m){ctx+='- "'+m.title+'" ('+m.type+")"+(m.storageUrl?" [audio available]":"")+(m.tags&&m.tags.length?" ["+m.tags.join(", ")+"]":"")+(m.description?" - "+m.description:"")+"\n"});ctx+="When user asks about a specific song or audio, you can hear it. [END MEDIA]\n"}
   if(chatSessionsCache.length){
@@ -683,7 +683,12 @@ function sendMessage(){
   var memCtx=buildMemCtx();
   var relevant=searchPaintFor(text);
   var relevantMedia=searchMediaFor(text);
-  var sysMsg={role:"system",content:getPersonality()+memCtx};
+  var kstNow=new Date(Date.now()+9*60*60*1000);
+  var timeStr=kstNow.getUTCFullYear()+"-"+String(kstNow.getUTCMonth()+1).padStart(2,"0")+"-"+String(kstNow.getUTCDate()).padStart(2,"0")+" "+String(kstNow.getUTCHours()).padStart(2,"0")+":"+String(kstNow.getUTCMinutes()).padStart(2,"0");
+  var dayNames=["일","월","화","수","목","금","토"];
+  var dayName=dayNames[kstNow.getUTCDay()];
+  var timeCtx="\n[CURRENT TIME] "+timeStr+" ("+dayName+"요일) KST\n";
+  var sysMsg={role:"system",content:getPersonality()+timeCtx+memCtx};
   var userContent=[];
 
   curAtt.forEach(function(a){
