@@ -373,27 +373,18 @@ var fcmToken=null;
 
 function registerFCMServiceWorker(){
   if(!('serviceWorker' in navigator)||!fcmMessaging)return Promise.reject('No SW support or FCM');
-  // Auto-detect base path for GitHub Pages subdirectory hosting
   var basePath = new URL(document.baseURI).pathname.replace(/\/[^\/]*$/, '/');
-  var swPath = basePath + 'firebase-messaging-sw.js';
-  return navigator.serviceWorker.register(swPath).then(function(reg){
+  var cfg=loadFbCfg();
+  if(!cfg)return Promise.reject('No Firebase config');
+  var swUrl = basePath + 'firebase-messaging-sw.js?'
+    + 'apiKey='+encodeURIComponent(cfg.apiKey)
+    + '&authDomain='+encodeURIComponent(cfg.authDomain)
+    + '&projectId='+encodeURIComponent(cfg.projectId)
+    + '&storageBucket='+encodeURIComponent(cfg.storageBucket||'')
+    + '&messagingSenderId='+encodeURIComponent(cfg.messagingSenderId)
+    + '&appId='+encodeURIComponent(cfg.appId);
+  return navigator.serviceWorker.register(swUrl).then(function(reg){
     console.log('[JARVIS] FCM SW registered, scope:',reg.scope);
-    // Send Firebase config to SW
-    var cfg=loadFbCfg();
-    if(cfg&&reg.active){
-      reg.active.postMessage({type:'FIREBASE_CONFIG',config:cfg});
-    }
-    // Also send config when SW activates
-    reg.addEventListener('updatefound',function(){
-      var newWorker=reg.installing;
-      if(newWorker){
-        newWorker.addEventListener('statechange',function(){
-          if(newWorker.state==='activated'&&cfg){
-            newWorker.postMessage({type:'FIREBASE_CONFIG',config:cfg});
-          }
-        });
-      }
-    });
     return reg;
   });
 }
