@@ -367,7 +367,7 @@ function saveORKey(){var k=document.getElementById("orKeyInput").value.trim();if
 function changeORKey(){closeConfig();var k=prompt("Enter new OpenRouter API key:");if(k&&k.trim().length>=10){orKey=k.trim();localStorage.setItem("ork_"+currentUser.uid,orKey)}}
 
 // ===== FCM PUSH NOTIFICATION SYSTEM =====
-var notifSettings={inactivity:true,diary_reminder:true,weekly_summary:true,birthday:true,holidays:true};
+var notifSettings={inactivity:true,diary_reminder:true,weekly_summary:true,birthday:true,holidays:true,meal_recommendation:true};
 var userBirthday=""; // MM-DD format
 var fcmToken=null;
 
@@ -505,6 +505,8 @@ function renderNotifUI(){
     
     html+='<div class="notif-toggle-row"><div><div class="notif-toggle-label">Holiday Greetings</div><div class="notif-toggle-desc">Korean holidays & special days</div></div><label class="notif-toggle"><input type="checkbox" '+(notifSettings.holidays?'checked':'')+' onchange="toggleNotifSetting(\'holidays\')"><span class="slider"></span></label></div>';
     
+    html+='<div class="notif-toggle-row"><div><div class="notif-toggle-label">Meal Recommendations</div><div class="notif-toggle-desc">7AM breakfast, 12PM lunch, 5PM dinner</div></div><label class="notif-toggle"><input type="checkbox" '+(notifSettings.meal_recommendation?'checked':'')+' onchange="toggleNotifSetting(\'meal_recommendation\')"><span class="slider"></span></label></div>';
+    
     html+='<button class="notif-enable-btn secondary" style="width:100%;margin-top:8px" onclick="testNotification()">Send Test Notification</button>';
   }
   
@@ -562,7 +564,7 @@ var MODELS=[
   {id:"openai/gpt-oss-120b:free",name:"GPT-OSS 120B",desc:"Free"}
 ];
 var chatHistory=[],activePreset=0,activeModel=0,isCustom=false,loading=false,customPrompt="",pendingAttachments=[];
-var paintPage=0,diaryCache=[],paintCache=[],mediaCache=[],chatSessionsCache=[];
+var paintPage=0,diaryCache=[],paintCache=[],mediaCache=[],chatSessionsCache=[],mealsCache=[];
 var uploadCancelled=false,currentSessionId=null;
 var PPP=30,BATCH=50;
 
@@ -607,7 +609,7 @@ function initApp(){
 }
 function updateHeader(){document.getElementById("headerSub").textContent=getName()+" · "+MODELS[activeModel].name;document.getElementById("emptyName").textContent=getName()}
 function updateSend(){if(!$inp)return;var h=$inp.value.trim().length>0||pendingAttachments.length>0;$send.className="send-btn "+(h&&!loading?"active":"disabled")}
-function loadAllCaches(){Promise.all([uCol("diary").orderBy("date","desc").get(),uCol("paintings").orderBy("ts","desc").get(),uCol("media").orderBy("ts","desc").get(),uCol("chats").orderBy("ts","desc").limit(50).get()]).then(function(results){diaryCache=results[0].docs.map(function(x){return Object.assign({id:x.id},x.data())});paintCache=results[1].docs.map(function(x){return Object.assign({id:x.id},x.data())});mediaCache=results[2].docs.map(function(x){return Object.assign({id:x.id},x.data())});chatSessionsCache=results[3].docs.map(function(x){return Object.assign({id:x.id},x.data())})})}
+function loadAllCaches(){Promise.all([uCol("diary").orderBy("date","desc").get(),uCol("paintings").orderBy("ts","desc").get(),uCol("media").orderBy("ts","desc").get(),uCol("chats").orderBy("ts","desc").limit(50).get(),uCol("meals").orderBy("ts","desc").limit(21).get()]).then(function(results){diaryCache=results[0].docs.map(function(x){return Object.assign({id:x.id},x.data())});paintCache=results[1].docs.map(function(x){return Object.assign({id:x.id},x.data())});mediaCache=results[2].docs.map(function(x){return Object.assign({id:x.id},x.data())});chatSessionsCache=results[3].docs.map(function(x){return Object.assign({id:x.id},x.data())});mealsCache=results[4].docs.map(function(x){return Object.assign({id:x.id},x.data())})})}
 
 function startNewSession(){currentSessionId=uid();chatHistory=[]}
 function saveChatSession(){if(!chatHistory.length)return;var msgs=chatHistory.map(function(m){var c=typeof m.content==="string"?m.content:JSON.stringify(m.content);return{role:m.role,content:c.substring(0,500)}});var firstU=null;for(var i=0;i<msgs.length;i++){if(msgs[i].role==="user"){firstU=msgs[i];break}}var data={sessionId:currentSessionId,preview:(firstU?firstU.content:"New chat").substring(0,100),messages:chatHistory.map(function(m){return{role:m.role,content:typeof m.content==="string"?m.content:JSON.stringify(m.content)}}),ts:Date.now(),messageCount:msgs.length,source:"web"};var existing=null;for(var j=0;j<chatSessionsCache.length;j++){if(chatSessionsCache[j].sessionId===currentSessionId){existing=chatSessionsCache[j];break}}if(existing){uCol("chats").doc(existing.id).set(data);Object.assign(existing,data)}else{uCol("chats").add(data).then(function(ref){chatSessionsCache.unshift(Object.assign({id:ref.id},data))})}}
@@ -642,6 +644,7 @@ function reuploadMedia(id){var m=null;for(var i=0;i<mediaCache.length;i++){if(me
 function buildMemCtx(){
   var ctx="";
   if(diaryCache.length){var sorted=diaryCache.slice().sort(function(a,b){return(a.date||"").localeCompare(b.date||"")});ctx+="\n\n[USER'S DIARY]\n";sorted.forEach(function(d){var timeInfo=d.ts?(" ("+fmtDate(d.ts)+")"):"";ctx+="--- "+d.date+timeInfo+" ---\n"+d.text+"\n\n"});ctx+="[END DIARY]\n"}
+  if(mealsCache.length){ctx+="\n[RECENT MEAL RECOMMENDATIONS]\n";mealsCache.forEach(function(m){ctx+="- "+m.date+" "+m.mealType+": "+m.message+"\n"});ctx+="[END MEALS]\n"}
   if(paintCache.length){ctx+="\n[PAINTINGS - "+paintCache.length+" works]\n";paintCache.forEach(function(p){var t=(p.tags||[]).join(", ");ctx+='- "'+p.title+'" ('+p.date+")"+(t?" ["+t+"]":"")+(p.description?" - "+p.description:"")+"\n"});ctx+="[END CATALOG]\n"}
   if(mediaCache.length){ctx+="\n[MUSIC & VIDEO - "+mediaCache.length+" files]\n";mediaCache.forEach(function(m){ctx+='- "'+m.title+'" ('+m.type+")"+(m.storageUrl?" [audio available]":"")+(m.tags&&m.tags.length?" ["+m.tags.join(", ")+"]":"")+(m.description?" - "+m.description:"")+"\n"});ctx+="When user asks about a specific song or audio, you can hear it. [END MEDIA]\n"}
   if(chatSessionsCache.length){
