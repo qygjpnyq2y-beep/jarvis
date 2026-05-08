@@ -1382,18 +1382,29 @@ function buildMemCtx(){
 }
 
 function searchPaintFor(q){if(!q||!paintCache.length)return[];var terms=q.toLowerCase().split(/\s+/).filter(Boolean);var scored=paintCache.map(function(p){var hay=[p.title,p.description].concat(p.tags||[]).join(" ").toLowerCase();var s=0;terms.forEach(function(t){if(hay.indexOf(t)>=0)s+=1;if((p.tags||[]).indexOf(t)>=0)s+=2;if(p.title.toLowerCase().indexOf(t)>=0)s+=1.5});return Object.assign({},p,{score:s})}).filter(function(x){return x.score>0});scored.sort(function(a,b){return b.score-a.score});return scored.slice(0,5)}function searchMediaFor(q){if(!q||!mediaCache.length)return[];var terms=q.toLowerCase().split(/\s+/).filter(Boolean);var scored=mediaCache.map(function(m){var hay=[m.title,m.description||"",m.fileName||""].concat(m.tags||[]).join(" ").toLowerCase();var s=0;terms.forEach(function(t){if(hay.indexOf(t)>=0)s+=1;if((m.tags||[]).indexOf(t)>=0)s+=2;if(m.title.toLowerCase().indexOf(t)>=0)s+=1.5});return Object.assign({},m,{score:s})}).filter(function(x){return x.score>0&&x.storageUrl});scored.sort(function(a,b){return b.score-a.score});return scored.slice(0,2)}function fetchUrlAsB64(url){return fetch(url).then(function(r){return r.blob()}).then(function(b){return new Promise(function(res,rej){var reader=new FileReader();reader.onload=function(){res(reader.result.split(",")[1])};reader.onerror=rej;reader.readAsDataURL(b)})})}
-
 function recommendMeal(mealType){
   return new Promise(function(resolve, reject){
-    var recent = mealsCache.slice(0, 10).map(function(m){return m.menu || m.recommendation || "?";});
+    var recent = mealsCache.slice(0, 10).map(function(m){return m.menu || "?";});
     var prefs = memCache.semantic.filter(function(s){
       return s.type==="preference" || s.type==="food" || /(맛|먹|음식|요리|매운|달콤|건강)/.test(s.content);
     });
-    var prompt = "You are Jarvis. Recommend ONE specific meal for "+mealType+".\n"+
-      "Recent meals (AVOID these): "+recent.join(", ")+"\n"+
-      "User preferences: "+prefs.map(function(p){return p.content;}).join(", ")+"\n"+
-      "Current time (KST): "+new Date(Date.now()+9*60*60*1000).toISOString()+"\n"+
-      "Return ONLY JSON: {\"menu\":\"dish name\",\"reason\":\"why\",\"cuisine\":\"Korean|Western|etc\"}";
+    
+    // === 일기에서 식단/상황 참고 ===
+    var diaryNotes = diaryCache.slice(0, 14).map(function(d){
+      return d.date + ": " + d.text;
+    }).join("\n");
+    
+    var typeKor = {breakfast:"아침",lunch:"점심",dinner:"저녁"};
+    var mealKor = typeKor[mealType] || mealType;
+    
+    var prompt = "너는 Jarvis야. 사용자의 "+mealKor+" 메뉴를 하나 추천해줘.\n\n"+
+      "[최근 추천했던 메뉴 (이건 피해줘)]\n"+recent.join(", ")+"\n\n"+
+      "[사용자 취향]\n"+prefs.map(function(p){return "- "+p.content;}).join("\n")+"\n\n"+
+      "[사용자의 최근 일기 (식단, 기분, 상황을 참고해서 추천해)]\n"+diaryNotes+"\n\n"+
+      "현재 시간 (KST): "+new Date(Date.now()+9*60*60*1000).toISOString()+"\n\n"+
+      "반드시 아래 JSON 형식으로만 응답해. 모든 값은 한국어로 작성해야 해.\n"+
+      "{\"menu\":\"메뉴 이름\",\"reason\":\"추천 이유\",\"cuisine\":\"한식|양식|중식|일식|기타\"}";
+    
     fetch("https://openrouter.ai/api/v1/chat/completions",{
       method:"POST",
       headers:{"Content-Type":"application/json","Authorization":"Bearer "+orKey},
