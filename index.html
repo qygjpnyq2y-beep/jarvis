@@ -1207,15 +1207,16 @@ function findSimilarSemantic(content){
   }
   return null;
 }
-function detectMealIntent(text){
-  var t = text.toLowerCase();
-  var r = [];
-  if(/아침|breakfast|morning/.test(t)) r.push("breakfast");
-  if(/점심|lunch/.test(t)) r.push("lunch");
-  if(/저녁|dinner|evening|밤/.test(t)) r.push("dinner");
-  if(/(밥|먹을까|추천|메뉴|food|eat|hungry|배고파|뭐\s*먹|뭘\s*먹|식사)/.test(t) && !r.length) r.push("auto");
-  return r;
+
+/* === MEAL REQUEST DETECTION (CONTEXT-AWARE) === */
+function isMealRequest(text){
+  var t = text.toLowerCase().replace(/[.,?!~]/g, "");
+  var nonFoodTopics = /(영화|드라마|책|도서|음악|노래|게임|운동|헬스|회의|일정|약속|여행|옷|쇼핑|공부|학교|회사|업무|프로젝트|코딩|개발|만화|애니|넷플|왓챠|디즈니|유튜브|tv|television|movie|book|music|song|game|exercise|work|study|travel|shopping|netflix|watch|see|read|play|listen|만나|친구|데이트)/;
+  if(nonFoodTopics.test(t)) return false;
+  var foodCore = /(밥|먹|메뉴|식사|요리|간식|디저트|맛집|배고파|배고픔|출출|해장|다이어트|식단|영양|반찬|국|찌개|구이|볶음|면|빵|커피|음료|breakfast|lunch|dinner|food|eat|meal|menu|cook|hungry|snack|recipe)/;
+  return foodCore.test(t);
 }
+
 var $msg,$inp,$send,$emptyState,$pendStrip,$attachBtn,appInit=false;
 function initApp(){if(appInit)return;appInit=true;$msg=document.getElementById("messages");$inp=document.getElementById("inputField");$send=document.getElementById("sendBtn");$emptyState=document.getElementById("emptyState");$pendStrip=document.getElementById("pendingStrip");$attachBtn=document.getElementById("attachBtn");try{document.getElementById("diaryDate").valueAsDate=new Date()}catch(e){}updateHeader();updateSend();renderMediaUploadZone();$inp.addEventListener("input",updateSend);$inp.addEventListener("keydown",function(e){if(e.key==="Enter"&&!e.shiftKey){e.preventDefault();sendMessage()}});document.getElementById("app").addEventListener("dragover",function(e){e.preventDefault()});document.getElementById("app").addEventListener("drop",function(e){e.preventDefault();if(e.dataTransfer.files.length)handleFiles(e.dataTransfer.files)});document.addEventListener("paste",function(e){var files=[];var items=e.clipboardData?e.clipboardData.items:null;if(items)for(var i=0;i<items.length;i++)if(items[i].kind==="file"){var f=items[i].getAsFile();if(f)files.push(f)}if(files.length)handleFiles(files)});var pz=document.getElementById("paintZone");pz.addEventListener("dragover",function(e){e.preventDefault();pz.classList.add("dragover")});pz.addEventListener("dragleave",function(){pz.classList.remove("dragover")});pz.addEventListener("drop",function(e){e.preventDefault();e.stopPropagation();pz.classList.remove("dragover");handlePaintUpload(e.dataTransfer.files)});loadAllCaches();startNewSession();restoreLocalState();initFCM()}
 function updateHeader(){document.getElementById("headerSub").textContent=getName()+" · "+MODELS[activeModel].name;document.getElementById("emptyName").textContent=getName()}function updateSend(){if(!$inp)return;var h=$inp.value.trim().length>0||pendingAttachments.length>0;$send.className="send-btn "+(h&&!loading?"active":"disabled")}
@@ -1382,21 +1383,19 @@ function buildMemCtx(){
 }
 
 function searchPaintFor(q){if(!q||!paintCache.length)return[];var terms=q.toLowerCase().split(/\s+/).filter(Boolean);var scored=paintCache.map(function(p){var hay=[p.title,p.description].concat(p.tags||[]).join(" ").toLowerCase();var s=0;terms.forEach(function(t){if(hay.indexOf(t)>=0)s+=1;if((p.tags||[]).indexOf(t)>=0)s+=2;if(p.title.toLowerCase().indexOf(t)>=0)s+=1.5});return Object.assign({},p,{score:s})}).filter(function(x){return x.score>0});scored.sort(function(a,b){return b.score-a.score});return scored.slice(0,5)}function searchMediaFor(q){if(!q||!mediaCache.length)return[];var terms=q.toLowerCase().split(/\s+/).filter(Boolean);var scored=mediaCache.map(function(m){var hay=[m.title,m.description||"",m.fileName||""].concat(m.tags||[]).join(" ").toLowerCase();var s=0;terms.forEach(function(t){if(hay.indexOf(t)>=0)s+=1;if((m.tags||[]).indexOf(t)>=0)s+=2;if(m.title.toLowerCase().indexOf(t)>=0)s+=1.5});return Object.assign({},m,{score:s})}).filter(function(x){return x.score>0&&x.storageUrl});scored.sort(function(a,b){return b.score-a.score});return scored.slice(0,2)}function fetchUrlAsB64(url){return fetch(url).then(function(r){return r.blob()}).then(function(b){return new Promise(function(res,rej){var reader=new FileReader();reader.onload=function(){res(reader.result.split(",")[1])};reader.onerror=rej;reader.readAsDataURL(b)})})}
+
+/* === MEAL RECOMMENDATION (KOREAN + DIARY-AWARE) === */
 function recommendMeal(mealType){
   return new Promise(function(resolve, reject){
     var recent = mealsCache.slice(0, 10).map(function(m){return m.menu || "?";});
     var prefs = memCache.semantic.filter(function(s){
       return s.type==="preference" || s.type==="food" || /(맛|먹|음식|요리|매운|달콤|건강)/.test(s.content);
     });
-    
-    // === 일기에서 식단/상황 참고 ===
     var diaryNotes = diaryCache.slice(0, 14).map(function(d){
       return d.date + ": " + d.text;
     }).join("\n");
-    
     var typeKor = {breakfast:"아침",lunch:"점심",dinner:"저녁"};
     var mealKor = typeKor[mealType] || mealType;
-    
     var prompt = "너는 Jarvis야. 사용자의 "+mealKor+" 메뉴를 하나 추천해줘.\n\n"+
       "[최근 추천했던 메뉴 (이건 피해줘)]\n"+recent.join(", ")+"\n\n"+
       "[사용자 취향]\n"+prefs.map(function(p){return "- "+p.content;}).join("\n")+"\n\n"+
@@ -1404,7 +1403,6 @@ function recommendMeal(mealType){
       "현재 시간 (KST): "+new Date(Date.now()+9*60*60*1000).toISOString()+"\n\n"+
       "반드시 아래 JSON 형식으로만 응답해. 모든 값은 한국어로 작성해야 해.\n"+
       "{\"menu\":\"메뉴 이름\",\"reason\":\"추천 이유\",\"cuisine\":\"한식|양식|중식|일식|기타\"}";
-    
     fetch("https://openrouter.ai/api/v1/chat/completions",{
       method:"POST",
       headers:{"Content-Type":"application/json","Authorization":"Bearer "+orKey},
@@ -1422,9 +1420,14 @@ function saveMealRecommendation(mealType, menu, reason){
   uCol("meals").add(entry).then(function(ref){mealsCache.unshift(Object.assign({id:ref.id},entry));});
 }
 function handleMealRequest(text){
-  var intents = detectMealIntent(text);
-  if(!intents.length) return false;
-  var mType = intents[0]==="auto" ? (function(){var h=new Date().getHours();return h<10?"breakfast":h<15?"lunch":"dinner";})() : intents[0];
+  if(!isMealRequest(text)) return false;
+  var t = text.toLowerCase();
+  var r = [];
+  if(/아침|breakfast|morning/.test(t)) r.push("breakfast");
+  if(/점심|lunch/.test(t)) r.push("lunch");
+  if(/저녁|dinner|evening|밤/.test(t)) r.push("dinner");
+  if(!r.length) r.push("auto");
+  var mType = r[0]==="auto" ? (function(){var h=new Date().getHours();return h<10?"breakfast":h<15?"lunch":"dinner";})() : r[0];
   var typeKor = {breakfast:"아침",lunch:"점심",dinner:"저녁"};
   $emptyState.classList.add("hidden");
   showLoad();
@@ -1506,7 +1509,7 @@ function sendMessage(){
   var text=$inp.value.trim();
   var hasAtt=pendingAttachments.length>0;
   
-  if((!hasAtt || text.length<40) && detectMealIntent(text).length>0){
+  if((!hasAtt || text.length<60) && isMealRequest(text)){
     if(handleMealRequest(text)){
       $inp.value=""; updateSend(); return;
     }
