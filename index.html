@@ -1211,10 +1211,23 @@ function findSimilarSemantic(content){
 /* === MEAL REQUEST DETECTION (CONTEXT-AWARE) === */
 function isMealRequest(text){
   var t = text.toLowerCase().replace(/[.,?!~]/g, "");
-  var nonFoodTopics = /(영화|드라마|책|도서|음악|노래|게임|운동|헬스|회의|일정|약속|여행|옷|쇼핑|공부|학교|회사|업무|프로젝트|코딩|개발|만화|애니|넷플|왓챠|디즈니|유튜브|tv|television|movie|book|music|song|game|exercise|work|study|travel|shopping|netflix|watch|see|read|play|listen|만나|친구|데이트)/;
+  
+  // 1. 명확한 비-음식 주제가 있으면 즉시 false
+  var nonFoodTopics = /(영화|드라마|책|도서|음악|노래|게임|운동|헬스|회의|일정|약속|여행|옷|쇼핑|공부|학교|회사|업무|프로젝트|코딩|개발|만화|애니|넷플|왓챠|디즈니|유튜브|tv|television|movie|book|music|song|game|exercise|work|study|travel|shopping|netflix|watch|see|read|play|listen|만나|친구|데이트|향수|향|화장품|뷰티|화장|패션|신발|가방|시계|악세서리|선글라스|코디|스킨|로션|립스틱|perfume|cosmetic|beauty|fashion|shoes|bag|watch|accessory)/;
   if(nonFoodTopics.test(t)) return false;
+  
+  // 2. 음식 관련 핵심 키워드
   var foodCore = /(밥|먹|메뉴|식사|요리|간식|디저트|맛집|배고파|배고픔|출출|해장|다이어트|식단|영양|반찬|국|찌개|구이|볶음|면|빵|커피|음료|breakfast|lunch|dinner|food|eat|meal|menu|cook|hungry|snack|recipe)/;
-  return foodCore.test(t);
+  
+  // 3. "아침/점심/저녁"만 있고 음식 키워드가 없으면 false (예: "아침에 만나자", "저녁 영화 볼까")
+  var timeOnly = /(아침|점심|저녁|breakfast|lunch|dinner)/;
+  var hasTime = timeOnly.test(t);
+  var hasFood = foodCore.test(t);
+  
+  if(hasFood) return true;
+  if(hasTime && !hasFood) return false;
+  
+  return false;
 }
 
 var $msg,$inp,$send,$emptyState,$pendStrip,$attachBtn,appInit=false;
