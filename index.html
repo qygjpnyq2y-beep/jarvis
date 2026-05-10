@@ -722,9 +722,12 @@ var I18N = {
 };
 
 var currentLang = "en";
+
+/* ===== FIXED setLang: now auto-advances to API key screen ===== */
 function setLang(lang){
   currentLang = lang;
   idbPut("settings","lang",lang);
+  
   var t = I18N[lang];
   document.getElementById("langSub").textContent = t.langSub;
   document.getElementById("apikeySub").textContent = t.apikeySub;
@@ -744,7 +747,6 @@ function setLang(lang){
   document.getElementById("anniTitle").textContent = "30 " + t.anniversaryTitle;
   document.getElementById("anniSub").textContent = t.anniversarySub;
   
-  // Update model button if exists
   updateHeader();
   
   // Update mode badge
@@ -754,10 +756,17 @@ function setLang(lang){
     badge.className = "mode-badge " + (isStarterMode ? "mode-starter" : "mode-advanced");
   }
   
-  // Lang screen active state
+  // Lang button active state
   document.querySelectorAll(".lang-btn").forEach(function(b){
     b.classList.toggle("active", b.getAttribute("onclick").includes("'"+lang+"'"));
   });
+  
+  /* === AUTO-ADVANCE === */
+  // If we are currently on the langScreen, move to apikeyScreen
+  if(!document.getElementById("langScreen").classList.contains("hidden")){
+    document.getElementById("langScreen").classList.add("hidden");
+    document.getElementById("apikeyScreen").classList.remove("hidden");
+  }
 }
 
 /* === INDEXEDDB ENGINE === */
@@ -917,7 +926,6 @@ function signOut(){
   closeConfig();
   if(auth) auth.signOut();
   else {
-    // Starter mode sign out = clear everything and reload
     localStorage.clear();
     indexedDB.deleteDatabase("jarvis_db");
     location.reload();
@@ -941,7 +949,6 @@ function onAuth(u){
     document.getElementById("r2SetupScreen").classList.add("hidden");
     if(loadFbCfg()) document.getElementById("authScreen").classList.remove("hidden");
     else {
-      // No FB config, show starter flow
       document.getElementById("authScreen").classList.add("hidden");
     }
   }
@@ -949,31 +956,58 @@ function onAuth(u){
 
 /* === FAST RESTORE ON LOAD === */
 idbOpen().then(function(){
-  idbGet("settings","lang").then(function(l){ if(l){ currentLang=l; setLang(l); } });
-  idbGet("settings","auth_user").then(function(saved){
-    if(saved && saved.uid && !currentUser && loadFbCfg()){
-      orKey = saved.orKey || "";
-      R2_WORKER = saved.r2Url || "";
-      if(orKey && R2_WORKER!==undefined){
-        document.getElementById("langScreen").classList.add("hidden");
-        document.getElementById("apikeyScreen").classList.add("hidden");
-        document.getElementById("fbSetupScreen").classList.add("hidden");
-        document.getElementById("authScreen").classList.add("hidden");
-        document.getElementById("r2SetupScreen").classList.add("hidden");
-        document.getElementById("app").classList.remove("hidden");
+  // 1. Restore language
+  idbGet("settings","lang").then(function(l){
+    if(l){
+      currentLang = l;
+      // Apply translations but DO NOT auto-advance (we handle that below based on saved state)
+      var t = I18N[l];
+      document.getElementById("langSub").textContent = t.langSub;
+      document.getElementById("apikeySub").textContent = t.apikeySub;
+      document.getElementById("apikeyWarn").innerHTML = t.apikeyWarn;
+      document.getElementById("fbSetupSub").textContent = t.fbSetupSub;
+      document.getElementById("authSub").textContent = t.authSub;
+      document.getElementById("authToggle").innerHTML = t.authToggle;
+      document.querySelector("#authScreen .s-skip").textContent = t.skipAuth;
+      document.getElementById("r2Sub").innerHTML = t.r2Sub;
+      document.getElementById("emptyOnline").textContent = t.emptyOnline;
+      document.getElementById("emptyHint").textContent = t.emptyHint;
+      document.getElementById("notifLabel").textContent = t.notifLabel;
+      document.getElementById("syncInd").textContent = t.syncInd;
+      document.getElementById("diaryText").placeholder = t.diaryPlaceholder;
+      document.getElementById("paintZone").innerHTML = t.paintZone+'<br><span style="font-size:10px;color:var(--text-tertiary)">Bulk upload with resume</span>';
+      document.getElementById("memorySearchInput").placeholder = t.searchPlaceholder;
+      document.getElementById("anniTitle").textContent = "30 " + t.anniversaryTitle;
+      document.getElementById("anniSub").textContent = t.anniversarySub;
+    }
+    
+    // 2. Check for saved auth (Advanced mode)
+    idbGet("settings","auth_user").then(function(saved){
+      if(saved && saved.uid && !currentUser && loadFbCfg()){
+        orKey = saved.orKey || "";
+        R2_WORKER = saved.r2Url || "";
+        if(orKey && R2_WORKER!==undefined){
+          document.getElementById("langScreen").classList.add("hidden");
+          document.getElementById("apikeyScreen").classList.add("hidden");
+          document.getElementById("fbSetupScreen").classList.add("hidden");
+          document.getElementById("authScreen").classList.add("hidden");
+          document.getElementById("r2SetupScreen").classList.add("hidden");
+          document.getElementById("app").classList.remove("hidden");
+        }
       }
+    });
+    
+    // 3. Check for Starter mode restore (API key only, no Firebase)
+    var savedKey = loadORKey();
+    if(savedKey && !loadFbCfg()){
+      orKey = savedKey;
+      isStarterMode = true;
+      document.getElementById("langScreen").classList.add("hidden");
+      document.getElementById("apikeyScreen").classList.add("hidden");
+      document.getElementById("app").classList.remove("hidden");
+      initApp();
     }
   });
-  // Check starter mode restore
-  var savedKey = loadORKey();
-  if(savedKey && !loadFbCfg()){
-    orKey = savedKey;
-    isStarterMode = true;
-    document.getElementById("langScreen").classList.add("hidden");
-    document.getElementById("apikeyScreen").classList.add("hidden");
-    document.getElementById("app").classList.remove("hidden");
-    initApp();
-  }
 });
 
 function saveORKey(){
@@ -982,13 +1016,11 @@ function saveORKey(){
   orKey=k;
   localStorage.setItem(LS_OR, orKey);
   if(currentUser) localStorage.setItem("ork_"+currentUser.uid, orKey);
-  // If no FB config, go straight to app (Starter)
   if(!loadFbCfg()){
     isStarterMode = true;
     showScreen("app");
     initApp();
   } else {
-    // Has FB config, ask if they want advanced
     showScreen("fbSetupScreen");
   }
 }
@@ -1204,7 +1236,7 @@ function uCol(c){
       limit:function(){return this;},
       get:function(){return Promise.resolve({docs:[]});},
       add:function(data){return Promise.resolve({id:uid()});},
-      doc:function(id){return {set:function(){},update:function(){},delete:function(){}};}
+      doc:function(id){return {set:function(){},update:function(){},delete:function(){} };}
     };
   }
   return fstore.collection("users").doc(currentUser.uid).collection(c);
@@ -1295,7 +1327,6 @@ function initApp(){
   startNewSession();
   restoreLocalState();
   initFCM();
-  setLang(currentLang);
 }
 
 function updateHeader(){
@@ -1307,7 +1338,6 @@ function updateHeader(){
     badge.textContent = isStarterMode ? t.starter : t.advanced;
     badge.className = "mode-badge " + (isStarterMode ? "mode-starter" : "mode-advanced");
   }
-  // Hide memory button in starter mode (or keep it for local memory only)
   var memBtn = document.getElementById("memBtn");
   if(memBtn) memBtn.style.display = isStarterMode ? "none" : "flex";
   var anniBtn = document.getElementById("anniBtn");
@@ -1322,7 +1352,6 @@ function updateSend(){
 
 function loadAllCaches(){
   if(isStarterMode){
-    // Load from local_memory store
     idbGet("local_memory","diary").then(function(d){if(d) diaryCache=d;});
     idbGet("local_memory","paintings").then(function(d){if(d) paintCache=d;});
     idbGet("local_memory","chats").then(function(d){if(d) chatSessionsCache=d;});
@@ -1996,7 +2025,7 @@ function handleMealRequest(text){
 
 function extractMemoriesAsync(recentMessages){
   if(!orKey) return;
-  if(isStarterMode) return; // No cloud memory extraction in starter mode
+  if(isStarterMode) return;
   var text = recentMessages.map(function(m){
     var c = typeof m.content==="string" ? m.content : JSON.stringify(m.content);
     return (m.role==="assistant"?"Jarvis":"User")+": "+c.substring(0,400);
@@ -2314,7 +2343,6 @@ function renderAnniversary(){
   var container = document.getElementById("anniversaryContent");
   var t = I18N[currentLang];
   
-  // Calculate days since first memory
   var firstTs = Date.now();
   var allMems = memCache.semantic.concat(memCache.episodic).concat(diaryCache);
   allMems.forEach(function(m){
@@ -2324,7 +2352,6 @@ function renderAnniversary(){
   var days = Math.floor((Date.now() - firstTs) / 86400000);
   if(days < 1) days = 1;
   
-  // Stats
   var newNodes = memCache.semantic.length;
   var newRelations = memCache.relations.length;
   var newThemes = memCache.themes.length;
@@ -2333,14 +2360,12 @@ function renderAnniversary(){
   
   var html = '';
   
-  // Header card
   html += '<div class="anni-card" style="text-align:center">';
   html += '<div style="font-size:48px;margin-bottom:8px">&#127881;</div>';
   html += '<div style="font-size:32px;font-family:\'Space Mono\',monospace;color:var(--accent);font-weight:700">'+days+'</div>';
   html += '<div style="font-size:13px;color:var(--text-tertiary)">'+t.anniversarySub+'</div>';
   html += '</div>';
   
-  // Stats
   html += '<div class="anni-card">';
   html += '<div class="anni-card-title">MEMORY STATISTICS</div>';
   html += '<div class="anni-stat"><span class="anni-stat-label">Semantic Nodes</span><span class="anni-stat-value">'+newNodes+'</span></div>';
@@ -2350,13 +2375,11 @@ function renderAnniversary(){
   html += '<div class="anni-stat"><span class="anni-stat-label">Messages Exchanged</span><span class="anni-stat-value">'+chatCount+'</span></div>';
   html += '</div>';
   
-  // Timeline of first memories
   if(memCache.episodic.length || memCache.semantic.length){
     html += '<div class="anni-card">';
     html += '<div class="anni-card-title">KEY MOMENTS</div>';
     html += '<div class="anni-timeline">';
     
-    // Sort all by date
     var events = [];
     memCache.episodic.slice(0,5).forEach(function(e){
       events.push({date:e.date, text:e.summary, type:'episodic'});
@@ -2375,7 +2398,6 @@ function renderAnniversary(){
     html += '</div></div>';
   }
   
-  // Graph evolution
   if(memCache.relations.length){
     html += '<div class="anni-card">';
     html += '<div class="anni-card-title">NEW CONNECTIONS</div>';
