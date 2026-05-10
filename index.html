@@ -373,7 +373,7 @@ input:focus,textarea:focus{outline:none}
   <div class="screen-logo" style="font-size:32px">JARVIS</div>
   <div class="screen-sub" id="fbSetupSub">Connect Firebase for cloud sync, backup, and media storage.</div>
   <div class="screen-form">
-    <textarea class="s-input" id="fbConfigInput" style="height:140px;text-align:left;font-size:11px;line-height:1.5" placeholder='{"apiKey":"...","authDomain":"...","projectId":"...","storageBucket":"...","messagingSenderId":"...","appId":"..."}'></textarea>
+    <textarea class="s-input" id="fbConfigInput" style="height:140px;text-align:left;font-size:11px;line-height:1.5" placeholder='{"apiKey":"...","authDomain":"...","projectId":"...","storageBucket":"...","messagingSenderId":"...","appId":"..."}' autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"></textarea>
     <button class="s-btn" onclick="saveFbConfig()">CONNECT</button>
     <div class="s-error" id="fbConfigError"></div>
     <div class="s-skip" onclick="skipAdvanced()">Skip — Use Starter Mode</div>
@@ -723,7 +723,7 @@ var I18N = {
 
 var currentLang = "en";
 
-/* ===== FIXED setLang: now auto-advances to API key screen ===== */
+/* ===== FIXED setLang: auto-advances to API key screen ===== */
 function setLang(lang){
   currentLang = lang;
   idbPut("settings","lang",lang);
@@ -749,20 +749,17 @@ function setLang(lang){
   
   updateHeader();
   
-  // Update mode badge
   var badge = document.getElementById("modeBadge");
   if(badge){
     badge.textContent = isStarterMode ? t.starter : t.advanced;
     badge.className = "mode-badge " + (isStarterMode ? "mode-starter" : "mode-advanced");
   }
   
-  // Lang button active state
   document.querySelectorAll(".lang-btn").forEach(function(b){
     b.classList.toggle("active", b.getAttribute("onclick").includes("'"+lang+"'"));
   });
   
   /* === AUTO-ADVANCE === */
-  // If we are currently on the langScreen, move to apikeyScreen
   if(!document.getElementById("langScreen").classList.contains("hidden")){
     document.getElementById("langScreen").classList.add("hidden");
     document.getElementById("apikeyScreen").classList.remove("hidden");
@@ -837,16 +834,43 @@ function hasR2(){return !!R2_WORKER}
 var LS_FB="jarvis_fb_config";function loadFbCfg(){try{var s=localStorage.getItem(LS_FB);if(s)return JSON.parse(s)}catch(e){}return null}
 var LS_OR="jarvis_or_key";function loadORKey(){return localStorage.getItem(LS_OR)||""}
 
+/* === FIREBASE INIT (모바일 대응 강화) === */
 function initFB(cfg){
-  try{
-    fbApp=firebase.initializeApp(cfg);
-    auth=firebase.auth();
-    fstore=firebase.firestore();
-    fstore.enablePersistence({synchronizeTabs:true}).catch(function(err){ console.warn("[JARVIS] Persistence error:", err.code); });
-    try{fcmMessaging=firebase.messaging()}catch(e){console.warn("[JARVIS] FCM init skipped:",e)}
+  try {
+    if (fbApp) return true;
+    if (typeof firebase !== 'undefined' && firebase.apps && firebase.apps.length > 0) {
+      fbApp = firebase.apps[0];
+      auth = firebase.auth();
+      fstore = firebase.firestore();
+      try { fcmMessaging = firebase.messaging(); } catch(e) {}
+      auth.onAuthStateChanged(onAuth);
+      return true;
+    }
+    
+    fbApp = firebase.initializeApp(cfg);
+    auth = firebase.auth();
+    fstore = firebase.firestore();
+    
+    try {
+      fstore.enablePersistence({synchronizeTabs:true}).catch(function(err){
+        console.warn("[JARVIS] Persistence error:", err.code);
+      });
+    } catch(e) { console.warn("[JARVIS] enablePersistence not supported", e); }
+    
+    try {
+      auth.setPersistence(firebase.auth.Auth.Persistence.LOCAL).catch(function(e){
+        console.warn("[JARVIS] Auth persistence error:", e);
+      });
+    } catch(e) { console.warn("[JARVIS] setPersistence not available", e); }
+    
+    try { fcmMessaging = firebase.messaging(); } catch(e) { console.warn("[JARVIS] FCM init skipped:", e); }
+    
     auth.onAuthStateChanged(onAuth);
     return true;
-  }catch(e){return false}
+  } catch(e) {
+    console.error("[JARVIS] Firebase init error:", e.message, e.stack);
+    return false;
+  }
 }
 
 /* === ONBOARDING FLOW === */
@@ -876,20 +900,49 @@ function skipAuth(){
   initApp();
 }
 
+/* === FB CONFIG SAVE (모바일 JSON 파싱 강화) === */
 function saveFbConfig(){
-  var raw=document.getElementById("fbConfigInput").value.trim();
-  var err=document.getElementById("fbConfigError");
-  err.textContent="";
-  try{
+  var raw = document.getElementById("fbConfigInput").value.trim();
+  var err = document.getElementById("fbConfigError");
+  err.textContent = "";
+  err.style.color = "#FF5F5F";
+  
+  if(!raw) { err.textContent = "Paste your Firebase config JSON."; return; }
+  
+  try {
     var cfg;
-    if(raw.startsWith("{")) cfg=JSON.parse(raw);
-    else cfg=JSON.parse(raw.replace(/(\w+)\s*:/g,'"$1":').replace(/'/g,'"'));
-    if(!cfg.apiKey||!cfg.projectId){err.textContent="Missing apiKey or projectId.";return}
-    if(!initFB(cfg)){err.textContent="Init failed.";return}
-    localStorage.setItem(LS_FB,JSON.stringify(cfg));
+    var cleaned = raw
+      .replace(/[\u2018\u2019]/g, "'")
+      .replace(/[\u201C\u201D]/g, '"')
+      .replace(/[\u2013\u2014]/g, '-')
+      .replace(/…/g, '...')
+      .replace(/\u00A0/g, ' ');
+    
+    if(cleaned.startsWith("{")) {
+      cfg = JSON.parse(cleaned);
+    } else {
+      cfg = JSON.parse(cleaned.replace(/(\w+)\s*:/g,'"$1":').replace(/'/g,'"'));
+    }
+    
+    if(!cfg.apiKey) { err.textContent = "Missing apiKey."; return; }
+    if(!cfg.authDomain) { err.textContent = "Missing authDomain."; return; }
+    if(!cfg.projectId) { err.textContent = "Missing projectId."; return; }
+    
+    if(cfg.authDomain) cfg.authDomain = cfg.authDomain.replace(/\/+$/, '');
+    
+    if(!initFB(cfg)) {
+      err.textContent = "Init failed. Check console for details. Try reloading the page.";
+      return;
+    }
+    
+    localStorage.setItem(LS_FB, JSON.stringify(cfg));
     document.getElementById("fbSetupScreen").classList.add("hidden");
     document.getElementById("authScreen").classList.remove("hidden");
-  }catch(e){err.textContent="Invalid JSON."}
+    
+  } catch(e) {
+    err.textContent = "Invalid JSON: " + e.message.substring(0, 60);
+    console.error("[JARVIS] Config parse error:", e);
+  }
 }
 
 function resetFbConfig(){
@@ -908,17 +961,29 @@ function toggleAuthMode(){
   document.getElementById("authError").textContent="";
 }
 
+/* === AUTH (모바일 대응) === */
 function doAuth(){
   var e=document.getElementById("authEmail").value.trim(),p=document.getElementById("authPass").value;
   var err=document.getElementById("authError");
   err.textContent="";
+  err.style.color = "#FF5F5F";
   if(!e||!p){err.textContent="Enter email and password.";return}
   if(p.length<6){err.textContent="6+ characters.";return}
   var promise;
   if(authMode==="signup")promise=auth.createUserWithEmailAndPassword(e,p);
   else promise=auth.signInWithEmailAndPassword(e,p);
-  promise.catch(function(x){
-    err.textContent=x.code==="auth/user-not-found"?"No account.":x.code==="auth/wrong-password"||x.code==="auth/invalid-credential"?"Wrong password.":x.code==="auth/email-already-in-use"?"Email in use.":x.message;
+  
+  promise.then(function(){
+    if(auth.currentUser) onAuth(auth.currentUser);
+  }).catch(function(x){
+    var msg = x.code==="auth/user-not-found"?"No account.":
+              x.code==="auth/wrong-password"||x.code==="auth/invalid-credential"?"Wrong password.":
+              x.code==="auth/email-already-in-use"?"Email in use.":
+              x.code==="auth/network-request-failed"?"Network error. Check connection.":
+              x.code==="auth/too-many-requests"?"Too many attempts. Try later.":
+              x.message;
+    err.textContent = msg;
+    console.error("[JARVIS] Auth error:", x.code, x.message);
   });
 }
 
@@ -956,11 +1021,9 @@ function onAuth(u){
 
 /* === FAST RESTORE ON LOAD === */
 idbOpen().then(function(){
-  // 1. Restore language
   idbGet("settings","lang").then(function(l){
     if(l){
       currentLang = l;
-      // Apply translations but DO NOT auto-advance (we handle that below based on saved state)
       var t = I18N[l];
       document.getElementById("langSub").textContent = t.langSub;
       document.getElementById("apikeySub").textContent = t.apikeySub;
@@ -981,7 +1044,6 @@ idbOpen().then(function(){
       document.getElementById("anniSub").textContent = t.anniversarySub;
     }
     
-    // 2. Check for saved auth (Advanced mode)
     idbGet("settings","auth_user").then(function(saved){
       if(saved && saved.uid && !currentUser && loadFbCfg()){
         orKey = saved.orKey || "";
@@ -997,7 +1059,6 @@ idbOpen().then(function(){
       }
     });
     
-    // 3. Check for Starter mode restore (API key only, no Firebase)
     var savedKey = loadORKey();
     if(savedKey && !loadFbCfg()){
       orKey = savedKey;
@@ -1008,6 +1069,18 @@ idbOpen().then(function(){
       initApp();
     }
   });
+});
+
+/* === ONLOAD: 모바일에서 Firebase SDK 로딩 대기 === */
+window.addEventListener('load', function(){
+  setTimeout(function(){
+    var cfg = loadFbCfg();
+    if(cfg && typeof firebase !== 'undefined') {
+      if(firebase.apps.length === 0) {
+        initFB(cfg);
+      }
+    }
+  }, 500);
 });
 
 function saveORKey(){
