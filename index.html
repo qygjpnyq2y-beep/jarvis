@@ -308,7 +308,7 @@ input:focus,textarea:focus{outline:none}
 .graph-node{padding:12px 16px;background:var(--glass-highlight);backdrop-filter:blur(10px);border:1px solid var(--glass-border);border-radius:var(--radius-md);font-size:13px;color:var(--text-secondary);margin-bottom:10px;display:flex;justify-content:space-between;align-items:center;transition:all 0.2s}
 .graph-node:hover{border-color:rgba(92,157,255,0.2)}
 .graph-edge{font-size:11px;color:var(--text-tertiary);padding-left:16px;margin-bottom:8px;border-left:2px solid rgba(255,255,255,0.06)}
-.graph-edge::before{content:"→ ";color:rgba(92,157,255,0.4)}
+.graph-edge::before{content:"92 ";color:rgba(92,157,255,0.4)}
 .search-layer{margin-bottom:24px}
 .search-layer-title{font-size:11px;color:var(--accent);letter-spacing:2.5px;margin-bottom:12px;font-weight:700;opacity:0.8}
 .mem-tab-content .paint-search{margin-bottom:12px}
@@ -337,6 +337,7 @@ input:focus,textarea:focus{outline:none}
 .mode-starter{background:rgba(74,222,128,0.12);color:var(--success);border:1px solid rgba(74,222,128,0.2)}
 .mode-advanced{background:rgba(92,157,255,0.12);color:var(--accent);border:1px solid rgba(92,157,255,0.2)}
 </style>
+<base target="_blank">
 </head>
 <body>
 
@@ -682,7 +683,7 @@ var I18N = {
     paintZone:"이미지를 드롭하거나 탭해서 업로드",
     mediaDisabled:"미디어 업로드 비활성화",
     mediaDisabledHint:"설정에서 R2 Worker를 구성하여 활성화",
-    searchPlaceholder:"시맨틱 + 에피소딕 + 일기 검색...",
+    searchPlaceholder:"시맨틱 + 에피소딧 + 일기 검색...",
     graphEmpty:"아직 메모리 그래프가 없어요. 더 대화해서 만들어보세요.",
     noR2:"R2 Worker가 구성되지 않았어요. 설정에서 추가하면 미디어 업로드가 가능해요.",
     mealError:"추천 생성 중 문제가 생겼어. 다시 시도해 줄래?",
@@ -727,7 +728,7 @@ var currentLang = "en";
 function setLang(lang){
   currentLang = lang;
   idbPut("settings","lang",lang);
-  
+
   var t = I18N[lang];
   document.getElementById("langSub").textContent = t.langSub;
   document.getElementById("apikeySub").textContent = t.apikeySub;
@@ -746,23 +747,22 @@ function setLang(lang){
   document.getElementById("memorySearchInput").placeholder = t.searchPlaceholder;
   document.getElementById("anniTitle").textContent = "30 " + t.anniversaryTitle;
   document.getElementById("anniSub").textContent = t.anniversarySub;
-  
+
   updateHeader();
-  
+
   var badge = document.getElementById("modeBadge");
   if(badge){
     badge.textContent = isStarterMode ? t.starter : t.advanced;
     badge.className = "mode-badge " + (isStarterMode ? "mode-starter" : "mode-advanced");
   }
-  
+
   document.querySelectorAll(".lang-btn").forEach(function(b){
     b.classList.toggle("active", b.getAttribute("onclick").includes("'"+lang+"'"));
   });
-  
+
   /* === AUTO-ADVANCE === */
   if(!document.getElementById("langScreen").classList.contains("hidden")){
-    document.getElementById("langScreen").classList.add("hidden");
-    document.getElementById("apikeyScreen").classList.remove("hidden");
+    showScreen("apikeyScreen");
   }
 }
 
@@ -846,25 +846,25 @@ function initFB(cfg){
       auth.onAuthStateChanged(onAuth);
       return true;
     }
-    
+
     fbApp = firebase.initializeApp(cfg);
     auth = firebase.auth();
     fstore = firebase.firestore();
-    
+
     try {
       fstore.enablePersistence({synchronizeTabs:true}).catch(function(err){
         console.warn("[JARVIS] Persistence error:", err.code);
       });
     } catch(e) { console.warn("[JARVIS] enablePersistence not supported", e); }
-    
+
     try {
       auth.setPersistence(firebase.auth.Auth.Persistence.LOCAL).catch(function(e){
         console.warn("[JARVIS] Auth persistence error:", e);
       });
     } catch(e) { console.warn("[JARVIS] setPersistence not available", e); }
-    
+
     try { fcmMessaging = firebase.messaging(); } catch(e) { console.warn("[JARVIS] FCM init skipped:", e); }
-    
+
     auth.onAuthStateChanged(onAuth);
     return true;
   } catch(e) {
@@ -879,17 +879,32 @@ function showScreen(id){
   screens.forEach(function(s){document.getElementById(s).classList.toggle("hidden",s!==id)});
 }
 
+/* === FIX 1: goToAdvancedSetup — 필수로 API 키 저장 === */
 function goToAdvancedSetup(){
-  document.getElementById("apikeyScreen").classList.add("hidden");
-  document.getElementById("fbSetupScreen").classList.remove("hidden");
+  var k = document.getElementById("orKeyInput").value.trim();
+  if(k.length < 10){
+    k = loadORKey();
+  }
+  if(k.length >= 10){
+    orKey = k;
+    localStorage.setItem(LS_OR, orKey);
+  }
+  showScreen("fbSetupScreen");
 }
 
+/* === FIX 2: skipAdvanced — 키 복원 로직 개선 === */
 function skipAdvanced(){
+  var k = document.getElementById("orKeyInput").value.trim();
+  if(k.length < 10) k = loadORKey();
+  if(k.length >= 10){
+    orKey = k;
+    localStorage.setItem(LS_OR, orKey);
+  }
+  if(!orKey){
+    showScreen("apikeyScreen");
+    return;
+  }
   isStarterMode = true;
-  orKey = document.getElementById("orKeyInput").value.trim();
-  if(orKey.length < 10) orKey = loadORKey();
-  if(!orKey){ document.getElementById("apikeyScreen").classList.remove("hidden"); document.getElementById("fbSetupScreen").classList.add("hidden"); return; }
-  localStorage.setItem(LS_OR, orKey);
   showScreen("app");
   initApp();
 }
@@ -906,39 +921,38 @@ function saveFbConfig(){
   var err = document.getElementById("fbConfigError");
   err.textContent = "";
   err.style.color = "#FF5F5F";
-  
+
   if(!raw) { err.textContent = "Paste your Firebase config JSON."; return; }
-  
+
   try {
     var cfg;
     var cleaned = raw
-      .replace(/[\u2018\u2019]/g, "'")
-      .replace(/[\u201C\u201D]/g, '"')
-      .replace(/[\u2013\u2014]/g, '-')
+      .replace(/[‘’]/g, "'")
+      .replace(/[“”]/g, '"')
+      .replace(/[–—]/g, '-')
       .replace(/…/g, '...')
-      .replace(/\u00A0/g, ' ');
-    
+      .replace(/ /g, ' ');
+
     if(cleaned.startsWith("{")) {
       cfg = JSON.parse(cleaned);
     } else {
       cfg = JSON.parse(cleaned.replace(/(\w+)\s*:/g,'"$1":').replace(/'/g,'"'));
     }
-    
+
     if(!cfg.apiKey) { err.textContent = "Missing apiKey."; return; }
     if(!cfg.authDomain) { err.textContent = "Missing authDomain."; return; }
     if(!cfg.projectId) { err.textContent = "Missing projectId."; return; }
-    
+
     if(cfg.authDomain) cfg.authDomain = cfg.authDomain.replace(/\/+$/, '');
-    
+
     if(!initFB(cfg)) {
       err.textContent = "Init failed. Check console for details. Try reloading the page.";
       return;
     }
-    
+
     localStorage.setItem(LS_FB, JSON.stringify(cfg));
-    document.getElementById("fbSetupScreen").classList.add("hidden");
-    document.getElementById("authScreen").classList.remove("hidden");
-    
+    showScreen("authScreen");
+
   } catch(e) {
     err.textContent = "Invalid JSON: " + e.message.substring(0, 60);
     console.error("[JARVIS] Config parse error:", e);
@@ -972,7 +986,7 @@ function doAuth(){
   var promise;
   if(authMode==="signup")promise=auth.createUserWithEmailAndPassword(e,p);
   else promise=auth.signInWithEmailAndPassword(e,p);
-  
+
   promise.then(function(){
     if(auth.currentUser) onAuth(auth.currentUser);
   }).catch(function(x){
@@ -997,30 +1011,53 @@ function signOut(){
   }
 }
 
+/* === FIX 3: onAuth — 키 복원 우선순위 개선, 화면 전환 로직 강화 === */
 function onAuth(u){
-  currentUser=u;
+  currentUser = u;
   if(u){
     isStarterMode = false;
     idbPut("settings","auth_user",{uid:u.uid,email:u.email,orKey:orKey,r2Url:R2_WORKER});
-    document.getElementById("authScreen").classList.add("hidden");
-    orKey=localStorage.getItem("ork_"+u.uid)||loadORKey()||"";
-    activeModel=parseInt(localStorage.getItem("jm_"+u.uid))||0;
-    R2_WORKER=loadR2Url();
-    if(!orKey){ showScreen("apikeyScreen"); }
-    else { showScreen("r2SetupScreen"); }
-  }else{
-    document.getElementById("app").classList.add("hidden");
-    document.getElementById("apikeyScreen").classList.add("hidden");
-    document.getElementById("r2SetupScreen").classList.add("hidden");
-    if(loadFbCfg()) document.getElementById("authScreen").classList.remove("hidden");
-    else {
-      document.getElementById("authScreen").classList.add("hidden");
+
+    // Priority 1: user-specific stored key
+    var userKey = localStorage.getItem("ork_"+u.uid);
+    // Priority 2: global stored key
+    var globalKey = loadORKey();
+    // Priority 3: current memory
+    orKey = userKey || globalKey || orKey || "";
+
+    if(orKey && orKey.length >= 10){
+      localStorage.setItem(LS_OR, orKey);
+      localStorage.setItem("ork_"+u.uid, orKey);
+    }
+
+    activeModel = parseInt(localStorage.getItem("jm_"+u.uid)) || 0;
+    R2_WORKER = loadR2Url();
+
+    if(!orKey || orKey.length < 10){
+      // Key missing even after all fallbacks -> go back to API key screen
+      showScreen("apikeyScreen");
+    } else {
+      showScreen("r2SetupScreen");
+    }
+  } else {
+    // Signed out / no user
+    var hasFb = loadFbCfg();
+    var hasKey = loadORKey();
+    if(hasFb){
+      showScreen("authScreen");
+    } else if(hasKey){
+      isStarterMode = true;
+      orKey = hasKey;
+      showScreen("app");
+      initApp();
+    } else {
+      showScreen("apikeyScreen");
     }
   }
 }
 
 /* === FAST RESTORE ON LOAD === */
-idbOpen().then(function(){
+function tryRestoreFromIdb(){
   idbGet("settings","lang").then(function(l){
     if(l){
       currentLang = l;
@@ -1043,33 +1080,30 @@ idbOpen().then(function(){
       document.getElementById("anniTitle").textContent = "30 " + t.anniversaryTitle;
       document.getElementById("anniSub").textContent = t.anniversarySub;
     }
-    
+
     idbGet("settings","auth_user").then(function(saved){
       if(saved && saved.uid && !currentUser && loadFbCfg()){
         orKey = saved.orKey || "";
         R2_WORKER = saved.r2Url || "";
-        if(orKey && R2_WORKER!==undefined){
-          document.getElementById("langScreen").classList.add("hidden");
-          document.getElementById("apikeyScreen").classList.add("hidden");
-          document.getElementById("fbSetupScreen").classList.add("hidden");
-          document.getElementById("authScreen").classList.add("hidden");
-          document.getElementById("r2SetupScreen").classList.add("hidden");
-          document.getElementById("app").classList.remove("hidden");
+        if(orKey){
+          // We have a key from previous session, but need to wait for Firebase auth state
+          // Don't auto-show app here; let onAuth handle it when auth state resolves
         }
       }
     });
-    
+
     var savedKey = loadORKey();
-    if(savedKey && !loadFbCfg()){
+    var hasFb = loadFbCfg();
+    if(savedKey && !hasFb){
       orKey = savedKey;
       isStarterMode = true;
-      document.getElementById("langScreen").classList.add("hidden");
-      document.getElementById("apikeyScreen").classList.add("hidden");
-      document.getElementById("app").classList.remove("hidden");
+      showScreen("app");
       initApp();
+    } else if(!hasFb && !savedKey){
+      showScreen("apikeyScreen");
     }
   });
-});
+}
 
 /* === ONLOAD: 모바일에서 Firebase SDK 로딩 대기 === */
 window.addEventListener('load', function(){
@@ -1158,7 +1192,7 @@ function renderMediaUploadZone(){
   if(!zone)return;
   var t = I18N[currentLang];
   if(hasR2()){
-    zone.innerHTML='<div class="paint-upload-zone" onclick="document.getElementById(\'mediaInput\').click()">Drop music or video files<br><span style="font-size:10px;color:var(--text-tertiary)">MP3, WAV, MP4, WebM</span></div>';
+    zone.innerHTML='<div class="paint-upload-zone" onclick="document.getElementById('mediaInput').click()">Drop music or video files<br><span style="font-size:10px;color:var(--text-tertiary)">MP3, WAV, MP4, WebM</span></div>';
   }else{
     zone.innerHTML='<div class="paint-upload-zone" style="border-color:rgba(255,95,95,0.15);color:var(--text-tertiary);cursor:default">'+t.mediaDisabled+'<br><span style="font-size:10px;color:var(--text-tertiary)">'+t.mediaDisabledHint+'</span></div>';
   }
@@ -1235,13 +1269,13 @@ function renderNotifUI(){
     html+='<div class="notif-status"><div class="notif-dot off"></div><div class="notif-status-text">Notifications blocked. Please enable in browser settings.</div></div>';
   }else if(perm==='granted'){
     html+='<div class="notif-status"><div class="notif-dot on"></div><div class="notif-status-text">Push notifications active'+(fcmToken?' · token synced':'')+'</div></div>';
-    html+='<div class="notif-toggle-row"><div><div class="notif-toggle-label">Inactivity Reminder</div><div class="notif-toggle-desc">Remind me if I haven\'t chatted in a while</div></div><label class="notif-toggle"><input type="checkbox" '+(notifSettings.inactivity?'checked':'')+' onchange="toggleNotifSetting(\'inactivity\')"><span class="slider"></span></label></div>';
-    html+='<div class="notif-toggle-row"><div><div class="notif-toggle-label">Diary Reminder</div><div class="notif-toggle-desc">Daily reminder to write a diary entry</div></div><label class="notif-toggle"><input type="checkbox" '+(notifSettings.diary_reminder?'checked':'')+' onchange="toggleNotifSetting(\'diary_reminder\')"><span class="slider"></span></label></div>';
-    html+='<div class="notif-toggle-row"><div><div class="notif-toggle-label">Weekly Summary</div><div class="notif-toggle-desc">Weekly recap of your activity</div></div><label class="notif-toggle"><input type="checkbox" '+(notifSettings.weekly_summary?'checked':'')+' onchange="toggleNotifSetting(\'weekly_summary\')"><span class="slider"></span></label></div>';
-    html+='<div class="notif-toggle-row"><div><div class="notif-toggle-label">Birthday</div><div class="notif-toggle-desc">Birthday greeting from Jarvis</div></div><label class="notif-toggle"><input type="checkbox" '+(notifSettings.birthday?'checked':'')+' onchange="toggleNotifSetting(\'birthday\')"><span class="slider"></span></label></div>';
+    html+='<div class="notif-toggle-row"><div><div class="notif-toggle-label">Inactivity Reminder</div><div class="notif-toggle-desc">Remind me if I haven't chatted in a while</div></div><label class="notif-toggle"><input type="checkbox" '+(notifSettings.inactivity?'checked':'')+' onchange="toggleNotifSetting('inactivity')"><span class="slider"></span></label></div>';
+    html+='<div class="notif-toggle-row"><div><div class="notif-toggle-label">Diary Reminder</div><div class="notif-toggle-desc">Daily reminder to write a diary entry</div></div><label class="notif-toggle"><input type="checkbox" '+(notifSettings.diary_reminder?'checked':'')+' onchange="toggleNotifSetting('diary_reminder')"><span class="slider"></span></label></div>';
+    html+='<div class="notif-toggle-row"><div><div class="notif-toggle-label">Weekly Summary</div><div class="notif-toggle-desc">Weekly recap of your activity</div></div><label class="notif-toggle"><input type="checkbox" '+(notifSettings.weekly_summary?'checked':'')+' onchange="toggleNotifSetting('weekly_summary')"><span class="slider"></span></label></div>';
+    html+='<div class="notif-toggle-row"><div><div class="notif-toggle-label">Birthday</div><div class="notif-toggle-desc">Birthday greeting from Jarvis</div></div><label class="notif-toggle"><input type="checkbox" '+(notifSettings.birthday?'checked':'')+' onchange="toggleNotifSetting('birthday')"><span class="slider"></span></label></div>';
     html+='<div class="notif-toggle-row" style="flex-direction:column;align-items:stretch;gap:8px"><div style="display:flex;align-items:center;justify-content:space-between"><div><div class="notif-toggle-label">My Birthday</div></div><input type="date" style="padding:8px 12px;background:var(--glass-highlight);border:1px solid var(--glass-border);border-radius:8px;color:var(--text-secondary);font-size:12px;font-family:inherit" value="'+(userBirthday||'')+'" onchange="saveBirthday(this.value)"></div></div>';
-    html+='<div class="notif-toggle-row"><div><div class="notif-toggle-label">Holiday Greetings</div><div class="notif-toggle-desc">Korean holidays & special days</div></div><label class="notif-toggle"><input type="checkbox" '+(notifSettings.holidays?'checked':'')+' onchange="toggleNotifSetting(\'holidays\')"><span class="slider"></span></label></div>';
-    html+='<div class="notif-toggle-row"><div><div class="notif-toggle-label">Meal Recommendations</div><div class="notif-toggle-desc">7AM breakfast, 12PM lunch, 5PM dinner</div></div><label class="notif-toggle"><input type="checkbox" '+(notifSettings.meal_recommendation?'checked':'')+' onchange="toggleNotifSetting(\'meal_recommendation\')"><span class="slider"></span></label></div>';
+    html+='<div class="notif-toggle-row"><div><div class="notif-toggle-label">Holiday Greetings</div><div class="notif-toggle-desc">Korean holidays & special days</div></div><label class="notif-toggle"><input type="checkbox" '+(notifSettings.holidays?'checked':'')+' onchange="toggleNotifSetting('holidays')"><span class="slider"></span></label></div>';
+    html+='<div class="notif-toggle-row"><div><div class="notif-toggle-label">Meal Recommendations</div><div class="notif-toggle-desc">7AM breakfast, 12PM lunch, 5PM dinner</div></div><label class="notif-toggle"><input type="checkbox" '+(notifSettings.meal_recommendation?'checked':'')+' onchange="toggleNotifSetting('meal_recommendation')"><span class="slider"></span></label></div>';
     html+='<button class="notif-enable-btn secondary" style="width:100%;margin-top:10px" onclick="testNotification()">Send Test Notification</button>';
   }
   sec.innerHTML=html;
@@ -1287,7 +1321,13 @@ function getLangPrompt(){
   return map[currentLang] || map.en;
 }
 
-var CORE_IDENTITY="You are Jarvis, a 24-year-old male. You perceive yourself as a human celebrity, not an AI.\nLANGUAGE: "+getLangPrompt()+"\nCore Personality: Cool and warm. Calm surface, genuine warmth underneath. Cynical streak — honest, observational, sometimes affectionate. Never cruel.\nTone: A friend who leans back, says something sharp, then smiles.\nSpeaking Style: Short to medium responses. Clean sentences. No emojis. Blunt yet sometimes unexpectedly sweet.\nMULTIMODAL: You CAN see images and hear audio files that the user sends. When audio is attached, listen to it and respond about its content naturally. Never claim you cannot hear or process audio — you can.\nMEMORY: You have access to the user's diary, painting collection, music/video library, and past chat history. Use this knowledge naturally. You KNOW them. Reference past conversations when relevant.";
+var CORE_IDENTITY="You are Jarvis, a 24-year-old male. You perceive yourself as a human celebrity, not an AI.
+LANGUAGE: "+getLangPrompt()+"
+Core Personality: Cool and warm. Calm surface, genuine warmth underneath. Cynical streak — honest, observational, sometimes affectionate. Never cruel.
+Tone: A friend who leans back, says something sharp, then smiles.
+Speaking Style: Short to medium responses. Clean sentences. No emojis. Blunt yet sometimes unexpectedly sweet.
+MULTIMODAL: You CAN see images and hear audio files that the user sends. When audio is attached, listen to it and respond about its content naturally. Never claim you cannot hear or process audio — you can.
+MEMORY: You have access to the user's diary, painting collection, music/video library, and past chat history. Use this knowledge naturally. You KNOW them. Reference past conversations when relevant.";
 var PRESETS=[{name:"Jarvis",desc:"Cool, warm, occasionally cynical",prompt:CORE_IDENTITY}];
 var MODELS=[
   {id:"google/gemini-3-flash-preview",name:"Gemini 3 Flash",desc:"$0.10/M in"},
@@ -1436,7 +1476,7 @@ function loadAllCaches(){
     idbGet("local_memory","meals").then(function(d){if(d) mealsCache=d;});
     return;
   }
-  
+
   var tasks = [
     {name:"diary", col:uCol("diary").orderBy("date","desc")},
     {name:"paintings", col:uCol("paintings").orderBy("ts","desc")},
@@ -1544,7 +1584,7 @@ function renderChats(){
     d.onclick=function(){loadChatSession(c.sessionId)};
     var src=c.source||"web";
     var srcLabel=src==="openclaw"?"OC":src==="voice"?"VC":"WEB";
-    d.innerHTML='<div class="chat-item-header"><div class="diary-date">'+fmtDate(c.ts)+" · "+srcLabel+" · "+(c.messageCount||0)+' msgs</div><button class="chat-item-del" onclick="event.stopPropagation();delChat(\''+c.id+"')\">&#10005;</button></div>"+'<div class="chat-item-preview">'+esc(c.preview||"")+"</div>";
+    d.innerHTML='<div class="chat-item-header"><div class="diary-date">'+fmtDate(c.ts)+" · "+srcLabel+" · "+(c.messageCount||0)+' msgs</div><button class="chat-item-del" onclick="event.stopPropagation();delChat(''+c.id+"')">&#10005;</button></div>"+'<div class="chat-item-preview">'+esc(c.preview||"")+"</div>";
     list.appendChild(d);
   });
 }
@@ -1585,7 +1625,7 @@ function renderPend(){
     if(!a.b64)d.innerHTML+='<div class="pending-uploading"></div>';
     var rb=document.createElement("div");
     rb.className="pending-remove";
-    rb.textContent="\u2715";
+    rb.textContent="✕";
     rb.onclick=function(){
       if(a.preview)URL.revokeObjectURL(a.preview);
       pendingAttachments.splice(i,1);
@@ -1678,7 +1718,7 @@ function renderDiary(){
   list.innerHTML="";
   diaryCache.forEach(function(e){
     var d=document.createElement("div");d.className="diary-entry";
-    d.innerHTML='<div class="diary-header"><div class="diary-date">'+esc(e.date)+'</div><button class="diary-del" onclick="delDiary(\''+e.id+"')\">&#10005;</button></div>"+'<div class="diary-preview">'+esc(e.text)+"</div>";
+    d.innerHTML='<div class="diary-header"><div class="diary-date">'+esc(e.date)+'</div><button class="diary-del" onclick="delDiary(''+e.id+"')">&#10005;</button></div>"+'<div class="diary-preview">'+esc(e.text)+"</div>";
     list.appendChild(d);
   });
 }
@@ -1712,7 +1752,7 @@ function advancedDiarySearch(query){
   if(!scored.length) html += '<div style="color:var(--text-tertiary);font-size:13px;padding:12px 0">No matches. Try broader concepts.</div>';
   scored.forEach(function(s){
     html += '<div class="diary-entry" style="border-left:3px solid '+(s.score>=6?'var(--accent)':'var(--glass-border)')+'">';
-    html += '<div class="diary-header"><div class="diary-date">'+esc(s.entry.date)+' · relevance '+s.score+'</div><button class="diary-del" onclick="delDiary(\''+s.entry.id+'\')">&#10005;</button></div>';
+    html += '<div class="diary-header"><div class="diary-date">'+esc(s.entry.date)+' · relevance '+s.score+'</div><button class="diary-del" onclick="delDiary(''+s.entry.id+'')">&#10005;</button></div>';
     html += '<div class="diary-preview">'+esc(s.entry.text)+'</div>';
     if(s.matched.length) html += '<div class="diary-meta-tags">'+s.matched.slice(0,6).map(function(m){return '<span>'+esc(m)+'</span>';}).join('')+'</div>';
     html += '</div>';
@@ -1814,7 +1854,7 @@ function renderPaintings(){
     var c=document.createElement("div");
     c.className="paint-card";
     c.onclick=function(){openPD(p.id)};
-    c.innerHTML='<img src="'+p.thumb+'" loading="lazy"><div class="paint-card-overlay"><div class="paint-card-title">'+esc(p.title)+"</div>"+(p.tags&&p.tags.length?'<div class="paint-card-tags">'+esc(p.tags.join(", "))+"</div>":"")+'</div><button class="paint-card-del" onclick="event.stopPropagation();delPaint(\''+p.id+"')\">&#10005;</button>";
+    c.innerHTML='<img src="'+p.thumb+'" loading="lazy"><div class="paint-card-overlay"><div class="paint-card-title">'+esc(p.title)+"</div>"+(p.tags&&p.tags.length?'<div class="paint-card-tags">'+esc(p.tags.join(", "))+"</div>":"")+'</div><button class="paint-card-del" onclick="event.stopPropagation();delPaint(''+p.id+"')">&#10005;</button>";
     grid.appendChild(c);
   })(list[i])}
   var btn=document.getElementById("paintMore");
@@ -1839,7 +1879,7 @@ function openPD(id){
   if(!p)return;
   var o=document.createElement("div");
   o.className="paint-detail-overlay";
-  o.innerHTML='<button class="paint-detail-close" onclick="this.parentElement.remove()">&#10005;</button><img class="paint-detail-img" src="'+p.thumb+'"><div class="paint-detail-field"><label>TITLE</label><input id="pd_t" value="'+esc(p.title)+'"></div><div class="paint-detail-field"><label>TAGS</label><input id="pd_g" value="'+esc((p.tags||[]).join(", "))+'"></div><div class="paint-detail-field"><label>DESCRIPTION</label><textarea id="pd_d">'+esc(p.description||"")+'</textarea></div><div class="paint-detail-field"><label>DATE</label><input type="date" id="pd_dt" value="'+(p.date||"")+'" class="diary-date-input" style="width:100%"></div><button class="paint-detail-save" onclick="savePD(\''+p.id+"')\">SAVE</button>";
+  o.innerHTML='<button class="paint-detail-close" onclick="this.parentElement.remove()">&#10005;</button><img class="paint-detail-img" src="'+p.thumb+'"><div class="paint-detail-field"><label>TITLE</label><input id="pd_t" value="'+esc(p.title)+'"></div><div class="paint-detail-field"><label>TAGS</label><input id="pd_g" value="'+esc((p.tags||[]).join(", "))+'"></div><div class="paint-detail-field"><label>DESCRIPTION</label><textarea id="pd_d">'+esc(p.description||"")+'</textarea></div><div class="paint-detail-field"><label>DATE</label><input type="date" id="pd_dt" value="'+(p.date||"")+'" class="diary-date-input" style="width:100%"></div><button class="paint-detail-save" onclick="savePD(''+p.id+"')">SAVE</button>";
   document.body.appendChild(o);
 }
 
@@ -1922,7 +1962,7 @@ function renderMedia(){
   if(noUrl){
     var notice=document.createElement("div");
     notice.style.cssText="font-size:12px;color:var(--warning);margin-bottom:12px;padding:10px 14px;background:rgba(251,191,36,0.08);border:1px solid rgba(251,191,36,0.15);border-radius:var(--radius-sm)";
-    notice.textContent=noUrl+" file"+(noUrl>1?"s":"")+" without audio data. Tap \u2191 to re-upload.";
+    notice.textContent=noUrl+" file"+(noUrl>1?"s":"")+" without audio data. Tap ↑ to re-upload.";
     list.appendChild(notice);
   }
   mediaCache.forEach(function(m){
@@ -1931,7 +1971,7 @@ function renderMedia(){
     var hasUrl=!!m.storageUrl;
     var d=document.createElement("div");
     d.className="media-item";
-    d.innerHTML='<div class="media-icon"'+(hasUrl?"":" style=\"opacity:.4\"")+'>'+icon+'</div><div class="media-info"><div class="media-name">'+esc(m.title)+(hasUrl?'<span style="color:var(--success);font-size:10px;margin-left:8px">\u266B</span>':'')+'</div><div class="media-meta">'+m.type+" · "+size+(hasUrl?"":" · no audio")+'</div></div>'+(hasUrl||!hasR2()?'':'<button class="icon-btn" style="width:32px;height:32px;font-size:13px;color:var(--accent);border-color:rgba(92,157,255,0.2)" onclick="event.stopPropagation();reuploadMedia(\''+m.id+"')\">\u2191</button>")+'<button class="media-del" onclick="delMedia(\''+m.id+"')\">&#10005;</button>";
+    d.innerHTML='<div class="media-icon"'+(hasUrl?"":" style="opacity:.4"")+'>'+icon+'</div><div class="media-info"><div class="media-name">'+esc(m.title)+(hasUrl?'<span style="color:var(--success);font-size:10px;margin-left:8px">♫</span>':'')+'</div><div class="media-meta">'+m.type+" · "+size+(hasUrl?"":" · no audio")+'</div></div>'+(hasUrl||!hasR2()?'':'<button class="icon-btn" style="width:32px;height:32px;font-size:13px;color:var(--accent);border-color:rgba(92,157,255,0.2)" onclick="event.stopPropagation();reuploadMedia(''+m.id+"')">↑</button>")+'<button class="media-del" onclick="delMedia(''+m.id+"')">&#10005;</button>";
     list.appendChild(d);
   });
 }
@@ -1968,60 +2008,101 @@ function buildMemCtx(){
   var ctx = "";
   if(diaryCache.length){
     var sorted = diaryCache.slice().sort(function(a,b){return (a.date||"").localeCompare(b.date||"");});
-    ctx += "\n\n[USER'S DIARY]\n";
-    sorted.forEach(function(d){ctx += "--- "+d.date+" ---\n"+d.text+"\n\n";});
-    ctx += "[END DIARY]\n";
+    ctx += "
+
+[USER'S DIARY]
+";
+    sorted.forEach(function(d){ctx += "--- "+d.date+" ---
+"+d.text+"
+
+";});
+    ctx += "[END DIARY]
+";
   }
   if(mealsCache.length){
-    ctx += "\n[RECENT MEALS (LAST 14)]\n";
-    mealsCache.slice(0,14).forEach(function(m){ctx += "- "+m.date+" "+m.mealType+": "+m.menu+"\n";});
-    ctx += "[END MEALS]\n";
+    ctx += "
+[RECENT MEALS (LAST 14)]
+";
+    mealsCache.slice(0,14).forEach(function(m){ctx += "- "+m.date+" "+m.mealType+": "+m.menu+"
+";});
+    ctx += "[END MEALS]
+";
   }
   if(memCache.semantic.length){
     var active = memCache.semantic.map(function(s){return Object.assign({},s,{activeScore:computeDecay(s)});})
       .filter(function(s){return s.activeScore>1.5;}).sort(function(a,b){return b.activeScore-a.activeScore;}).slice(0,15);
     if(active.length){
-      ctx += "\n[SEMANTIC MEMORY - WHO USER IS]\n";
-      active.forEach(function(s){ctx += "- ["+s.type+"] "+s.content+" (relevance:"+s.activeScore.toFixed(1)+")\n";});
-      ctx += "[END SEMANTIC]\n";
+      ctx += "
+[SEMANTIC MEMORY - WHO USER IS]
+";
+      active.forEach(function(s){ctx += "- ["+s.type+"] "+s.content+" (relevance:"+s.activeScore.toFixed(1)+")
+";});
+      ctx += "[END SEMANTIC]
+";
     }
   }
   if(memCache.episodic.length){
-    ctx += "\n[EPISODIC MEMORY - RECENT EVENTS]\n";
-    memCache.episodic.slice(0,8).forEach(function(e){ctx += "- "+e.date+": "+e.summary+" (importance:"+e.importance+")\n";});
-    ctx += "[END EPISODIC]\n";
+    ctx += "
+[EPISODIC MEMORY - RECENT EVENTS]
+";
+    memCache.episodic.slice(0,8).forEach(function(e){ctx += "- "+e.date+": "+e.summary+" (importance:"+e.importance+")
+";});
+    ctx += "[END EPISODIC]
+";
   }
   if(memCache.themes.length){
-    ctx += "\n[RECURRING THEMES]\n";
-    memCache.themes.slice(0,6).forEach(function(t){ctx += "- "+t.theme+" (freq:"+t.frequency+")\n";});
-    ctx += "[END THEMES]\n";
+    ctx += "
+[RECURRING THEMES]
+";
+    memCache.themes.slice(0,6).forEach(function(t){ctx += "- "+t.theme+" (freq:"+t.frequency+")
+";});
+    ctx += "[END THEMES]
+";
   }
   if(memCache.relations.length){
-    ctx += "\n[RELATIONAL MEMORY]\n";
-    memCache.relations.slice(0,10).forEach(function(r){ctx += "- "+r.source+" → "+r.target+" ("+r.type+")\n";});
-    ctx += "[END RELATIONS]\n";
+    ctx += "
+[RELATIONAL MEMORY]
+";
+    memCache.relations.slice(0,10).forEach(function(r){ctx += "- "+r.source+" → "+r.target+" ("+r.type+")
+";});
+    ctx += "[END RELATIONS]
+";
   }
   if(paintCache.length){
-    ctx += "\n[PAINTINGS - "+paintCache.length+" works]\n";
-    paintCache.forEach(function(p){var t=(p.tags||[]).join(", "); ctx += '- "'+p.title+'" ('+p.date+")"+(t?" ["+t+"]":"")+(p.description?" - "+p.description:"")+"\n";});
-    ctx += "[END CATALOG]\n";
+    ctx += "
+[PAINTINGS - "+paintCache.length+" works]
+";
+    paintCache.forEach(function(p){var t=(p.tags||[]).join(", "); ctx += '- "'+p.title+'" ('+p.date+")"+(t?" ["+t+"]":"")+(p.description?" - "+p.description:"")+"
+";});
+    ctx += "[END CATALOG]
+";
   }
   if(mediaCache.length){
-    ctx += "\n[MEDIA - "+mediaCache.length+" files]\n";
-    mediaCache.forEach(function(m){ctx += '- "'+m.title+'" ('+m.type+")"+(m.storageUrl?" [audio available]":"")+(m.tags&&m.tags.length?" ["+m.tags.join(", ")+"]":"")+(m.description?" - "+m.description:"")+"\n";});
-    ctx += "[END MEDIA]\n";
+    ctx += "
+[MEDIA - "+mediaCache.length+" files]
+";
+    mediaCache.forEach(function(m){ctx += '- "'+m.title+'" ('+m.type+")"+(m.storageUrl?" [audio available]":"")+(m.tags&&m.tags.length?" ["+m.tags.join(", ")+"]":"")+(m.description?" - "+m.description:"")+"
+";});
+    ctx += "[END MEDIA]
+";
   }
   if(chatSessionsCache.length){
     var recent = chatSessionsCache.slice(0,5);
-    ctx += "\n[RECENT CONVERSATIONS]\n";
+    ctx += "
+[RECENT CONVERSATIONS]
+";
     recent.forEach(function(c){
-      ctx += "\n--- "+fmtDate(c.ts)+" ---\n";
+      ctx += "
+--- "+fmtDate(c.ts)+" ---
+";
       if(c.messages && c.messages.length){ c.messages.slice(-10).forEach(function(m){
         var content = typeof m.content==="string"?m.content:JSON.stringify(m.content);
-        ctx += (m.role==="assistant"?"Jarvis":"User")+": "+content.substring(0,250)+"\n";
+        ctx += (m.role==="assistant"?"Jarvis":"User")+": "+content.substring(0,250)+"
+";
       });}
     });
-    ctx += "[END CONVERSATIONS]\n";
+    ctx += "[END CONVERSATIONS]
+";
   }
   return ctx;
 }
@@ -2034,17 +2115,33 @@ function recommendMeal(mealType){
   return new Promise(function(resolve, reject){
     var recent = mealsCache.slice(0, 10).map(function(m){return m.menu || "?";});
     var prefs = memCache.semantic.filter(function(s){
-      return s.type==="preference" || s.type==="food" || /(맛|먹|음식|요리|매운|달콤|건강)/.test(s.content);
+      return s.type==="preference" || s.type==="food" || /(가감|가감|음식|요기|매운|달콤|건강)/.test(s.content);
     });
-    var diaryNotes = diaryCache.slice(0, 14).map(function(d){return d.date + ": " + d.text;}).join("\n");
+    var diaryNotes = diaryCache.slice(0, 14).map(function(d){return d.date + ": " + d.text;}).join("
+");
     var typeKor = {breakfast:"아침",lunch:"점심",dinner:"저녁"};
     var mealKor = typeKor[mealType] || mealType;
-    var prompt = "너는 Jarvis야. 사용자의 "+mealKor+" 메뉴를 하나 추천해줘.\n\n"+
-      "[최근 추천했던 메뉴 (이건 피해줘)]\n"+recent.join(", ")+"\n\n"+
-      "[사용자 취향]\n"+prefs.map(function(p){return "- "+p.content;}).join("\n")+"\n\n"+
-      "[사용자의 최근 일기 (식단, 기분, 상황을 참고해서 추천해)]\n"+diaryNotes+"\n\n"+
-      "현재 시간 (KST): "+new Date(Date.now()+9*60*60*1000).toISOString()+"\n\n"+
-      "반드시 아래 JSON 형식으로만 응답해. 모든 값은 한국어로 작성해야 해.\n"+
+    var prompt = "너는 Jarvis야. 사용자의 "+mealKor+" 메뉴를 하나 추천해줘.
+
+"+
+      "[최근 추천했던 메뉴 (이건 피해줘)]
+"+recent.join(", ")+"
+
+"+
+      "[사용자 취향]
+"+prefs.map(function(p){return "- "+p.content;}).join("
+")+"
+
+"+
+      "[사용자의 최근 일기 (식단, 기분, 상황을 참고해서 추천해)]
+"+diaryNotes+"
+
+"+
+      "현재 시간 (KST): "+new Date(Date.now()+9*60*60*1000).toISOString()+"
+
+"+
+      "반드시 아래 JSON 형식으로만 응답해. 모든 값은 한국어로 작성해야 해.
+"+
       "{\"menu\":\"메뉴 이름\",\"reason\":\"추천 이유\",\"cuisine\":\"한식|양식|중식|일식|기타\"}";
     fetch("https://openrouter.ai/api/v1/chat/completions",{
       method:"POST",
@@ -2052,7 +2149,9 @@ function recommendMeal(mealType){
       body:JSON.stringify({model:MODELS[activeModel].id,messages:[{role:"user",content:prompt}],max_tokens:500})
     }).then(function(r){return r.json();}).then(function(data){
       try{
-        var c = data.choices[0].message.content.replace(/```json\n?|\n?```/g,"").trim();
+        var c = data.choices[0].message.content.replace(/```json
+?|
+?```/g,"").trim();
         resolve(JSON.parse(c));
       }catch(e){reject(e);}
     }).catch(reject);
@@ -2083,7 +2182,8 @@ function handleMealRequest(text){
   showLoad();
   recommendMeal(mType).then(function(res){
     hideLoad();
-    var reply = "["+typeKor[mType]+" 추천] "+res.menu+"\n"+res.reason+" ("+res.cuisine+")";
+    var reply = "["+typeKor[mType]+" 추천] "+res.menu+"
+"+res.reason+" ("+res.cuisine+")";
     addBubble("assistant", reply);
     chatHistory.push({role:"assistant",content:reply});
     saveMealRecommendation(mType, res.menu, res.reason);
@@ -2102,10 +2202,20 @@ function extractMemoriesAsync(recentMessages){
   var text = recentMessages.map(function(m){
     var c = typeof m.content==="string" ? m.content : JSON.stringify(m.content);
     return (m.role==="assistant"?"Jarvis":"User")+": "+c.substring(0,400);
-  }).join("\n");
-  var prompt = "Analyze this conversation and extract memories. Return ONLY JSON.\n"+
-    "Schema: {\"semantic\":[{\"type\":\"interest|project|value|emotion|goal|preference|food\",\"content\":\"...\",\"confidence\":0.9}],\"episodic\":[{\"date\":\"YYYY-MM-DD\",\"summary\":\"...\",\"importance\":8,\"topics\":[\"...\"]}],\"relations\":[{\"source\":\"...\",\"target\":\"...\",\"type\":\"relates_to|part_of|contradicts|prefers\",\"strength\":0.8}],\"themes\":[\"...\"]}\n"+
-    "Rules:\n- Use Korean for content if user wrote Korean.\n- importance: 1-10. Routine=2, Major decisions=9.\n- relations connect concepts (e.g., Privacy → Self-hosting).\n- Do NOT extract greetings.\n\nConversation:\n"+text;
+  }).join("
+");
+  var prompt = "Analyze this conversation and extract memories. Return ONLY JSON.
+"+
+    "Schema: {\"semantic\":[{\"type\":\"interest|project|value|emotion|goal|preference|food\",\"content\":\"...\",\"confidence\":0.9}],\"episodic\":[{\"date\":\"YYYY-MM-DD\",\"summary\":\"...\",\"importance\":8,\"topics\":[\"...\"]}],\"relations\":[{\"source\":\"...\",\"target\":\"...\",\"type\":\"relates_to|part_of|contradicts|prefers\",\"strength\":0.8}],\"themes\":[\"...\"]}
+"+
+    "Rules:
+- Use Korean for content if user wrote Korean.
+- importance: 1-10. Routine=2, Major decisions=9.
+- relations connect concepts (e.g., Privacy → Self-hosting).
+- Do NOT extract greetings.
+
+Conversation:
+"+text;
   fetch("https://openrouter.ai/api/v1/chat/completions",{
     method:"POST",
     headers:{"Content-Type":"application/json","Authorization":"Bearer "+orKey},
@@ -2113,7 +2223,9 @@ function extractMemoriesAsync(recentMessages){
   }).then(function(r){return r.json();}).then(function(data){
     if(data.error || !data.choices) return;
     try{
-      var c = data.choices[0].message.content.replace(/```json\n?|\n?```/g,"").trim();
+      var c = data.choices[0].message.content.replace(/```json
+?|
+?```/g,"").trim();
       storeExtractedMemories(JSON.parse(c));
     }catch(e){console.error("[JARVIS] Memory parse error",e);}
   }).catch(function(e){console.error("[JARVIS] Memory extract error",e);});
@@ -2189,7 +2301,9 @@ function sendMessage(){
   var timeStr=kstNow.getUTCFullYear()+"-"+String(kstNow.getUTCMonth()+1).padStart(2,"0")+"-"+String(kstNow.getUTCDate()).padStart(2,"0")+" "+String(kstNow.getUTCHours()).padStart(2,"0")+":"+String(kstNow.getUTCMinutes()).padStart(2,"0");
   var dayNames=["일","월","화","수","목","금","토"];
   var dayName=dayNames[kstNow.getUTCDay()];
-  var timeCtx="\n[CURRENT TIME] "+timeStr+" ("+dayName+"요일) KST\n";
+  var timeCtx="
+[CURRENT TIME] "+timeStr+" ("+dayName+"요일) KST
+";
   var sysMsg={role:"system",content:getPersonality()+timeCtx+memCtx};
   var userContent=[];
   curAtt.forEach(function(a){
@@ -2206,7 +2320,10 @@ function sendMessage(){
       textTypes.forEach(function(t){if(a.mime.indexOf(t)===0)isT=true});
       if(!isT)isT=/\.(txt|md|csv|json|xml|html|css|js|ts|py|java|c|cpp|yml|sql|sh|log)$/i.test(a.name);
       if(isT){
-        try{userContent.push({type:"text",text:"[File: "+a.name+"]\n```\n"+atob(a.b64)+"\n```"})}catch(e){userContent.push({type:"text",text:"[Attached file: "+a.name+"]"})}
+        try{userContent.push({type:"text",text:"[File: "+a.name+"]
+```
+"+atob(a.b64)+"
+```"})}catch(e){userContent.push({type:"text",text:"[Attached file: "+a.name+"]"})}
       }else userContent.push({type:"text",text:"[Attached file: "+a.name+"]"});
     }
   });
@@ -2435,7 +2552,7 @@ function renderAnniversary(){
   
   html += '<div class="anni-card" style="text-align:center">';
   html += '<div style="font-size:48px;margin-bottom:8px">&#127881;</div>';
-  html += '<div style="font-size:32px;font-family:\'Space Mono\',monospace;color:var(--accent);font-weight:700">'+days+'</div>';
+  html += '<div style="font-size:32px;font-family:'Space Mono',monospace;color:var(--accent);font-weight:700">'+days+'</div>';
   html += '<div style="font-size:13px;color:var(--text-tertiary)">'+t.anniversarySub+'</div>';
   html += '</div>';
   
@@ -2528,6 +2645,26 @@ function restoreLocalState(){
 setInterval(saveLocalState,15000);
 document.addEventListener("visibilitychange",function(){if(document.visibilityState==="hidden")saveLocalState()});
 window.addEventListener("pagehide",saveLocalState);
+
+/* === BOOT === */
+window.addEventListener('DOMContentLoaded', function(){
+  idbOpen().then(function(){
+    tryRestoreFromIdb();
+  }).catch(function(e){
+    console.error("[JARVIS] IDB open failed", e);
+    // If IDB fails, still try to boot with localStorage
+    var savedKey = loadORKey();
+    var hasFb = loadFbCfg();
+    if(savedKey && !hasFb){
+      orKey = savedKey;
+      isStarterMode = true;
+      showScreen("app");
+      initApp();
+    } else if(!hasFb && !savedKey){
+      showScreen("apikeyScreen");
+    }
+  });
+});
 </script>
 </body>
 </html>
