@@ -336,6 +336,19 @@ input:focus,textarea:focus{outline:none}
 .mode-badge{display:inline-block;padding:3px 10px;border-radius:20px;font-size:9px;font-weight:700;letter-spacing:1px;text-transform:uppercase;margin-left:8px}
 .mode-starter{background:rgba(74,222,128,0.12);color:var(--success);border:1px solid rgba(74,222,128,0.2)}
 .mode-advanced{background:rgba(92,157,255,0.12);color:var(--accent);border:1px solid rgba(92,157,255,0.2)}
+
+.mobile-only{display:none}
+.desktop-only{display:flex}
+@media (max-width: 768px){
+  .mobile-only{display:flex !important}
+  .desktop-only{display:none !important}
+  .header-btns{display:none !important}
+  .hamburger{font-size:20px;width:40px;height:40px}
+  .mobile-menu{position:fixed;top:max(60px,env(safe-area-inset-top));right:12px;background:var(--bg-elevated);backdrop-filter:blur(24px) saturate(180%);-webkit-backdrop-filter:blur(24px) saturate(180%);border:1px solid var(--glass-border);border-radius:var(--radius-md);padding:8px;z-index:60;display:flex;flex-direction:column;gap:4px;min-width:180px;box-shadow:0 8px 32px rgba(0,0,0,0.4);animation:float-in .2s ease}
+  .mobile-menu-item{padding:12px 16px;background:transparent;border:none;border-radius:var(--radius-sm);color:var(--text-secondary);font-family:inherit;font-size:14px;text-align:left;cursor:pointer;display:flex;align-items:center;gap:12px;transition:all 0.2s}
+  .mobile-menu-item:hover,.mobile-menu-item:active{background:rgba(92,157,255,0.08);color:var(--accent)}
+  .mobile-menu-backdrop{position:fixed;inset:0;z-index:55;background:transparent}
+}
 </style>
 <base target="_blank">
 </head>
@@ -419,13 +432,22 @@ input:focus,textarea:focus{outline:none}
         <div class="header-sub" id="headerSub"></div>
       </div>
     </div>
-    <div class="header-btns">
+    <div class="header-btns desktop-only">
       <button class="icon-btn" onclick="clearChat()">&#8634;</button>
       <button class="icon-btn" onclick="openMemory()" id="memBtn" title="Memory">&#128218;</button>
       <button class="icon-btn" onclick="openAnniversary()" id="anniBtn" title="Anniversary">&#127881;</button>
       <button class="icon-btn" onclick="openConfig()">&#9881;</button>
     </div>
+    <button class="icon-btn mobile-only hamburger" onclick="toggleMobileMenu()">&#9776;</button>
   </div>
+    <!-- Mobile Menu -->
+  <div class="mobile-menu-backdrop hidden" id="mobileMenuBack" onclick="closeMobileMenu()"></div>
+  <div class="mobile-menu hidden" id="mobileMenu">
+    <button class="mobile-menu-item" onclick="openConfig();closeMobileMenu()">&#9881;<span>Settings</span></button>
+    <button class="mobile-menu-item" onclick="openMemory();closeMobileMenu()">&#128218;<span>Memory</span></button>
+    <button class="mobile-menu-item" onclick="openAnniversary();closeMobileMenu()">&#127881;<span>Anniversary</span></button>
+  </div>
+
   <div class="messages" id="messages">
     <div class="empty-state" id="emptyState">
       <div class="empty-glyph">JARVIS</div>
@@ -583,6 +605,22 @@ input:focus,textarea:focus{outline:none}
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-messaging-compat.js"></script>
 <script>
+/* === MOBILE HAMBURGER MENU === */
+function toggleMobileMenu(){
+  var menu = document.getElementById("mobileMenu");
+  var back = document.getElementById("mobileMenuBack");
+  if(menu.classList.contains("hidden")){
+    menu.classList.remove("hidden");
+    back.classList.remove("hidden");
+  }else{
+    closeMobileMenu();
+  }
+}
+function closeMobileMenu(){
+  document.getElementById("mobileMenu").classList.add("hidden");
+  document.getElementById("mobileMenuBack").classList.add("hidden");
+}
+
 /* ================= I18N ================= */
 var I18N = {
   en:{
