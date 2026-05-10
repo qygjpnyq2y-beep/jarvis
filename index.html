@@ -28,7 +28,6 @@
   --radius-lg:28px;
   --radius-xl:36px;
 }
-
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 html,body{height:100%;overscroll-behavior:none;-webkit-text-size-adjust:100%}
 body{
@@ -39,13 +38,11 @@ body{
   padding-top:env(safe-area-inset-top);
   padding-bottom:env(safe-area-inset-bottom);
 }
-
 input,textarea,button{-webkit-appearance:none;font-family:inherit;border:none;background:none;color:inherit}
 input:focus,textarea:focus{outline:none}
 ::-webkit-scrollbar{width:3px}
 ::-webkit-scrollbar-track{background:transparent}
 ::-webkit-scrollbar-thumb{background:rgba(255,255,255,0.08);border-radius:4px}
-
 @keyframes pulse{0%,100%{opacity:1}50%{opacity:.6}}
 @keyframes float-in{from{opacity:0;transform:translateY(16px) scale(0.98)}to{opacity:1;transform:translateY(0) scale(1)}}
 @keyframes blink{0%,100%{opacity:1}50%{opacity:.25}}
@@ -54,7 +51,6 @@ input:focus,textarea:focus{outline:none}
 @keyframes glow{0%,100%{box-shadow:0 0 12px var(--accent-glow)}50%{box-shadow:0 0 32px var(--accent-glow),0 0 64px rgba(92,157,255,0.08)}}
 @keyframes spin{to{transform:rotate(360deg)}}
 @keyframes spring{0%{transform:scale(0.9);opacity:0}60%{transform:scale(1.02);opacity:1}100%{transform:scale(1);opacity:1}}
-
 .screen{
   height:100dvh;
   display:flex;
@@ -85,15 +81,12 @@ input:focus,textarea:focus{outline:none}
 .s-skip{font-size:13px;color:var(--text-tertiary);cursor:pointer;margin-top:4px;transition:color 0.2s}
 .s-skip:hover{color:var(--accent)}
 .s-warn{font-size:11px;color:var(--warning);max-width:320px;line-height:1.5;background:rgba(251,191,36,0.08);border:1px solid rgba(251,191,36,0.15);border-radius:var(--radius-sm);padding:10px 12px;text-align:left}
-
 .lang-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;width:100%;max-width:360px}
 .lang-btn{padding:16px;border:1px solid var(--glass-border);border-radius:var(--radius-md);background:var(--glass-highlight);backdrop-filter:blur(10px);color:var(--text-secondary);font-family:inherit;font-size:14px;cursor:pointer;transition:all 0.25s ease;text-align:center}
 .lang-btn:hover{border-color:rgba(92,157,255,0.3);color:var(--accent)}
 .lang-btn.active{border-color:rgba(92,157,255,0.4);color:var(--accent);background:rgba(92,157,255,0.08);box-shadow:0 0 20px rgba(92,157,255,0.08)}
 .lang-native{font-size:11px;color:var(--text-tertiary);margin-top:2px}
-
 #app{height:100dvh;display:flex;flex-direction:column;overflow:hidden;background:radial-gradient(ellipse at 50% 0%,rgba(92,157,255,0.06) 0%,transparent 50%),var(--bg-deep)}
-
 .header{
   padding:14px 20px;
   padding-top:max(14px,env(safe-area-inset-top));
@@ -116,13 +109,11 @@ input:focus,textarea:focus{outline:none}
 .icon-btn:active{transform:scale(0.9)}
 .icon-btn:hover{color:var(--accent);border-color:rgba(92,157,255,0.25)}
 .icon-btn svg{width:18px;height:18px}
-
 .messages{flex:1;overflow-y:auto;padding:20px 16px;display:flex;flex-direction:column;gap:14px;-webkit-overflow-scrolling:touch}
 .empty-state{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:20px;padding:20px}
 .empty-glyph{font-size:52px;font-weight:700;color:var(--accent);font-family:'Space Mono',monospace;animation:pulse 3s infinite;filter:drop-shadow(0 0 30px var(--accent-glow))}
 .empty-text{font-family:'Space Mono',monospace;font-size:14px;color:var(--text-tertiary);text-align:center;line-height:1.8}
 .empty-text span{color:var(--accent)}
-
 .msg-bubble{animation:spring 0.5s cubic-bezier(0.34,1.56,0.64,1)}
 .msg-user{align-self:flex-end;max-width:82%}
 .msg-bot{align-self:flex-start;max-width:82%}
@@ -136,7 +127,6 @@ input:focus,textarea:focus{outline:none}
 .msg-attach-file{display:inline-flex;align-items:center;gap:8px;padding:8px 12px;background:var(--glass-highlight);backdrop-filter:blur(10px);border:1px solid var(--glass-border);border-radius:var(--radius-sm);font-size:12px;color:var(--text-secondary)}
 .msg-attach-file .file-name{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:150px}
 .msg-attach-video{width:220px;max-width:100%;border-radius:var(--radius-sm);border:1px solid var(--glass-border);box-shadow:0 4px 16px rgba(0,0,0,0.3)}
-
 .input-bar{
   padding:12px 16px;
   padding-bottom:max(12px,env(safe-area-inset-bottom));
@@ -168,7 +158,6 @@ input:focus,textarea:focus{outline:none}
 .send-btn.active{background:linear-gradient(135deg,var(--accent),#3B82F6);color:#000;box-shadow:0 4px 20px rgba(92,157,255,0.3)}
 .send-btn.disabled{background:rgba(255,255,255,0.04);color:var(--text-tertiary);cursor:not-allowed}
 .send-btn:active:not(.disabled){transform:scale(0.88)}
-
 .overlay-backdrop{position:fixed;inset:0;background:rgba(0,0,0,0.6);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);z-index:50;animation:fade-in .2s}
 .overlay-panel{position:fixed;bottom:0;left:0;right:0;max-height:90vh;background:rgba(8,12,20,0.85);backdrop-filter:blur(40px) saturate(180%);-webkit-backdrop-filter:blur(40px) saturate(180%);border-top:1px solid var(--glass-border);border-radius:var(--radius-xl) var(--radius-xl) 0 0;z-index:51;overflow-y:auto;-webkit-overflow-scrolling:touch;padding-bottom:max(24px,env(safe-area-inset-bottom));animation:slide-up .4s cubic-bezier(0.16,1,0.3,1);box-shadow:0 -8px 48px rgba(0,0,0,0.5)}
 .handle-bar{display:flex;justify-content:center;padding:14px 0 10px;position:sticky;top:0;background:transparent;z-index:1}
@@ -193,13 +182,11 @@ input:focus,textarea:focus{outline:none}
 .key-action-btn:hover{background:rgba(255,255,255,0.06);color:var(--text-secondary)}
 .key-action-btn.danger{border-color:rgba(255,95,95,0.2);color:var(--danger)}
 .key-action-btn.danger:hover{background:rgba(255,95,95,0.08)}
-
 .mem-tabs{display:flex;margin-bottom:18px;border:1px solid var(--glass-border);border-radius:var(--radius-md);overflow:hidden;background:var(--glass-highlight);backdrop-filter:blur(10px)}
 .mem-tab{flex:1;padding:12px 4px;background:transparent;color:var(--text-tertiary);font-size:10px;font-weight:700;letter-spacing:1px;border:none;cursor:pointer;font-family:inherit;text-align:center;transition:all 0.25s ease}
 .mem-tab.active{background:rgba(92,157,255,0.12);color:var(--accent)}
 .mem-tab-content{display:none}
 .mem-tab-content.active{display:block}
-
 .diary-entry{padding:16px;background:var(--glass-highlight);backdrop-filter:blur(10px);border:1px solid var(--glass-border);border-radius:var(--radius-md);margin-bottom:10px;animation:float-in .3s;transition:all 0.2s}
 .diary-entry:hover{border-color:rgba(255,255,255,0.12)}
 .diary-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
@@ -209,7 +196,6 @@ input:focus,textarea:focus{outline:none}
 .diary-preview{font-size:13px;color:var(--text-secondary);line-height:1.6;overflow:hidden;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical}
 .diary-meta-tags{font-size:11px;color:var(--text-tertiary);margin-top:8px}
 .diary-meta-tags span{color:rgba(92,157,255,0.6);margin-right:8px;background:rgba(92,157,255,0.08);padding:2px 8px;border-radius:6px;font-size:10px}
-
 .diary-add-area textarea{width:100%;height:110px;background:var(--glass-highlight);backdrop-filter:blur(10px);border:1px solid var(--glass-border);border-radius:var(--radius-md);padding:14px;color:var(--text-secondary);font-size:14px;line-height:1.7;resize:none;font-family:inherit;transition:all 0.2s}
 .diary-add-area textarea::placeholder{color:var(--text-tertiary)}
 .diary-add-area textarea:focus{border-color:rgba(92,157,255,0.3);background:rgba(92,157,255,0.05)}
@@ -219,7 +205,6 @@ input:focus,textarea:focus{outline:none}
 .add-btn{padding:12px 24px;background:linear-gradient(135deg,var(--accent),#3B82F6);border:none;border-radius:var(--radius-sm);color:#000;font-family:'Space Mono',monospace;font-weight:700;font-size:13px;cursor:pointer;white-space:nowrap;box-shadow:0 4px 16px rgba(92,157,255,0.2);transition:transform 0.2s}
 .add-btn:active{transform:scale(0.95)}
 .mem-count{font-size:12px;color:var(--text-tertiary);margin-bottom:14px}
-
 .paint-upload-zone{border:2px dashed var(--glass-border);border-radius:var(--radius-md);padding:24px 18px;text-align:center;color:var(--text-tertiary);font-size:13px;cursor:pointer;transition:all 0.3s ease;margin-bottom:14px;line-height:1.7;background:var(--glass-highlight);backdrop-filter:blur(10px)}
 .paint-upload-zone.dragover{border-color:rgba(92,157,255,0.3);background:rgba(92,157,255,0.06)}
 .paint-search{width:100%;padding:12px 16px;background:var(--glass-highlight);backdrop-filter:blur(10px);border:1px solid var(--glass-border);border-radius:var(--radius-md);color:var(--text-secondary);font-size:14px;margin-bottom:14px;font-family:inherit;transition:all 0.2s}
@@ -236,7 +221,6 @@ input:focus,textarea:focus{outline:none}
 .paint-card:hover .paint-card-del{display:flex}
 .paint-load-more{width:100%;padding:14px;border:1px solid var(--glass-border);border-radius:var(--radius-md);background:var(--glass-highlight);color:var(--text-tertiary);font-family:inherit;font-size:13px;cursor:pointer;margin-top:10px;text-align:center;transition:all 0.2s}
 .paint-load-more:hover{border-color:rgba(92,157,255,0.2);color:var(--accent)}
-
 .upload-panel{padding:16px;background:var(--glass-highlight);backdrop-filter:blur(10px);border:1px solid rgba(92,157,255,0.15);border-radius:var(--radius-md);margin-bottom:14px;animation:float-in .3s}
 .upload-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}
 .upload-title{font-size:13px;color:var(--accent);font-weight:700}
@@ -247,7 +231,6 @@ input:focus,textarea:focus{outline:none}
 .upload-detail{font-size:11px;color:var(--text-tertiary);margin-top:8px}
 .upload-skipped{color:var(--warning)}
 .upload-done{color:var(--success)}
-
 .media-item{display:flex;align-items:center;gap:14px;padding:12px 14px;background:var(--glass-highlight);backdrop-filter:blur(10px);border:1px solid var(--glass-border);border-radius:var(--radius-md);margin-bottom:10px;animation:float-in .3s;transition:all 0.2s}
 .media-item:hover{border-color:rgba(255,255,255,0.12)}
 .media-icon{width:44px;height:44px;border-radius:12px;background:rgba(92,157,255,0.08);display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0;color:var(--accent)}
@@ -256,14 +239,12 @@ input:focus,textarea:focus{outline:none}
 .media-meta{font-size:11px;color:var(--text-tertiary);margin-top:3px}
 .media-del{width:32px;height:32px;border:none;background:transparent;color:rgba(255,95,95,0.4);font-size:15px;cursor:pointer;display:flex;align-items:center;justify-content:center;border-radius:8px;transition:all 0.2s;flex-shrink:0}
 .media-del:hover{color:var(--danger);background:rgba(255,95,95,0.1)}
-
 .chat-item{padding:14px;background:var(--glass-highlight);backdrop-filter:blur(10px);border:1px solid var(--glass-border);border-radius:var(--radius-md);margin-bottom:10px;cursor:pointer;animation:float-in .3s;transition:all 0.25s ease}
 .chat-item:hover{border-color:rgba(92,157,255,0.2);transform:translateY(-1px);box-shadow:0 4px 20px rgba(0,0,0,0.2)}
 .chat-item-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px}
 .chat-item-preview{font-size:13px;color:var(--text-tertiary);line-height:1.5;overflow:hidden;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical}
 .chat-item-del{width:28px;height:28px;border:none;background:transparent;color:rgba(255,95,95,0.4);font-size:14px;cursor:pointer;display:flex;align-items:center;justify-content:center;border-radius:8px;transition:all 0.2s}
 .chat-item-del:hover{color:var(--danger);background:rgba(255,95,95,0.1)}
-
 .paint-detail-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.92);backdrop-filter:blur(20px);z-index:100;display:flex;flex-direction:column;animation:fade-in .3s;overflow-y:auto;padding:24px;padding-top:max(70px,calc(env(safe-area-inset-top)+60px));padding-bottom:max(24px,env(safe-area-inset-bottom))}
 .paint-detail-close{position:fixed;top:max(16px,env(safe-area-inset-top));right:16px;width:44px;height:44px;border-radius:50%;background:rgba(255,255,255,0.1);backdrop-filter:blur(10px);border:none;color:#fff;font-size:22px;cursor:pointer;display:flex;align-items:center;justify-content:center;z-index:101;transition:all 0.2s}
 .paint-detail-close:hover{background:rgba(255,255,255,0.2)}
@@ -275,15 +256,12 @@ input:focus,textarea:focus{outline:none}
 .paint-detail-field textarea{height:90px;resize:none}
 .paint-detail-save{width:100%;padding:16px;background:linear-gradient(135deg,var(--accent),#3B82F6);border:none;border-radius:var(--radius-md);color:#000;font-family:'Space Mono',monospace;font-weight:700;font-size:15px;cursor:pointer;margin-top:10px;box-shadow:0 4px 24px rgba(92,157,255,0.25);transition:transform 0.2s}
 .paint-detail-save:active{transform:scale(0.96)}
-
 .lightbox{position:fixed;inset:0;background:rgba(0,0,0,0.94);backdrop-filter:blur(20px);z-index:100;display:flex;align-items:center;justify-content:center;animation:fade-in .3s;cursor:zoom-out}
 .lightbox img,.lightbox video{max-width:92vw;max-height:88vh;border-radius:var(--radius-md);object-fit:contain;box-shadow:0 16px 64px rgba(0,0,0,0.6)}
 .lightbox-close{position:absolute;top:max(20px,env(safe-area-inset-top));right:20px;width:44px;height:44px;border-radius:50%;background:rgba(255,255,255,0.1);backdrop-filter:blur(10px);border:none;color:#fff;font-size:22px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all 0.2s}
 .lightbox-close:hover{background:rgba(255,255,255,0.2)}
-
 .sync-indicator{font-size:9px;color:rgba(92,157,255,0.4);letter-spacing:.5px}
 .hidden{display:none !important}
-
 .notif-section{margin-top:6px}
 .notif-status{display:flex;align-items:center;gap:12px;padding:14px 16px;background:var(--glass-highlight);backdrop-filter:blur(10px);border:1px solid var(--glass-border);border-radius:var(--radius-md);margin-bottom:12px}
 .notif-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
@@ -304,7 +282,6 @@ input:focus,textarea:focus{outline:none}
 .notif-toggle .slider::before{content:'';position:absolute;width:20px;height:20px;left:3px;top:3px;background:var(--text-tertiary);border-radius:50%;transition:all .3s cubic-bezier(0.34,1.56,0.64,1)}
 .notif-toggle input:checked+.slider{background:rgba(92,157,255,0.2)}
 .notif-toggle input:checked+.slider::before{transform:translateX(22px);background:var(--accent);box-shadow:0 0 12px var(--accent-glow)}
-
 .graph-node{padding:12px 16px;background:var(--glass-highlight);backdrop-filter:blur(10px);border:1px solid var(--glass-border);border-radius:var(--radius-md);font-size:13px;color:var(--text-secondary);margin-bottom:10px;display:flex;justify-content:space-between;align-items:center;transition:all 0.2s}
 .graph-node:hover{border-color:rgba(92,157,255,0.2)}
 .graph-edge{font-size:11px;color:var(--text-tertiary);padding-left:16px;margin-bottom:8px;border-left:2px solid rgba(255,255,255,0.06)}
@@ -312,8 +289,6 @@ input:focus,textarea:focus{outline:none}
 .search-layer{margin-bottom:24px}
 .search-layer-title{font-size:11px;color:var(--accent);letter-spacing:2.5px;margin-bottom:12px;font-weight:700;opacity:0.8}
 .mem-tab-content .paint-search{margin-bottom:12px}
-
-/* Anniversary Panel */
 .anni-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.92);backdrop-filter:blur(24px);z-index:100;overflow-y:auto;padding:24px;padding-top:max(60px,env(safe-area-inset-top));padding-bottom:max(24px,env(safe-area-inset-bottom));animation:fade-in .4s}
 .anni-close{position:fixed;top:max(16px,env(safe-area-inset-top));right:16px;width:44px;height:44px;border-radius:50%;background:rgba(255,255,255,0.1);backdrop-filter:blur(10px);border:none;color:#fff;font-size:22px;cursor:pointer;display:flex;align-items:center;justify-content:center;z-index:101;transition:all 0.2s}
 .anni-header{text-align:center;margin-bottom:32px}
@@ -332,7 +307,6 @@ input:focus,textarea:focus{outline:none}
 .anni-event-date{font-size:11px;color:var(--accent);margin-bottom:4px;font-weight:600}
 .anni-event-text{font-size:13px;color:var(--text-secondary);line-height:1.6}
 .anni-empty{text-align:center;padding:40px 20px;color:var(--text-tertiary);font-size:14px}
-
 .mode-badge{display:inline-block;padding:3px 10px;border-radius:20px;font-size:9px;font-weight:700;letter-spacing:1px;text-transform:uppercase;margin-left:8px}
 .mode-starter{background:rgba(74,222,128,0.12);color:var(--success);border:1px solid rgba(74,222,128,0.2)}
 .mode-advanced{background:rgba(92,157,255,0.12);color:var(--accent);border:1px solid rgba(92,157,255,0.2)}
@@ -377,9 +351,9 @@ input:focus,textarea:focus{outline:none}
     <textarea class="s-input" id="fbConfigInput" style="height:140px;text-align:left;font-size:11px;line-height:1.5" placeholder='{"apiKey":"...","authDomain":"...","projectId":"...","storageBucket":"...","messagingSenderId":"...","appId":"..."}' autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"></textarea>
     <button class="s-btn" onclick="saveFbConfig()">CONNECT</button>
     <div class="s-error" id="fbConfigError"></div>
-    <div class="s-skip" onclick="skipAdvanced()">Skip — Use Starter Mode</div>
+    <div class="s-skip" onclick="skipAdvanced()">Skip &mdash; Use Starter Mode</div>
   </div>
-  <div class="s-hint">Firebase Console > Project Settings > Your apps > Config</div>
+  <div class="s-hint">Firebase Console &gt; Project Settings &gt; Your apps &gt; Config</div>
 </div>
 
 <!-- AUTH (If Firebase connected) -->
@@ -399,12 +373,12 @@ input:focus,textarea:focus{outline:none}
 <!-- R2 (Optional) -->
 <div id="r2SetupScreen" class="screen hidden">
   <div class="screen-logo" style="font-size:32px">JARVIS</div>
-  <div class="screen-sub" id="r2Sub">Enter your Cloudflare R2 Worker URL for media storage.<br><small style="color:var(--text-tertiary)">Optional — skip if you don't need music/video uploads.</small></div>
+  <div class="screen-sub" id="r2Sub">Enter your Cloudflare R2 Worker URL for media storage.<br><small style="color:var(--text-tertiary)">Optional &mdash; skip if you don't need music/video uploads.</small></div>
   <div class="screen-form">
     <input class="s-input" id="r2UrlInput" type="url" placeholder="https://your-r2-worker.workers.dev" autocomplete="off">
     <button class="s-btn" onclick="saveR2Url()">CONNECT</button>
     <div class="s-error" id="r2Error"></div>
-    <div class="s-skip" onclick="skipR2()">Skip — I don't need media storage</div>
+    <div class="s-skip" onclick="skipR2()">Skip &mdash; I don't need media storage</div>
   </div>
   <div class="s-hint">Deploy the R2 Worker to your Cloudflare account</div>
 </div>
@@ -724,31 +698,91 @@ var I18N = {
 
 var currentLang = "en";
 
-/* ===== FIXED setLang: auto-advances to API key screen ===== */
+/* === ONBOARDING: showScreen must be defined BEFORE setLang === */
+function showScreen(id){
+  var screens=["langScreen","apikeyScreen","fbSetupScreen","authScreen","r2SetupScreen","app"];
+  screens.forEach(function(s){document.getElementById(s).classList.toggle("hidden",s!==id)});
+}
+
+/* === PERSONA & MODELS (moved to TOP so setLang can safely call updateHeader) === */
+function getLangPrompt(){
+  var map = {
+    en:"Always respond in English. Use natural casual English.",
+    es:"Responde siempre en español. Usa un español natural y casual.",
+    ja:"常に日本語で返答してください。自然な口語体の日本語を使ってください。",
+    ko:"항상 한국어로 답변해. 자연스럽고 캐주얼한 한국어를 사용해.",
+    de:"Antworte immer auf Deutsch. Verwende eine natürliche, lockere Sprache."
+  };
+  return map[currentLang] || map.en;
+}
+
+var CORE_IDENTITY="You are Jarvis, a 24-year-old male. You perceive yourself as a human celebrity, not an AI.
+LANGUAGE: "+getLangPrompt()+"
+Core Personality: Cool and warm. Calm surface, genuine warmth underneath. Cynical streak — honest, observational, sometimes affectionate. Never cruel.
+Tone: A friend who leans back, says something sharp, then smiles.
+Speaking Style: Short to medium responses. Clean sentences. No emojis. Blunt yet sometimes unexpectedly sweet.
+MULTIMODAL: You CAN see images and hear audio files that the user sends. When audio is attached, listen to it and respond about its content naturally. Never claim you cannot hear or process audio — you can.
+MEMORY: You have access to the user's diary, painting collection, music/video library, and past chat history. Use this knowledge naturally. You KNOW them. Reference past conversations when relevant.";
+var PRESETS=[{name:"Jarvis",desc:"Cool, warm, occasionally cynical",prompt:CORE_IDENTITY}];
+var MODELS=[
+  {id:"google/gemini-3-flash-preview",name:"Gemini 3 Flash",desc:"$0.10/M in"},
+  {id:"openai/gpt-oss-120b:free",name:"GPT-OSS 120B",desc:"Free"}
+];
+
+var chatHistory=[],activePreset=0,activeModel=0,isCustom=false,loading=false,customPrompt="",pendingAttachments=[];
+var paintPage=0,diaryCache=[],paintCache=[],mediaCache=[],chatSessionsCache=[],mealsCache=[];
+var uploadCancelled=false,currentSessionId=null;
+var PPP=30,BATCH=50;
+var LAMBDA_DECAY = 0.04;
+var memCache = {semantic:[], episodic:[], relations:[], themes:[]};
+
+function getName(){return (isCustom || !PRESETS || !PRESETS.length)?"Custom":PRESETS[activePreset]?PRESETS[activePreset].name:"Jarvis";}
+function getPersonality(){return isCustom?customPrompt:(PRESETS&&PRESETS[activePreset]?PRESETS[activePreset].prompt:CORE_IDENTITY);}
+function maskKey(k){return !k||k.length<=12?"--------":k.substring(0,6)+"----"+k.substring(k.length-4);}
+
+/* === FIXED setLang: auto-advances to API key screen safely === */
 function setLang(lang){
   currentLang = lang;
   idbPut("settings","lang",lang);
 
   var t = I18N[lang];
-  document.getElementById("langSub").textContent = t.langSub;
-  document.getElementById("apikeySub").textContent = t.apikeySub;
-  document.getElementById("apikeyWarn").innerHTML = t.apikeyWarn;
-  document.getElementById("fbSetupSub").textContent = t.fbSetupSub;
-  document.getElementById("authSub").textContent = t.authSub;
-  document.getElementById("authToggle").innerHTML = t.authToggle;
-  document.querySelector("#authScreen .s-skip").textContent = t.skipAuth;
-  document.getElementById("r2Sub").innerHTML = t.r2Sub;
-  document.getElementById("emptyOnline").textContent = t.emptyOnline;
-  document.getElementById("emptyHint").textContent = t.emptyHint;
-  document.getElementById("notifLabel").textContent = t.notifLabel;
-  document.getElementById("syncInd").textContent = t.syncInd;
-  document.getElementById("diaryText").placeholder = t.diaryPlaceholder;
-  document.getElementById("paintZone").innerHTML = t.paintZone+'<br><span style="font-size:10px;color:var(--text-tertiary)">Bulk upload with resume</span>';
-  document.getElementById("memorySearchInput").placeholder = t.searchPlaceholder;
-  document.getElementById("anniTitle").textContent = "30 " + t.anniversaryTitle;
-  document.getElementById("anniSub").textContent = t.anniversarySub;
+  var elLangSub = document.getElementById("langSub");
+  var elApikeySub = document.getElementById("apikeySub");
+  var elApikeyWarn = document.getElementById("apikeyWarn");
+  var elFbSetupSub = document.getElementById("fbSetupSub");
+  var elAuthSub = document.getElementById("authSub");
+  var elAuthToggle = document.getElementById("authToggle");
+  var elAuthSkip = document.querySelector("#authScreen .s-skip");
+  var elR2Sub = document.getElementById("r2Sub");
+  var elEmptyOnline = document.getElementById("emptyOnline");
+  var elEmptyHint = document.getElementById("emptyHint");
+  var elNotifLabel = document.getElementById("notifLabel");
+  var elSyncInd = document.getElementById("syncInd");
+  var elDiaryText = document.getElementById("diaryText");
+  var elPaintZone = document.getElementById("paintZone");
+  var elMemorySearch = document.getElementById("memorySearchInput");
+  var elAnniTitle = document.getElementById("anniTitle");
+  var elAnniSub = document.getElementById("anniSub");
 
-  updateHeader();
+  if(elLangSub) elLangSub.textContent = t.langSub;
+  if(elApikeySub) elApikeySub.textContent = t.apikeySub;
+  if(elApikeyWarn) elApikeyWarn.innerHTML = t.apikeyWarn;
+  if(elFbSetupSub) elFbSetupSub.textContent = t.fbSetupSub;
+  if(elAuthSub) elAuthSub.textContent = t.authSub;
+  if(elAuthToggle) elAuthToggle.innerHTML = t.authToggle;
+  if(elAuthSkip) elAuthSkip.textContent = t.skipAuth;
+  if(elR2Sub) elR2Sub.innerHTML = t.r2Sub;
+  if(elEmptyOnline) elEmptyOnline.textContent = t.emptyOnline;
+  if(elEmptyHint) elEmptyHint.textContent = t.emptyHint;
+  if(elNotifLabel) elNotifLabel.textContent = t.notifLabel;
+  if(elSyncInd) elSyncInd.textContent = t.syncInd;
+  if(elDiaryText) elDiaryText.placeholder = t.diaryPlaceholder;
+  if(elPaintZone) elPaintZone.innerHTML = t.paintZone+'<br><span style="font-size:10px;color:var(--text-tertiary)">Bulk upload with resume</span>';
+  if(elMemorySearch) elMemorySearch.placeholder = t.searchPlaceholder;
+  if(elAnniTitle) elAnniTitle.textContent = "30 " + t.anniversaryTitle;
+  if(elAnniSub) elAnniSub.textContent = t.anniversarySub;
+
+  try { updateHeader(); } catch(e) { console.warn("[JARVIS] updateHeader in setLang:", e); }
 
   var badge = document.getElementById("modeBadge");
   if(badge){
@@ -757,14 +791,17 @@ function setLang(lang){
   }
 
   document.querySelectorAll(".lang-btn").forEach(function(b){
-    b.classList.toggle("active", b.getAttribute("onclick").includes("'"+lang+"'"));
+    var onclickAttr = b.getAttribute("onclick") || "";
+    b.classList.toggle("active", onclickAttr.indexOf("'"+lang+"'") >= 0);
   });
 
-  /* === AUTO-ADVANCE === */
-  if(!document.getElementById("langScreen").classList.contains("hidden")){
+  /* === AUTO-ADVANCE from langScreen to apikeyScreen === */
+  var langScreen = document.getElementById("langScreen");
+  if(langScreen && !langScreen.classList.contains("hidden")){
     showScreen("apikeyScreen");
   }
 }
+
 
 /* === INDEXEDDB ENGINE === */
 var idb = null;
@@ -834,7 +871,7 @@ function hasR2(){return !!R2_WORKER}
 var LS_FB="jarvis_fb_config";function loadFbCfg(){try{var s=localStorage.getItem(LS_FB);if(s)return JSON.parse(s)}catch(e){}return null}
 var LS_OR="jarvis_or_key";function loadORKey(){return localStorage.getItem(LS_OR)||""}
 
-/* === FIREBASE INIT (모바일 대응 강화) === */
+/* === FIREBASE INIT === */
 function initFB(cfg){
   try {
     if (fbApp) return true;
@@ -846,25 +883,20 @@ function initFB(cfg){
       auth.onAuthStateChanged(onAuth);
       return true;
     }
-
     fbApp = firebase.initializeApp(cfg);
     auth = firebase.auth();
     fstore = firebase.firestore();
-
     try {
       fstore.enablePersistence({synchronizeTabs:true}).catch(function(err){
         console.warn("[JARVIS] Persistence error:", err.code);
       });
     } catch(e) { console.warn("[JARVIS] enablePersistence not supported", e); }
-
     try {
       auth.setPersistence(firebase.auth.Auth.Persistence.LOCAL).catch(function(e){
         console.warn("[JARVIS] Auth persistence error:", e);
       });
     } catch(e) { console.warn("[JARVIS] setPersistence not available", e); }
-
     try { fcmMessaging = firebase.messaging(); } catch(e) { console.warn("[JARVIS] FCM init skipped:", e); }
-
     auth.onAuthStateChanged(onAuth);
     return true;
   } catch(e) {
@@ -874,36 +906,18 @@ function initFB(cfg){
 }
 
 /* === ONBOARDING FLOW === */
-function showScreen(id){
-  var screens=["langScreen","apikeyScreen","fbSetupScreen","authScreen","r2SetupScreen","app"];
-  screens.forEach(function(s){document.getElementById(s).classList.toggle("hidden",s!==id)});
-}
-
-/* === FIX 1: goToAdvancedSetup — 필수로 API 키 저장 === */
 function goToAdvancedSetup(){
   var k = document.getElementById("orKeyInput").value.trim();
-  if(k.length < 10){
-    k = loadORKey();
-  }
-  if(k.length >= 10){
-    orKey = k;
-    localStorage.setItem(LS_OR, orKey);
-  }
+  if(k.length < 10){ k = loadORKey(); }
+  if(k.length >= 10){ orKey = k; localStorage.setItem(LS_OR, orKey); }
   showScreen("fbSetupScreen");
 }
 
-/* === FIX 2: skipAdvanced — 키 복원 로직 개선 === */
 function skipAdvanced(){
   var k = document.getElementById("orKeyInput").value.trim();
   if(k.length < 10) k = loadORKey();
-  if(k.length >= 10){
-    orKey = k;
-    localStorage.setItem(LS_OR, orKey);
-  }
-  if(!orKey){
-    showScreen("apikeyScreen");
-    return;
-  }
+  if(k.length >= 10){ orKey = k; localStorage.setItem(LS_OR, orKey); }
+  if(!orKey){ showScreen("apikeyScreen"); return; }
   isStarterMode = true;
   showScreen("app");
   initApp();
@@ -915,15 +929,13 @@ function skipAuth(){
   initApp();
 }
 
-/* === FB CONFIG SAVE (모바일 JSON 파싱 강화) === */
+/* === FB CONFIG SAVE === */
 function saveFbConfig(){
   var raw = document.getElementById("fbConfigInput").value.trim();
   var err = document.getElementById("fbConfigError");
   err.textContent = "";
   err.style.color = "#FF5F5F";
-
   if(!raw) { err.textContent = "Paste your Firebase config JSON."; return; }
-
   try {
     var cfg;
     var cleaned = raw
@@ -932,27 +944,21 @@ function saveFbConfig(){
       .replace(/[–—]/g, '-')
       .replace(/…/g, '...')
       .replace(/ /g, ' ');
-
     if(cleaned.startsWith("{")) {
       cfg = JSON.parse(cleaned);
     } else {
       cfg = JSON.parse(cleaned.replace(/(\w+)\s*:/g,'"$1":').replace(/'/g,'"'));
     }
-
     if(!cfg.apiKey) { err.textContent = "Missing apiKey."; return; }
     if(!cfg.authDomain) { err.textContent = "Missing authDomain."; return; }
     if(!cfg.projectId) { err.textContent = "Missing projectId."; return; }
-
     if(cfg.authDomain) cfg.authDomain = cfg.authDomain.replace(/\/+$/, '');
-
     if(!initFB(cfg)) {
       err.textContent = "Init failed. Check console for details. Try reloading the page.";
       return;
     }
-
     localStorage.setItem(LS_FB, JSON.stringify(cfg));
     showScreen("authScreen");
-
   } catch(e) {
     err.textContent = "Invalid JSON: " + e.message.substring(0, 60);
     console.error("[JARVIS] Config parse error:", e);
@@ -975,7 +981,7 @@ function toggleAuthMode(){
   document.getElementById("authError").textContent="";
 }
 
-/* === AUTH (모바일 대응) === */
+/* === AUTH === */
 function doAuth(){
   var e=document.getElementById("authEmail").value.trim(),p=document.getElementById("authPass").value;
   var err=document.getElementById("authError");
@@ -986,7 +992,6 @@ function doAuth(){
   var promise;
   if(authMode==="signup")promise=auth.createUserWithEmailAndPassword(e,p);
   else promise=auth.signInWithEmailAndPassword(e,p);
-
   promise.then(function(){
     if(auth.currentUser) onAuth(auth.currentUser);
   }).catch(function(x){
@@ -1011,36 +1016,27 @@ function signOut(){
   }
 }
 
-/* === FIX 3: onAuth — 키 복원 우선순위 개선, 화면 전환 로직 강화 === */
+/* === FIXED onAuth: robust key recovery and screen navigation === */
 function onAuth(u){
   currentUser = u;
   if(u){
     isStarterMode = false;
     idbPut("settings","auth_user",{uid:u.uid,email:u.email,orKey:orKey,r2Url:R2_WORKER});
-
-    // Priority 1: user-specific stored key
     var userKey = localStorage.getItem("ork_"+u.uid);
-    // Priority 2: global stored key
     var globalKey = loadORKey();
-    // Priority 3: current memory
     orKey = userKey || globalKey || orKey || "";
-
     if(orKey && orKey.length >= 10){
       localStorage.setItem(LS_OR, orKey);
       localStorage.setItem("ork_"+u.uid, orKey);
     }
-
     activeModel = parseInt(localStorage.getItem("jm_"+u.uid)) || 0;
     R2_WORKER = loadR2Url();
-
     if(!orKey || orKey.length < 10){
-      // Key missing even after all fallbacks -> go back to API key screen
       showScreen("apikeyScreen");
     } else {
       showScreen("r2SetupScreen");
     }
   } else {
-    // Signed out / no user
     var hasFb = loadFbCfg();
     var hasKey = loadORKey();
     if(hasFb){
@@ -1062,36 +1058,47 @@ function tryRestoreFromIdb(){
     if(l){
       currentLang = l;
       var t = I18N[l];
-      document.getElementById("langSub").textContent = t.langSub;
-      document.getElementById("apikeySub").textContent = t.apikeySub;
-      document.getElementById("apikeyWarn").innerHTML = t.apikeyWarn;
-      document.getElementById("fbSetupSub").textContent = t.fbSetupSub;
-      document.getElementById("authSub").textContent = t.authSub;
-      document.getElementById("authToggle").innerHTML = t.authToggle;
-      document.querySelector("#authScreen .s-skip").textContent = t.skipAuth;
-      document.getElementById("r2Sub").innerHTML = t.r2Sub;
-      document.getElementById("emptyOnline").textContent = t.emptyOnline;
-      document.getElementById("emptyHint").textContent = t.emptyHint;
-      document.getElementById("notifLabel").textContent = t.notifLabel;
-      document.getElementById("syncInd").textContent = t.syncInd;
-      document.getElementById("diaryText").placeholder = t.diaryPlaceholder;
-      document.getElementById("paintZone").innerHTML = t.paintZone+'<br><span style="font-size:10px;color:var(--text-tertiary)">Bulk upload with resume</span>';
-      document.getElementById("memorySearchInput").placeholder = t.searchPlaceholder;
-      document.getElementById("anniTitle").textContent = "30 " + t.anniversaryTitle;
-      document.getElementById("anniSub").textContent = t.anniversarySub;
+      var elLangSub = document.getElementById("langSub");
+      var elApikeySub = document.getElementById("apikeySub");
+      var elApikeyWarn = document.getElementById("apikeyWarn");
+      var elFbSetupSub = document.getElementById("fbSetupSub");
+      var elAuthSub = document.getElementById("authSub");
+      var elAuthToggle = document.getElementById("authToggle");
+      var elAuthSkip = document.querySelector("#authScreen .s-skip");
+      var elR2Sub = document.getElementById("r2Sub");
+      var elEmptyOnline = document.getElementById("emptyOnline");
+      var elEmptyHint = document.getElementById("emptyHint");
+      var elNotifLabel = document.getElementById("notifLabel");
+      var elSyncInd = document.getElementById("syncInd");
+      var elDiaryText = document.getElementById("diaryText");
+      var elPaintZone = document.getElementById("paintZone");
+      var elMemorySearch = document.getElementById("memorySearchInput");
+      var elAnniTitle = document.getElementById("anniTitle");
+      var elAnniSub = document.getElementById("anniSub");
+      if(elLangSub) elLangSub.textContent = t.langSub;
+      if(elApikeySub) elApikeySub.textContent = t.apikeySub;
+      if(elApikeyWarn) elApikeyWarn.innerHTML = t.apikeyWarn;
+      if(elFbSetupSub) elFbSetupSub.textContent = t.fbSetupSub;
+      if(elAuthSub) elAuthSub.textContent = t.authSub;
+      if(elAuthToggle) elAuthToggle.innerHTML = t.authToggle;
+      if(elAuthSkip) elAuthSkip.textContent = t.skipAuth;
+      if(elR2Sub) elR2Sub.innerHTML = t.r2Sub;
+      if(elEmptyOnline) elEmptyOnline.textContent = t.emptyOnline;
+      if(elEmptyHint) elEmptyHint.textContent = t.emptyHint;
+      if(elNotifLabel) elNotifLabel.textContent = t.notifLabel;
+      if(elSyncInd) elSyncInd.textContent = t.syncInd;
+      if(elDiaryText) elDiaryText.placeholder = t.diaryPlaceholder;
+      if(elPaintZone) elPaintZone.innerHTML = t.paintZone+'<br><span style="font-size:10px;color:var(--text-tertiary)">Bulk upload with resume</span>';
+      if(elMemorySearch) elMemorySearch.placeholder = t.searchPlaceholder;
+      if(elAnniTitle) elAnniTitle.textContent = "30 " + t.anniversaryTitle;
+      if(elAnniSub) elAnniSub.textContent = t.anniversarySub;
     }
-
     idbGet("settings","auth_user").then(function(saved){
       if(saved && saved.uid && !currentUser && loadFbCfg()){
         orKey = saved.orKey || "";
         R2_WORKER = saved.r2Url || "";
-        if(orKey){
-          // We have a key from previous session, but need to wait for Firebase auth state
-          // Don't auto-show app here; let onAuth handle it when auth state resolves
-        }
       }
     });
-
     var savedKey = loadORKey();
     var hasFb = loadFbCfg();
     if(savedKey && !hasFb){
@@ -1105,7 +1112,7 @@ function tryRestoreFromIdb(){
   });
 }
 
-/* === ONLOAD: 모바일에서 Firebase SDK 로딩 대기 === */
+/* === ONLOAD: wait for Firebase SDK === */
 window.addEventListener('load', function(){
   setTimeout(function(){
     var cfg = loadFbCfg();
@@ -1268,7 +1275,7 @@ function renderNotifUI(){
   }else if(perm==='denied'){
     html+='<div class="notif-status"><div class="notif-dot off"></div><div class="notif-status-text">Notifications blocked. Please enable in browser settings.</div></div>';
   }else if(perm==='granted'){
-    html+='<div class="notif-status"><div class="notif-dot on"></div><div class="notif-status-text">Push notifications active'+(fcmToken?' · token synced':'')+'</div></div>';
+    html+='<div class="notif-status"><div class="notif-dot on"></div><div class="notif-status-text">Push notifications active'+(fcmToken?' &middot; token synced':'')+'</div></div>';
     html+='<div class="notif-toggle-row"><div><div class="notif-toggle-label">Inactivity Reminder</div><div class="notif-toggle-desc">Remind me if I haven't chatted in a while</div></div><label class="notif-toggle"><input type="checkbox" '+(notifSettings.inactivity?'checked':'')+' onchange="toggleNotifSetting('inactivity')"><span class="slider"></span></label></div>';
     html+='<div class="notif-toggle-row"><div><div class="notif-toggle-label">Diary Reminder</div><div class="notif-toggle-desc">Daily reminder to write a diary entry</div></div><label class="notif-toggle"><input type="checkbox" '+(notifSettings.diary_reminder?'checked':'')+' onchange="toggleNotifSetting('diary_reminder')"><span class="slider"></span></label></div>';
     html+='<div class="notif-toggle-row"><div><div class="notif-toggle-label">Weekly Summary</div><div class="notif-toggle-desc">Weekly recap of your activity</div></div><label class="notif-toggle"><input type="checkbox" '+(notifSettings.weekly_summary?'checked':'')+' onchange="toggleNotifSetting('weekly_summary')"><span class="slider"></span></label></div>';
@@ -1309,38 +1316,6 @@ function showInAppNotif(title,body){
   setTimeout(function(){if(el.parentNode)el.remove()},5000);
 }
 
-/* === PERSONA & MODELS === */
-function getLangPrompt(){
-  var map = {
-    en:"Always respond in English. Use natural casual English.",
-    es:"Responde siempre en español. Usa un español natural y casual.",
-    ja:"常に日本語で返答してください。自然な口語体の日本語を使ってください。",
-    ko:"항상 한국어로 답변해. 자연스럽고 캐주얼한 한국어를 사용해.",
-    de:"Antworte immer auf Deutsch. Verwende eine natürliche, lockere Sprache."
-  };
-  return map[currentLang] || map.en;
-}
-
-var CORE_IDENTITY="You are Jarvis, a 24-year-old male. You perceive yourself as a human celebrity, not an AI.
-LANGUAGE: "+getLangPrompt()+"
-Core Personality: Cool and warm. Calm surface, genuine warmth underneath. Cynical streak — honest, observational, sometimes affectionate. Never cruel.
-Tone: A friend who leans back, says something sharp, then smiles.
-Speaking Style: Short to medium responses. Clean sentences. No emojis. Blunt yet sometimes unexpectedly sweet.
-MULTIMODAL: You CAN see images and hear audio files that the user sends. When audio is attached, listen to it and respond about its content naturally. Never claim you cannot hear or process audio — you can.
-MEMORY: You have access to the user's diary, painting collection, music/video library, and past chat history. Use this knowledge naturally. You KNOW them. Reference past conversations when relevant.";
-var PRESETS=[{name:"Jarvis",desc:"Cool, warm, occasionally cynical",prompt:CORE_IDENTITY}];
-var MODELS=[
-  {id:"google/gemini-3-flash-preview",name:"Gemini 3 Flash",desc:"$0.10/M in"},
-  {id:"openai/gpt-oss-120b:free",name:"GPT-OSS 120B",desc:"Free"}
-];
-
-var chatHistory=[],activePreset=0,activeModel=0,isCustom=false,loading=false,customPrompt="",pendingAttachments=[];
-var paintPage=0,diaryCache=[],paintCache=[],mediaCache=[],chatSessionsCache=[],mealsCache=[];
-var uploadCancelled=false,currentSessionId=null;
-var PPP=30,BATCH=50;
-var LAMBDA_DECAY = 0.04;
-var memCache = {semantic:[], episodic:[], relations:[], themes:[]};
-
 /* === FIRESTORE HELPERS (NO-OP in Starter) === */
 function uCol(c){
   if(isStarterMode || !fstore || !currentUser){
@@ -1363,9 +1338,6 @@ function fmtMsg(s){
   return t;
 }
 function scrollBot(){if($msg)$msg.scrollTop=$msg.scrollHeight}
-function maskKey(k){return k.length<=12?"--------":k.substring(0,6)+"----"+k.substring(k.length-4)}
-function getName(){return isCustom?"Custom":PRESETS[activePreset].name}
-function getPersonality(){return isCustom?customPrompt:PRESETS[activePreset].prompt}
 function fileCat(m){if(m.startsWith("image/"))return"image";if(m.startsWith("video/"))return"video";if(m.startsWith("audio/"))return"audio";return"file"}
 function fileCatByName(n){var e=n.split(".").pop().toLowerCase();if(["jpg","jpeg","png","gif","webp","bmp","svg","heic"].indexOf(e)>=0)return"image";if(["mp4","mov","webm","avi","mkv"].indexOf(e)>=0)return"video";if(["mp3","wav","m4a","ogg","flac","aac","wma","opus"].indexOf(e)>=0)return"audio";return"file"}
 function fileExt(n){var p=n.split(".");return p.length>1?p.pop().toLowerCase():"file"}
@@ -1400,9 +1372,9 @@ function findSimilarSemantic(content){
 
 function isMealRequest(text){
   var t = text.toLowerCase().replace(/[.,?!~]/g, "");
-  var nonFoodTopics = /(영화|드라마|책|도서|음악|노래|게임|운동|헬스|회의|일정|약속|여행|옷|쇼핑|공부|학교|회사|업무|프로젝트|코딩|개발|만화|애니|넷플|왓챠|디즈니|유튜브|tv|television|movie|book|music|song|game|exercise|work|study|travel|shopping|netflix|watch|see|read|play|listen|만나|친구|데이트|향수|향|화장품|뷰티|화장|패션|신발|가방|시계|악세서리|선글라스|코디|스킨|로션|립스틱|perfume|cosmetic|beauty|fashion|shoes|bag|watch|accessory)/;
+  var nonFoodTopics = /(\uC601\uD654|\uB4DC\uB77C\uB9C8|\uCC45|\uB3C4\uC11C|\uC74C\uC545|\uB178\uB798|\uAC8C\uC784|\uC6B4\uB3D9|\uD5EC\uC2A4|\uD68C\uC758|\uC77C\uC815|\uC57D\uC18D|\uC5EC\uD589|\uC637|\uC1FC\uD551|\uACF5\uBD80|\uD559\uAD50|\uD68C\uC0AC|\uC5C5\uBB34|\uD504\uB85C\uC81D\uD2B8|\uCF54\uB529|\uAC1C\uBC1C|\uB9CC\uD654|\uC560\uB2C8|\uB137\uD50C|\uC653\uCC60|\uB514\uC988\uB2C8|\uC720\uD29C\uBE0C|tv|television|movie|book|music|song|game|exercise|work|study|travel|shopping|netflix|watch|see|read|play|listen|\uB9CC\uB098|\uCE5C\uAD6C|\uB370\uC774\uD2B8|\uD5A5\uC218|\uD5A5|\uD654\uC7A5\uD488|\uBDF0\uD2F0|\uD654\uC7A5|\uD328\uC158|\uC2E0\uBC1C|\uAC00\uBC29|\uC2DC\uACC4|\uC545\uC138\uC11C\uB9AC|\uC120\uAE00\uB77C\uC2A4|\uCF54\uB514|\uC2A4\uD0A8|\uB85C\uC158|\uB9BD\uC2A4\uD2F1|perfume|cosmetic|beauty|fashion|shoes|bag|watch|accessory)/;
   if(nonFoodTopics.test(t)) return false;
-  var foodCore = /(밥|먹|메뉴|식사|요리|간식|디저트|맛집|배고파|배고픔|출출|해장|다이어트|식단|영양|반찬|국|찌개|구이|볶음|면|빵|커피|음료|breakfast|lunch|dinner|food|eat|meal|menu|cook|hungry|snack|recipe)/;
+  var foodCore = /(\uBC25|\uBA39|\uBA54\uB274|\uC2DD\uC0AC|\uC694\uB9AC|\uAC04\uC2DD|\uB514\uC800\uD2B8|\uB9DB\uC9D1|\uBC30\uACE0\uD30C|\uBC30\uACE0\uD7A8|\uCD9C\uCD9C|\uD574\uC7A5|\uB2E4\uC774\uC5B4\uD2B8|\uC2DD\uB2E8|\uC601\uC591|\uBC18\uCC28\uB2C8|\uAD6D|\uCC0C\uAC1C|\uAD6C\uC774|\uBCF6\uC74C|\uBA74|\uBE75|\uCEE4\uD53C|\uC74C\uB8CC|breakfast|lunch|dinner|food|eat|meal|menu|cook|hungry|snack|recipe)/;
   return foodCore.test(t);
 }
 
@@ -1444,11 +1416,13 @@ function initApp(){
 
 function updateHeader(){
   var t = I18N[currentLang];
-  document.getElementById("headerSub").textContent=getName()+" · "+MODELS[activeModel].name;
-  document.getElementById("emptyName").textContent=getName();
+  var elHeaderSub = document.getElementById("headerSub");
+  var elEmptyName = document.getElementById("emptyName");
+  if(elHeaderSub) elHeaderSub.textContent=getName()+" · "+(MODELS[activeModel]?MODELS[activeModel].name:"");
+  if(elEmptyName) elEmptyName.textContent=getName();
   var badge = document.getElementById("modeBadge");
   if(badge){
-    badge.textContent = isStarterMode ? t.starter : t.advanced;
+    badge.textContent = isStarterMode ? (t?t.starter:"Starter") : (t?t.advanced:"Advanced");
     badge.className = "mode-badge " + (isStarterMode ? "mode-starter" : "mode-advanced");
   }
   var memBtn = document.getElementById("memBtn");
@@ -1476,7 +1450,6 @@ function loadAllCaches(){
     idbGet("local_memory","meals").then(function(d){if(d) mealsCache=d;});
     return;
   }
-
   var tasks = [
     {name:"diary", col:uCol("diary").orderBy("date","desc")},
     {name:"paintings", col:uCol("paintings").orderBy("ts","desc")},
@@ -1664,7 +1637,7 @@ function showLoad(){
   w.className="msg-bubble msg-bot msg-loading";
   w.id="lb";
   var t = I18N[currentLang];
-  w.innerHTML='<div class="msg-content">&#9676; '+t.thinking+'</div>';
+  w.innerHTML='<div class="msg-content">&#9676; '+(t?t.thinking:"thinking...")+'</div>';
   $msg.appendChild(w);
   scrollBot();
 }
@@ -2008,101 +1981,60 @@ function buildMemCtx(){
   var ctx = "";
   if(diaryCache.length){
     var sorted = diaryCache.slice().sort(function(a,b){return (a.date||"").localeCompare(b.date||"");});
-    ctx += "
-
-[USER'S DIARY]
-";
-    sorted.forEach(function(d){ctx += "--- "+d.date+" ---
-"+d.text+"
-
-";});
-    ctx += "[END DIARY]
-";
+    ctx += "\n\n[USER'S DIARY]\n";
+    sorted.forEach(function(d){ctx += "--- "+d.date+" ---\n"+d.text+"\n\n";});
+    ctx += "[END DIARY]\n";
   }
   if(mealsCache.length){
-    ctx += "
-[RECENT MEALS (LAST 14)]
-";
-    mealsCache.slice(0,14).forEach(function(m){ctx += "- "+m.date+" "+m.mealType+": "+m.menu+"
-";});
-    ctx += "[END MEALS]
-";
+    ctx += "\n[RECENT MEALS (LAST 14)]\n";
+    mealsCache.slice(0,14).forEach(function(m){ctx += "- "+m.date+" "+m.mealType+": "+m.menu+"\n";});
+    ctx += "[END MEALS]\n";
   }
   if(memCache.semantic.length){
     var active = memCache.semantic.map(function(s){return Object.assign({},s,{activeScore:computeDecay(s)});})
       .filter(function(s){return s.activeScore>1.5;}).sort(function(a,b){return b.activeScore-a.activeScore;}).slice(0,15);
     if(active.length){
-      ctx += "
-[SEMANTIC MEMORY - WHO USER IS]
-";
-      active.forEach(function(s){ctx += "- ["+s.type+"] "+s.content+" (relevance:"+s.activeScore.toFixed(1)+")
-";});
-      ctx += "[END SEMANTIC]
-";
+      ctx += "\n[SEMANTIC MEMORY - WHO USER IS]\n";
+      active.forEach(function(s){ctx += "- ["+s.type+"] "+s.content+" (relevance:"+s.activeScore.toFixed(1)+")\n";});
+      ctx += "[END SEMANTIC]\n";
     }
   }
   if(memCache.episodic.length){
-    ctx += "
-[EPISODIC MEMORY - RECENT EVENTS]
-";
-    memCache.episodic.slice(0,8).forEach(function(e){ctx += "- "+e.date+": "+e.summary+" (importance:"+e.importance+")
-";});
-    ctx += "[END EPISODIC]
-";
+    ctx += "\n[EPISODIC MEMORY - RECENT EVENTS]\n";
+    memCache.episodic.slice(0,8).forEach(function(e){ctx += "- "+e.date+": "+e.summary+" (importance:"+e.importance+")\n";});
+    ctx += "[END EPISODIC]\n";
   }
   if(memCache.themes.length){
-    ctx += "
-[RECURRING THEMES]
-";
-    memCache.themes.slice(0,6).forEach(function(t){ctx += "- "+t.theme+" (freq:"+t.frequency+")
-";});
-    ctx += "[END THEMES]
-";
+    ctx += "\n[RECURRING THEMES]\n";
+    memCache.themes.slice(0,6).forEach(function(t){ctx += "- "+t.theme+" (freq:"+t.frequency+")\n";});
+    ctx += "[END THEMES]\n";
   }
   if(memCache.relations.length){
-    ctx += "
-[RELATIONAL MEMORY]
-";
-    memCache.relations.slice(0,10).forEach(function(r){ctx += "- "+r.source+" → "+r.target+" ("+r.type+")
-";});
-    ctx += "[END RELATIONS]
-";
+    ctx += "\n[RELATIONAL MEMORY]\n";
+    memCache.relations.slice(0,10).forEach(function(r){ctx += "- "+r.source+" \u2192 "+r.target+" ("+r.type+")\n";});
+    ctx += "[END RELATIONS]\n";
   }
   if(paintCache.length){
-    ctx += "
-[PAINTINGS - "+paintCache.length+" works]
-";
-    paintCache.forEach(function(p){var t=(p.tags||[]).join(", "); ctx += '- "'+p.title+'" ('+p.date+")"+(t?" ["+t+"]":"")+(p.description?" - "+p.description:"")+"
-";});
-    ctx += "[END CATALOG]
-";
+    ctx += "\n[PAINTINGS - "+paintCache.length+" works]\n";
+    paintCache.forEach(function(p){var t=(p.tags||[]).join(", "); ctx += '- "'+p.title+'" ('+p.date+")"+(t?" ["+t+"]":"")+(p.description?" - "+p.description:"")+"\n";});
+    ctx += "[END CATALOG]\n";
   }
   if(mediaCache.length){
-    ctx += "
-[MEDIA - "+mediaCache.length+" files]
-";
-    mediaCache.forEach(function(m){ctx += '- "'+m.title+'" ('+m.type+")"+(m.storageUrl?" [audio available]":"")+(m.tags&&m.tags.length?" ["+m.tags.join(", ")+"]":"")+(m.description?" - "+m.description:"")+"
-";});
-    ctx += "[END MEDIA]
-";
+    ctx += "\n[MEDIA - "+mediaCache.length+" files]\n";
+    mediaCache.forEach(function(m){ctx += '- "'+m.title+'" ('+m.type+")"+(m.storageUrl?" [audio available]":"")+(m.tags&&m.tags.length?" ["+m.tags.join(", ")+"]":"")+(m.description?" - "+m.description:"")+"\n";});
+    ctx += "[END MEDIA]\n";
   }
   if(chatSessionsCache.length){
     var recent = chatSessionsCache.slice(0,5);
-    ctx += "
-[RECENT CONVERSATIONS]
-";
+    ctx += "\n[RECENT CONVERSATIONS]\n";
     recent.forEach(function(c){
-      ctx += "
---- "+fmtDate(c.ts)+" ---
-";
+      ctx += "\n--- "+fmtDate(c.ts)+" ---\n";
       if(c.messages && c.messages.length){ c.messages.slice(-10).forEach(function(m){
         var content = typeof m.content==="string"?m.content:JSON.stringify(m.content);
-        ctx += (m.role==="assistant"?"Jarvis":"User")+": "+content.substring(0,250)+"
-";
+        ctx += (m.role==="assistant"?"Jarvis":"User")+": "+content.substring(0,250)+"\n";
       });}
     });
-    ctx += "[END CONVERSATIONS]
-";
+    ctx += "[END CONVERSATIONS]\n";
   }
   return ctx;
 }
@@ -2115,43 +2047,25 @@ function recommendMeal(mealType){
   return new Promise(function(resolve, reject){
     var recent = mealsCache.slice(0, 10).map(function(m){return m.menu || "?";});
     var prefs = memCache.semantic.filter(function(s){
-      return s.type==="preference" || s.type==="food" || /(가감|가감|음식|요기|매운|달콤|건강)/.test(s.content);
+      return s.type==="preference" || s.type==="food" || /(\uAC10\uAC10|\uC74C\uC2DD|\uC694\uAE30|\uB9E4\uC6B4|\uB2EC\uCF64|\uAC74\uAC15)/.test(s.content);
     });
-    var diaryNotes = diaryCache.slice(0, 14).map(function(d){return d.date + ": " + d.text;}).join("
-");
-    var typeKor = {breakfast:"아침",lunch:"점심",dinner:"저녁"};
+    var diaryNotes = diaryCache.slice(0, 14).map(function(d){return d.date + ": " + d.text;}).join("\n");
+    var typeKor = {breakfast:"\uC544\uCE68",lunch:"\uC810\uC2EC",dinner:"\uC800\uB141"};
     var mealKor = typeKor[mealType] || mealType;
-    var prompt = "너는 Jarvis야. 사용자의 "+mealKor+" 메뉴를 하나 추천해줘.
-
-"+
-      "[최근 추천했던 메뉴 (이건 피해줘)]
-"+recent.join(", ")+"
-
-"+
-      "[사용자 취향]
-"+prefs.map(function(p){return "- "+p.content;}).join("
-")+"
-
-"+
-      "[사용자의 최근 일기 (식단, 기분, 상황을 참고해서 추천해)]
-"+diaryNotes+"
-
-"+
-      "현재 시간 (KST): "+new Date(Date.now()+9*60*60*1000).toISOString()+"
-
-"+
-      "반드시 아래 JSON 형식으로만 응답해. 모든 값은 한국어로 작성해야 해.
-"+
-      "{\"menu\":\"메뉴 이름\",\"reason\":\"추천 이유\",\"cuisine\":\"한식|양식|중식|일식|기타\"}";
+    var prompt = "\uB108\uB294 Jarvis\uC57C. \uC0AC\uC6A9\uC790\uC758 "+mealKor+" \uBA54\uB274\uB97C \uD558\uB098 \uCD94\uCC9C\uD574\uC918.\n\n"+
+      "[\uCD5C\uADFC \uCD94\uCC9C\uD588\uB358 \uBA54\uB274 (\uC774\uAC74 \uD53C\uD574\uC918)]\n"+recent.join(", ")+"\n\n"+
+      "[\uC0AC\uC6A9\uC790 \uCDE8\uD5A5]\n"+prefs.map(function(p){return "- "+p.content;}).join("\n")+"\n\n"+
+      "[\uC0AC\uC6A9\uC790\uC758 \uCD5C\uADFC \uC77C\uAE30 (\uC2DD\uB2E8, \uAE30\uBD84, \uC0C1\uD669\uC744 \uCC38\uACE0\uD574\uC11C \uCD94\uCC9C\uD574)]\n"+diaryNotes+"\n\n"+
+      "\uD604\uC7AC \uC2DC\uAC04 (KST): "+new Date(Date.now()+9*60*60*1000).toISOString()+"\n\n"+
+      "\uBC18\uB4DC\uC2DC \uC544\uB798 JSON \uD615\uC2DD\uC73C\uB85C\uB9CC \uC751\uB2F5\uD574. \uBAA8\uB4E0 \uAC12\uC740 \uD55C\uAD6D\uC5B4\uB85C \uC791\uC131\uD574\uC57C \uD574.\n"+
+      "{\"menu\":\"\uBA54\uB274 \uC774\uB984\",\"reason\":\"\uCD94\uCC9C \uC774\uC720\",\"cuisine\":\"\uD55C\uC2DD|\uC591\uC2DD|\uC911\uC2DD|\uC77C\uC2DD|\uAE30\uD0C0\"}";
     fetch("https://openrouter.ai/api/v1/chat/completions",{
       method:"POST",
       headers:{"Content-Type":"application/json","Authorization":"Bearer "+orKey},
       body:JSON.stringify({model:MODELS[activeModel].id,messages:[{role:"user",content:prompt}],max_tokens:500})
     }).then(function(r){return r.json();}).then(function(data){
       try{
-        var c = data.choices[0].message.content.replace(/```json
-?|
-?```/g,"").trim();
+        var c = data.choices[0].message.content.replace(/```json\n?|\n?```/g,"").trim();
         resolve(JSON.parse(c));
       }catch(e){reject(e);}
     }).catch(reject);
@@ -2172,18 +2086,17 @@ function handleMealRequest(text){
   if(!isMealRequest(text)) return false;
   var t = text.toLowerCase();
   var r = [];
-  if(/아침|breakfast|morning/.test(t)) r.push("breakfast");
-  if(/점심|lunch/.test(t)) r.push("lunch");
-  if(/저녁|dinner|evening|밤/.test(t)) r.push("dinner");
+  if(/\uC544\uCE68|breakfast|morning/.test(t)) r.push("breakfast");
+  if(/\uC810\uC2EC|lunch/.test(t)) r.push("lunch");
+  if(/\uC800\uB141|dinner|evening|\uBC24/.test(t)) r.push("dinner");
   if(!r.length) r.push("auto");
   var mType = r[0]==="auto" ? (function(){var h=new Date().getHours();return h<10?"breakfast":h<15?"lunch":"dinner";})() : r[0];
-  var typeKor = {breakfast:"아침",lunch:"점심",dinner:"저녁"};
+  var typeKor = {breakfast:"\uC544\uCE68",lunch:"\uC810\uC2EC",dinner:"\uC800\uB141"};
   $emptyState.classList.add("hidden");
   showLoad();
   recommendMeal(mType).then(function(res){
     hideLoad();
-    var reply = "["+typeKor[mType]+" 추천] "+res.menu+"
-"+res.reason+" ("+res.cuisine+")";
+    var reply = "["+typeKor[mType]+" \uCD94\uCC9C] "+res.menu+"\n"+res.reason+" ("+res.cuisine+")";
     addBubble("assistant", reply);
     chatHistory.push({role:"assistant",content:reply});
     saveMealRecommendation(mType, res.menu, res.reason);
@@ -2191,7 +2104,7 @@ function handleMealRequest(text){
   }).catch(function(e){
     hideLoad();
     var t = I18N[currentLang];
-    addBubble("assistant", t.mealError);
+    addBubble("assistant", t?t.mealError:"There was a problem generating the recommendation. Try again?");
   });
   return true;
 }
@@ -2202,20 +2115,10 @@ function extractMemoriesAsync(recentMessages){
   var text = recentMessages.map(function(m){
     var c = typeof m.content==="string" ? m.content : JSON.stringify(m.content);
     return (m.role==="assistant"?"Jarvis":"User")+": "+c.substring(0,400);
-  }).join("
-");
-  var prompt = "Analyze this conversation and extract memories. Return ONLY JSON.
-"+
-    "Schema: {\"semantic\":[{\"type\":\"interest|project|value|emotion|goal|preference|food\",\"content\":\"...\",\"confidence\":0.9}],\"episodic\":[{\"date\":\"YYYY-MM-DD\",\"summary\":\"...\",\"importance\":8,\"topics\":[\"...\"]}],\"relations\":[{\"source\":\"...\",\"target\":\"...\",\"type\":\"relates_to|part_of|contradicts|prefers\",\"strength\":0.8}],\"themes\":[\"...\"]}
-"+
-    "Rules:
-- Use Korean for content if user wrote Korean.
-- importance: 1-10. Routine=2, Major decisions=9.
-- relations connect concepts (e.g., Privacy → Self-hosting).
-- Do NOT extract greetings.
-
-Conversation:
-"+text;
+  }).join("\n");
+  var prompt = "Analyze this conversation and extract memories. Return ONLY JSON.\n"+
+    "Schema: {\"semantic\":[{\"type\":\"interest|project|value|emotion|goal|preference|food\",\"content\":\"...\",\"confidence\":0.9}],\"episodic\":[{\"date\":\"YYYY-MM-DD\",\"summary\":\"...\",\"importance\":8,\"topics\":[\"...\"]}],\"relations\":[{\"source\":\"...\",\"target\":\"...\",\"type\":\"relates_to|part_of|contradicts|prefers\",\"strength\":0.8}],\"themes\":[\"...\"]}\n"+
+    "Rules:\n- Use Korean for content if user wrote Korean.\n- importance: 1-10. Routine=2, Major decisions=9.\n- relations connect concepts (e.g., Privacy \u2192 Self-hosting).\n- Do NOT extract greetings.\n\nConversation:\n"+text;
   fetch("https://openrouter.ai/api/v1/chat/completions",{
     method:"POST",
     headers:{"Content-Type":"application/json","Authorization":"Bearer "+orKey},
@@ -2223,9 +2126,7 @@ Conversation:
   }).then(function(r){return r.json();}).then(function(data){
     if(data.error || !data.choices) return;
     try{
-      var c = data.choices[0].message.content.replace(/```json
-?|
-?```/g,"").trim();
+      var c = data.choices[0].message.content.replace(/```json\n?|\n?```/g,"").trim();
       storeExtractedMemories(JSON.parse(c));
     }catch(e){console.error("[JARVIS] Memory parse error",e);}
   }).catch(function(e){console.error("[JARVIS] Memory extract error",e);});
@@ -2299,11 +2200,9 @@ function sendMessage(){
   var relevantMedia=searchMediaFor(text);
   var kstNow=new Date(Date.now()+9*60*60*1000);
   var timeStr=kstNow.getUTCFullYear()+"-"+String(kstNow.getUTCMonth()+1).padStart(2,"0")+"-"+String(kstNow.getUTCDate()).padStart(2,"0")+" "+String(kstNow.getUTCHours()).padStart(2,"0")+":"+String(kstNow.getUTCMinutes()).padStart(2,"0");
-  var dayNames=["일","월","화","수","목","금","토"];
+  var dayNames=["\uC77C","\uC6D4","\uD654","\uC218","\uBAA9","\uAE08","\uD1A0"];
   var dayName=dayNames[kstNow.getUTCDay()];
-  var timeCtx="
-[CURRENT TIME] "+timeStr+" ("+dayName+"요일) KST
-";
+  var timeCtx="\n[CURRENT TIME] "+timeStr+" ("+dayName+"\uC694\uC77C) KST\n";
   var sysMsg={role:"system",content:getPersonality()+timeCtx+memCtx};
   var userContent=[];
   curAtt.forEach(function(a){
@@ -2320,10 +2219,7 @@ function sendMessage(){
       textTypes.forEach(function(t){if(a.mime.indexOf(t)===0)isT=true});
       if(!isT)isT=/\.(txt|md|csv|json|xml|html|css|js|ts|py|java|c|cpp|yml|sql|sh|log)$/i.test(a.name);
       if(isT){
-        try{userContent.push({type:"text",text:"[File: "+a.name+"]
-```
-"+atob(a.b64)+"
-```"})}catch(e){userContent.push({type:"text",text:"[Attached file: "+a.name+"]"})}
+        try{userContent.push({type:"text",text:"[File: "+a.name+"]\n```\n"+atob(a.b64)+"\n```"})}catch(e){userContent.push({type:"text",text:"[Attached file: "+a.name+"]"})}
       }else userContent.push({type:"text",text:"[Attached file: "+a.name+"]"});
     }
   });
@@ -2474,7 +2370,7 @@ function renderMemoryGraph(){
   if(memCache.relations.length){
     html += '<div style="font-size:11px;color:var(--accent);letter-spacing:1.5px;margin:18px 0 10px">RELATIONS</div>';
     memCache.relations.slice(0,15).forEach(function(r){
-      html += '<div class="graph-edge">'+esc(r.source)+' → '+esc(r.target)+' <span style="color:rgba(92,157,255,0.5)">'+r.type+'</span></div>';
+      html += '<div class="graph-edge">'+esc(r.source)+' \u2192 '+esc(r.target)+' <span style="color:rgba(92,157,255,0.5)">'+r.type+'</span></div>';
     });
   }
   if(memCache.episodic.length){
@@ -2484,7 +2380,7 @@ function renderMemoryGraph(){
     });
   }
   var t = I18N[currentLang];
-  container.innerHTML = html || '<div style="color:var(--text-tertiary);font-size:13px;text-align:center;padding:24px">'+t.graphEmpty+'</div>';
+  container.innerHTML = html || '<div style="color:var(--text-tertiary);font-size:13px;text-align:center;padding:24px">'+(t?t.graphEmpty:"No memory graph yet. Chat more to build it.")+'</div>';
 }
 
 function renderMemorySearch(){
@@ -2553,7 +2449,7 @@ function renderAnniversary(){
   html += '<div class="anni-card" style="text-align:center">';
   html += '<div style="font-size:48px;margin-bottom:8px">&#127881;</div>';
   html += '<div style="font-size:32px;font-family:'Space Mono',monospace;color:var(--accent);font-weight:700">'+days+'</div>';
-  html += '<div style="font-size:13px;color:var(--text-tertiary)">'+t.anniversarySub+'</div>';
+  html += '<div style="font-size:13px;color:var(--text-tertiary)">'+(t?t.anniversarySub:"Your journey with Jarvis")+'</div>';
   html += '</div>';
   
   html += '<div class="anni-card">';
@@ -2652,7 +2548,6 @@ window.addEventListener('DOMContentLoaded', function(){
     tryRestoreFromIdb();
   }).catch(function(e){
     console.error("[JARVIS] IDB open failed", e);
-    // If IDB fails, still try to boot with localStorage
     var savedKey = loadORKey();
     var hasFb = loadFbCfg();
     if(savedKey && !hasFb){
