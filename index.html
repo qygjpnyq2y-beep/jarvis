@@ -1009,7 +1009,8 @@ function onAuth(u){
     }
     activeModel = parseInt(localStorage.getItem("jm_"+u.uid)) || 0;
     if(!orKey || orKey.length < 10){ showScreen("apikeyScreen"); }
-    else { showScreen("r2SetupScreen"); }
+    else if(!R2_WORKER){ showScreen("r2SetupScreen"); }
+    else { showScreen("app"); initApp(); }
   } else {
     var hasFb = loadFbCfg();
     var hasKey = loadORKey();
