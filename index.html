@@ -996,6 +996,7 @@ function signOut(){
 
 function onAuth(u){
   currentUser = u;
+  R2_WORKER = loadR2Url();
   if(u){
     isStarterMode = false;
     idbPut("settings","auth_user",{uid:u.uid,email:u.email,orKey:orKey,r2Url:R2_WORKER});
@@ -1007,7 +1008,6 @@ function onAuth(u){
       localStorage.setItem("ork_"+u.uid, orKey);
     }
     activeModel = parseInt(localStorage.getItem("jm_"+u.uid)) || 0;
-    R2_WORKER = loadR2Url();
     if(!orKey || orKey.length < 10){ showScreen("apikeyScreen"); }
     else { showScreen("r2SetupScreen"); }
   } else {
@@ -1052,6 +1052,7 @@ idbOpen().then(function(){
       }
     });
     
+    R2_WORKER = loadR2Url();
     var savedKey = loadORKey();
     if(savedKey && !loadFbCfg()){
       orKey = savedKey;
