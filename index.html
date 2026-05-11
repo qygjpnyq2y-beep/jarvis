@@ -336,6 +336,75 @@ input:focus,textarea:focus{outline:none}
 .mode-badge{display:inline-block;padding:3px 10px;border-radius:20px;font-size:9px;font-weight:700;letter-spacing:1px;text-transform:uppercase;margin-left:8px}
 .mode-starter{background:rgba(74,222,128,0.12);color:var(--success);border:1px solid rgba(74,222,128,0.2)}
 .mode-advanced{background:rgba(92,157,255,0.12);color:var(--accent);border:1px solid rgba(92,157,255,0.2)}
+
+/* === ANNIVERSARY V2: GLASSMORPHISM DASHBOARD === */
+.anni-hero{text-align:center;padding:32px 24px;background:radial-gradient(ellipse at 50% 0%,rgba(92,157,255,0.12) 0%,transparent 70%);border:1px solid rgba(92,157,255,0.15);position:relative;overflow:hidden}
+.anni-hero::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(92,157,255,0.08),transparent);pointer-events:none}
+.anni-hero .anni-big{font-family:'Space Mono',monospace;font-size:56px;font-weight:700;color:var(--accent);letter-spacing:-2px;line-height:1;filter:drop-shadow(0 0 24px var(--accent-glow));position:relative}
+.anni-hero .anni-label{font-size:13px;color:var(--text-tertiary);margin-top:10px;letter-spacing:2px;text-transform:uppercase;position:relative}
+.anni-hero .anni-sub2{font-size:12px;color:var(--text-tertiary);margin-top:6px;opacity:.7;position:relative}
+.anni-section-title{font-size:11px;color:var(--accent);letter-spacing:2.5px;margin:24px 0 14px 4px;font-weight:700;opacity:.9;text-transform:uppercase}
+.anni-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+@media (max-width:640px){.anni-grid{grid-template-columns:1fr}}
+.anni-card-v2{padding:20px;background:var(--glass-highlight);backdrop-filter:blur(16px) saturate(180%);-webkit-backdrop-filter:blur(16px) saturate(180%);border:1px solid var(--glass-border);border-radius:var(--radius-lg);animation:float-in .5s;position:relative;overflow:hidden}
+.anni-card-v2::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,rgba(92,157,255,0.3),transparent)}
+.anni-card-v2 .card-title{font-size:12px;color:var(--accent);letter-spacing:1.5px;margin-bottom:14px;font-weight:700;opacity:.8}
+
+/* Activity Heatmap - Radial */
+.heatmap-wrap{width:100%;display:flex;flex-direction:column;align-items:center;gap:12px}
+.heatmap-radial{position:relative;width:220px;height:220px;margin:0 auto}
+.heatmap-ring{position:absolute;inset:0;border-radius:50%;border:1px solid rgba(92,157,255,0.08)}
+.heatmap-center{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);text-align:center;z-index:2}
+.heatmap-center .hc-label{font-size:10px;color:var(--text-tertiary);letter-spacing:1px}
+.heatmap-center .hc-val{font-family:'Space Mono',monospace;font-size:22px;color:var(--accent);font-weight:700}
+.heatmap-seg{position:absolute;width:2px;height:28px;background:rgba(92,157,255,0.06);transform-origin:bottom center;border-radius:1px;transition:all .3s ease}
+.heatmap-seg.active{background:linear-gradient(to top,var(--accent),rgba(92,157,255,0.3));box-shadow:0 0 8px rgba(92,157,255,0.3)}
+.heatmap-legend{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin-top:8px}
+.heatmap-legend span{font-size:10px;color:var(--text-tertiary);display:flex;align-items:center;gap:4px}
+.heatmap-legend i{width:8px;height:8px;border-radius:2px;display:inline-block}
+
+/* Calendar Grid */
+.cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:4px}
+.cal-cell{aspect-ratio:1;border-radius:6px;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.04);display:flex;align-items:center;justify-content:center;font-size:10px;color:var(--text-tertiary);font-family:'Space Mono',monospace;transition:all .2s;position:relative}
+.cal-cell.has-data{background:rgba(92,157,255,0.15);border-color:rgba(92,157,255,0.25);color:var(--accent);box-shadow:0 0 8px rgba(92,157,255,0.1)}
+.cal-cell.high{background:rgba(92,157,255,0.35);border-color:rgba(92,157,255,0.5);color:#fff;font-weight:700;box-shadow:0 0 12px rgba(92,157,255,0.25)}
+.cal-cell .cal-tooltip{position:absolute;bottom:calc(100% + 6px);left:50%;transform:translateX(-50%) scale(0.9);padding:6px 10px;background:var(--bg-elevated);border:1px solid var(--glass-border);border-radius:8px;font-size:10px;color:var(--text-secondary);white-space:nowrap;opacity:0;pointer-events:none;transition:all .2s;z-index:10}
+.cal-cell:hover .cal-tooltip{opacity:1;transform:translateX(-50%) scale(1)}
+.cal-header{display:grid;grid-template-columns:repeat(7,1fr);gap:4px;margin-bottom:6px}
+.cal-header div{text-align:center;font-size:9px;color:var(--text-tertiary);letter-spacing:1px}
+
+/* Trend Line */
+.trend-wrap{height:80px;position:relative;margin-top:10px}
+.trend-svg{width:100%;height:100%}
+.trend-area{fill:url(#trendGrad);opacity:.3}
+.trend-line{fill:none;stroke:var(--accent);stroke-width:2;stroke-linecap:round;filter:drop-shadow(0 0 4px var(--accent-glow))}
+.trend-dot{fill:var(--accent);stroke:var(--bg-deep);stroke-width:2}
+.trend-peak{fill:var(--warning);stroke:var(--bg-deep);stroke-width:2;filter:drop-shadow(0 0 6px rgba(251,191,36,0.4))}
+
+/* Topic Cloud */
+.topic-cloud{display:flex;flex-wrap:wrap;gap:8px;align-items:center;justify-content:center;padding:8px 0}
+.topic-tag{padding:6px 14px;border-radius:20px;background:rgba(92,157,255,0.08);border:1px solid rgba(92,157,255,0.15);color:var(--text-secondary);font-size:12px;transition:all .3s ease;cursor:default;position:relative;overflow:hidden}
+.topic-tag:hover{background:rgba(92,157,255,0.18);border-color:rgba(92,157,255,0.3);transform:translateY(-1px);box-shadow:0 4px 12px rgba(92,157,255,0.1)}
+.topic-tag.popular{background:rgba(92,157,255,0.2);border-color:rgba(92,157,255,0.35);color:var(--accent);font-weight:600;font-size:14px}
+.topic-tag.rare{background:rgba(255,255,255,0.03);border-color:rgba(255,255,255,0.06);color:var(--text-tertiary);font-size:10px}
+
+/* Sentiment Flow */
+.sentiment-bar{display:flex;height:32px;border-radius:var(--radius-md);overflow:hidden;background:rgba(255,255,255,0.03);border:1px solid var(--glass-border);position:relative}
+.sentiment-seg{flex:1;transition:all .3s ease;position:relative;cursor:pointer}
+.sentiment-seg:hover{filter:brightness(1.3)}
+.sentiment-seg .st-tooltip{position:absolute;bottom:calc(100% + 6px);left:50%;transform:translateX(-50%) scale(0.9);padding:5px 10px;background:var(--bg-elevated);border:1px solid var(--glass-border);border-radius:8px;font-size:10px;color:var(--text-secondary);white-space:nowrap;opacity:0;pointer-events:none;transition:all .2s;z-index:10}
+.sentiment-seg:hover .st-tooltip{opacity:1;transform:translateX(-50%) scale(1)}
+.sentiment-legend{display:flex;gap:16px;justify-content:center;margin-top:10px;flex-wrap:wrap}
+.sentiment-legend span{font-size:10px;color:var(--text-tertiary);display:flex;align-items:center;gap:4px}
+.sentiment-legend i{width:8px;height:8px;border-radius:50%;display:inline-block}
+
+/* Key Stats Row */
+.anni-stats-row{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-top:4px}
+@media (max-width:640px){.anni-stats-row{grid-template-columns:repeat(2,1fr)}}
+.anni-stat-box{padding:14px 10px;text-align:center;background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.05);border-radius:var(--radius-md);transition:all .2s}
+.anni-stat-box:hover{border-color:rgba(92,157,255,0.15);background:rgba(92,157,255,0.04)}
+.anni-stat-box .as-num{font-family:'Space Mono',monospace;font-size:20px;color:var(--accent);font-weight:700}
+.anni-stat-box .as-label{font-size:10px;color:var(--text-tertiary);margin-top:4px;letter-spacing:.5px}
 </style>
 <base target="_blank">
 </head>
@@ -2411,81 +2480,264 @@ function closeAnniversary(){
   document.getElementById("anniversaryOverlay").classList.add("hidden");
 }
 
+
+/* === DATA AGGREGATION FOR ANNIVERSARY DASHBOARD === */
+function aggregateActivityData(){
+  var now = Date.now();
+  var thirtyDaysAgo = now - 30 * 86400000;
+  var hourly = new Array(24).fill(0);
+  var daily = {};
+  var totalMsgs = 0;
+  var peakDay = {date:"",count:0};
+
+  chatSessionsCache.forEach(function(s){
+    if(!s.ts || s.ts < thirtyDaysAgo) return;
+    var d = new Date(s.ts);
+    var h = d.getHours();
+    var dayKey = d.toISOString().split("T")[0];
+    var count = s.messageCount || (s.messages?s.messages.length:1);
+    hourly[h] += count;
+    daily[dayKey] = (daily[dayKey]||0) + count;
+    totalMsgs += count;
+    if(daily[dayKey] > peakDay.count) peakDay = {date:dayKey,count:daily[dayKey]};
+  });
+
+  diaryCache.forEach(function(d){
+    if(!d.ts || d.ts < thirtyDaysAgo) return;
+    var dayKey = new Date(d.ts).toISOString().split("T")[0];
+    daily[dayKey] = (daily[dayKey]||0) + 1;
+    if(daily[dayKey] > peakDay.count) peakDay = {date:dayKey,count:daily[dayKey]};
+  });
+
+  var filledDaily = [];
+  for(var i=29;i>=0;i--){
+    var d = new Date(now - i*86400000);
+    var key = d.toISOString().split("T")[0];
+    filledDaily.push({date:key,count:daily[key]||0,day:d.getDay()});
+  }
+
+  return {hourly:hourly,daily:filledDaily,total:totalMsgs,peak:peakDay};
+}
+
+function getTopKeywords(){
+  var keywords = {};
+  (memCache.themes||[]).forEach(function(t){if(t.theme) keywords[t.theme]=(keywords[t.theme]||0)+(t.frequency||1);});
+  (memCache.semantic||[]).forEach(function(s){if(s.content) keywords[s.content]=(keywords[s.content]||0)+1;});
+  diaryCache.forEach(function(d){
+    if(!d.text) return;
+    var words = d.text.toLowerCase().split(/[\s,.!?;:　、。]+/).filter(function(w){return w.length>=2;});
+    words.forEach(function(w){keywords[w]=(keywords[w]||0)+1;});
+  });
+  var sorted = Object.keys(keywords).map(function(k){return {word:k,count:keywords[k]};}).sort(function(a,b){return b.count-a.count;});
+  return sorted.slice(0,15);
+}
+
+function analyzeSentiment(){
+  var positive = /(좋아|행복|최고|멋져|감사|재미|즐거워|기쁘|사랑|좋은|잘했|성공|완벽|대박|신나|great|happy|love|good|best|awesome|perfect|amazing|thanks|fun|joy|excited|calm|peaceful)/i;
+  var negative = /(싫어|화나|짜증|슬퍼|힘들|스트레스|걱정|실패|문제|어려워|나쁜|최악|짜증|bad|hate|angry|sad|tired|stress|worried|fail|problem|hard|worst)/i;
+  var dailySentiment = [];
+  var now = Date.now();
+
+  for(var i=29;i>=0;i--){
+    var d = new Date(now - i*86400000);
+    var key = d.toISOString().split("T")[0];
+    var pos=0, neg=0, neu=0;
+
+    diaryCache.forEach(function(entry){
+      if(!entry.date || !entry.text || entry.date!==key) return;
+      if(positive.test(entry.text)) pos++;
+      else if(negative.test(entry.text)) neg++;
+      else neu++;
+    });
+
+    chatSessionsCache.forEach(function(s){
+      if(!s.ts) return;
+      var sKey = new Date(s.ts).toISOString().split("T")[0];
+      if(sKey!==key || !s.messages) return;
+      s.messages.forEach(function(m){
+        if(m.role!=="user" || !m.content) return;
+        var text = typeof m.content==="string"?m.content:"";
+        if(positive.test(text)) pos++;
+        else if(negative.test(text)) neg++;
+        else neu++;
+      });
+    });
+
+    var total = pos+neg+neu;
+    if(total===0) dailySentiment.push({date:key,type:"neutral",score:0});
+    else if(pos>neg) dailySentiment.push({date:key,type:"positive",score:pos/total});
+    else if(neg>pos) dailySentiment.push({date:key,type:"negative",score:neg/total});
+    else dailySentiment.push({date:key,type:"neutral",score:neu/total});
+  }
+  return dailySentiment;
+}
+
 function renderAnniversary(){
   var container = document.getElementById("anniversaryContent");
   var t = I18N[currentLang];
-  
+
+  // Calculate accurate day count
   var firstTs = Date.now();
-  var allMems = memCache.semantic.concat(memCache.episodic).concat(diaryCache);
-  allMems.forEach(function(m){
-    var ts = m.ts || m.firstSeen || Date.now();
-    if(ts < firstTs) firstTs = ts;
-  });
+  var firstVisit = localStorage.getItem("jarvis_first_seen");
+  if(firstVisit) firstTs = parseInt(firstVisit);
+  chatSessionsCache.forEach(function(c){if(c.ts && c.ts < firstTs) firstTs = c.ts;});
+  diaryCache.forEach(function(d){if(d.ts && d.ts < firstTs) firstTs = d.ts;});
+  memCache.semantic.forEach(function(s){if(s.firstSeen && s.firstSeen < firstTs) firstTs = s.firstSeen;});
+  memCache.episodic.forEach(function(e){if(e.ts && e.ts < firstTs) firstTs = e.ts;});
+
   var days = Math.floor((Date.now() - firstTs) / 86400000);
   if(days < 1) days = 1;
-  
-  var newNodes = memCache.semantic.length;
-  var newRelations = memCache.relations.length;
-  var newThemes = memCache.themes.length;
-  var diaryCount = diaryCache.length;
-  var chatCount = chatSessionsCache.reduce(function(a,c){return a+(c.messageCount||0)},0);
-  
+
+  document.getElementById("anniTitle").textContent = days + " " + t.anniversaryTitle;
+  document.getElementById("anniSub").textContent = t.anniversarySub;
+
+  // Aggregate data
+  var activity = aggregateActivityData();
+  var keywords = getTopKeywords();
+  var sentiment = analyzeSentiment();
+
   var html = '';
-  
-  html += '<div class="anni-card" style="text-align:center">';
-  html += '<div style="font-size:48px;margin-bottom:8px">&#127881;</div>';
-  html += '<div style="font-size:32px;font-family:\'Space Mono\',monospace;color:var(--accent);font-weight:700">'+days+'</div>';
-  html += '<div style="font-size:13px;color:var(--text-tertiary)">'+t.anniversarySub+'</div>';
+
+  // HERO CARD
+  html += '<div class="anni-card anni-hero">';
+  html += '<div class="anni-big">'+days+'</div>';
+  html += '<div class="anni-label">'+t.anniversaryTitle+'</div>';
+  html += '<div class="anni-sub2">'+fmtDate(firstTs)+' ~ '+fmtDate(Date.now())+'</div>';
   html += '</div>';
-  
-  html += '<div class="anni-card">';
-  html += '<div class="anni-card-title">MEMORY STATISTICS</div>';
-  html += '<div class="anni-stat"><span class="anni-stat-label">Semantic Nodes</span><span class="anni-stat-value">'+newNodes+'</span></div>';
-  html += '<div class="anni-stat"><span class="anni-stat-label">Relations Formed</span><span class="anni-stat-value">'+newRelations+'</span></div>';
-  html += '<div class="anni-stat"><span class="anni-stat-label">Recurring Themes</span><span class="anni-stat-value">'+newThemes+'</span></div>';
-  html += '<div class="anni-stat"><span class="anni-stat-label">Diary Entries</span><span class="anni-stat-value">'+diaryCount+'</span></div>';
-  html += '<div class="anni-stat"><span class="anni-stat-label">Messages Exchanged</span><span class="anni-stat-value">'+chatCount+'</span></div>';
+
+  // KEY STATS ROW
+  html += '<div class="anni-stats-row">';
+  html += '<div class="anni-stat-box"><div class="as-num">'+activity.total+'</div><div class="as-label">Messages</div></div>';
+  html += '<div class="anni-stat-box"><div class="as-num">'+diaryCache.length+'</div><div class="as-label">Diary</div></div>';
+  html += '<div class="anni-stat-box"><div class="as-num">'+memCache.semantic.length+'</div><div class="as-label">Memories</div></div>';
+  html += '<div class="anni-stat-box"><div class="as-num">'+memCache.relations.length+'</div><div class="as-label">Relations</div></div>';
   html += '</div>';
-  
+
+  // GRID: Heatmap + Calendar
+  html += '<div class="anni-grid">';
+
+  // ACTIVITY HEATMAP
+  html += '<div class="anni-card-v2">';
+  html += '<div class="card-title">Activity Heatmap</div>';
+  html += '<div class="heatmap-wrap">';
+  html += '<div class="heatmap-radial">';
+  html += '<div class="heatmap-center"><div class="hc-label">Peak Hour</div><div class="hc-val">'+activity.hourly.indexOf(Math.max.apply(null,activity.hourly))+':00</div></div>';
+  var maxH = Math.max.apply(null,activity.hourly)||1;
+  for(var h=0;h<24;h++){
+    var intensity = activity.hourly[h]/maxH;
+    var opacity = 0.05 + intensity*0.95;
+    var height = 20 + intensity*28;
+    var rot = h*15;
+    html += '<div class="heatmap-seg" style="transform:rotate('+rot+'deg);height:'+height+'px;opacity:'+opacity+';background:linear-gradient(to top,rgba(92,157,255,'+opacity+'),transparent);" title="'+h+':00 - '+activity.hourly[h]+' msgs"></div>';
+  }
+  html += '</div>';
+  html += '<div class="heatmap-legend">';
+  html += '<span><i style="background:rgba(92,157,255,0.1)"></i> Low</span>';
+  html += '<span><i style="background:rgba(92,157,255,0.5)"></i> Mid</span>';
+  html += '<span><i style="background:rgba(92,157,255,0.9)"></i> High</span>';
+  html += '</div>';
+  html += '</div>';
+  html += '</div>';
+
+  // CALENDAR GRID
+  html += '<div class="anni-card-v2">';
+  html += '<div class="card-title">30-Day Activity</div>';
+  html += '<div class="cal-header"><div>S</div><div>M</div><div>T</div><div>W</div><div>T</div><div>F</div><div>S</div></div>';
+  html += '<div class="cal-grid">';
+  var maxCount = Math.max.apply(null,activity.daily.map(function(d){return d.count;}))||1;
+  activity.daily.forEach(function(d){
+    var intensity = d.count/maxCount;
+    var cls = 'cal-cell';
+    if(intensity>0.6) cls += ' high';
+    else if(intensity>0) cls += ' has-data';
+    var tooltip = d.date + (d.count?': '+d.count+' interactions':': no activity');
+    html += '<div class="'+cls+'"><span class="cal-tooltip">'+esc(tooltip)+'</span>'+new Date(d.date).getDate()+'</div>';
+  });
+  html += '</div>';
+  if(activity.peak.count){
+    html += '<div style="font-size:11px;color:var(--text-tertiary);margin-top:10px;text-align:center">Peak: <span style="color:var(--accent)">'+activity.peak.date+'</span> with '+activity.peak.count+' interactions</div>';
+  }
+  html += '</div>';
+
+  html += '</div>'; // end anni-grid
+
+  // TREND LINE
+  html += '<div class="anni-card-v2">';
+  html += '<div class="card-title">Activity Trend</div>';
+  html += '<div class="trend-wrap">';
+  html += '<svg class="trend-svg" viewBox="0 0 300 80" preserveAspectRatio="none">';
+  html += '<defs><linearGradient id="trendGrad" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="rgba(92,157,255,0.3)"/><stop offset="100%" stop-color="rgba(92,157,255,0)"/></linearGradient></defs>';
+  var points = activity.daily.map(function(d,i){return [i*(300/29),80-(d.count/maxCount)*70];});
+  var areaPath = 'M'+points[0][0]+',80 ' + points.map(function(p){return 'L'+p[0]+','+p[1];}).join(' ') + ' L'+points[points.length-1][0]+',80 Z';
+  var linePath = 'M'+points.map(function(p){return p[0]+','+p[1];}).join(' L');
+  html += '<path class="trend-area" d="'+areaPath+'"/>';
+  html += '<path class="trend-line" d="'+linePath+'"/>';
+  points.forEach(function(p,i){
+    if(activity.daily[i].count===maxCount) html += '<circle class="trend-peak" cx="'+p[0]+'" cy="'+p[1]+'" r="3"/>';
+    else if(activity.daily[i].count>0) html += '<circle class="trend-dot" cx="'+p[0]+'" cy="'+p[1]+'" r="2"/>';
+  });
+  html += '</svg>';
+  html += '</div>';
+  html += '</div>';
+
+  // TOPIC CLOUD
+  html += '<div class="anni-card-v2">';
+  html += '<div class="card-title">Top Topics</div>';
+  html += '<div class="topic-cloud">';
+  if(keywords.length){
+    var maxK = keywords[0].count;
+    keywords.forEach(function(k,i){
+      var cls = 'topic-tag';
+      if(i<3) cls += ' popular';
+      else if(k.count===1) cls += ' rare';
+      var size = 10 + (k.count/maxK)*6;
+      html += '<div class="'+cls+'" style="font-size:'+size+'px">'+esc(k.word)+'</div>';
+    });
+  }else{
+    html += '<div style="color:var(--text-tertiary);font-size:13px;text-align:center;padding:12px">No topic data yet. Chat more to build your topic cloud.</div>';
+  }
+  html += '</div>';
+  html += '</div>';
+
+  // SENTIMENT FLOW
+  html += '<div class="anni-card-v2">';
+  html += '<div class="card-title">Sentiment Flow (30 Days)</div>';
+  html += '<div class="sentiment-bar">';
+  sentiment.forEach(function(s){
+    var color = s.type==="positive"?'rgba(74,222,128,0.6)':s.type==="negative"?'rgba(255,95,95,0.5)':'rgba(138,155,176,0.3)';
+    var label = s.date + ': ' + s.type;
+    html += '<div class="sentiment-seg" style="background:'+color+'"><span class="st-tooltip">'+esc(label)+'</span></div>';
+  });
+  html += '</div>';
+  html += '<div class="sentiment-legend">';
+  html += '<span><i style="background:rgba(74,222,128,0.6)"></i> Positive</span>';
+  html += '<span><i style="background:rgba(138,155,176,0.3)"></i> Neutral</span>';
+  html += '<span><i style="background:rgba(255,95,95,0.5)"></i> Negative</span>';
+  html += '</div>';
+  html += '</div>';
+
+  // KEY MOMENTS (keep original timeline)
   if(memCache.episodic.length || memCache.semantic.length){
-    html += '<div class="anni-card">';
-    html += '<div class="anni-card-title">KEY MOMENTS</div>';
+    html += '<div class="section-label">Key Moments</div>';
+    html += '<div class="anni-card-v2">';
     html += '<div class="anni-timeline">';
-    
     var events = [];
-    memCache.episodic.slice(0,5).forEach(function(e){
-      events.push({date:e.date, text:e.summary, type:'episodic'});
-    });
-    memCache.semantic.slice(0,5).forEach(function(s){
-      events.push({date:fmtDate(s.firstSeen), text:"Learned: "+s.content, type:'semantic'});
-    });
+    memCache.episodic.slice(0,8).forEach(function(e){events.push({date:e.date,text:e.summary,type:'episodic'});});
+    memCache.semantic.slice(0,8).forEach(function(s){events.push({date:fmtDate(s.firstSeen),text:"Learned: "+s.content,type:'semantic'});});
     events.sort(function(a,b){return (a.date||"").localeCompare(b.date||"");});
-    
     events.forEach(function(ev){
       html += '<div class="anni-event">';
       html += '<div class="anni-event-date">'+esc(ev.date)+'</div>';
       html += '<div class="anni-event-text">'+esc(ev.text)+'</div>';
       html += '</div>';
     });
-    html += '</div></div>';
-  }
-  
-  if(memCache.relations.length){
-    html += '<div class="anni-card">';
-    html += '<div class="anni-card-title">NEW CONNECTIONS</div>';
-    memCache.relations.slice(0,6).forEach(function(r){
-      html += '<div style="padding:8px 0;font-size:13px;color:var(--text-secondary);border-bottom:1px solid rgba(255,255,255,0.04)">';
-      html += '<span style="color:var(--accent)">'+esc(r.source)+'</span> &rarr; <span style="color:var(--accent)">'+esc(r.target)+'</span>';
-      html += ' <span style="color:var(--text-tertiary);font-size:11px">('+r.type+')</span>';
-      html += '</div>';
-    });
+    html += '</div>';
     html += '</div>';
   }
-  
+
   if(!html) html = '<div class="anni-empty">Not enough data yet. Keep chatting!</div>';
   container.innerHTML = html;
 }
-
 function clearChat(){
   saveChatSession();
   startNewSession();
