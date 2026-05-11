@@ -90,7 +90,7 @@ input:focus,textarea:focus{outline:none}
 .lang-btn{padding:16px;border:1px solid var(--glass-border);border-radius:var(--radius-md);background:var(--glass-highlight);backdrop-filter:blur(10px);color:var(--text-secondary);font-family:inherit;font-size:14px;cursor:pointer;transition:all 0.25s ease;text-align:center}
 .lang-btn:hover{border-color:rgba(92,157,255,0.3);color:var(--accent)}
 .lang-btn.active{border-color:rgba(92,157,255,0.4);color:var(--accent);background:rgba(92,157,255,0.08);box-shadow:0 0 20px rgba(92,157,255,0.08)}
-.lang-native{font-size:11px;color:var(--text-tertiary);margin-top:2px}
+.lang-native{font-size:11px;color:var(--text-tertiary);margin-top:2px;display:block;pointer-events:none}
 
 #app{height:100dvh;display:flex;flex-direction:column;overflow:hidden;background:radial-gradient(ellipse at 50% 0%,rgba(92,157,255,0.06) 0%,transparent 50%),var(--bg-deep)}
 
@@ -422,11 +422,11 @@ input:focus,textarea:focus{outline:none}
   <div class="screen-logo">JARVIS</div>
   <div class="screen-sub" id="langSub">Select your language</div>
   <div class="lang-grid">
-    <button class="lang-btn" onclick="setLang('en')">English<div class="lang-native">English</div></button>
-    <button class="lang-btn" onclick="setLang('es')">Español<div class="lang-native">Spanish</div></button>
-    <button class="lang-btn" onclick="setLang('ja')">日本語<div class="lang-native">Japanese</div></button>
-    <button class="lang-btn" onclick="setLang('ko')">한국어<div class="lang-native">Korean</div></button>
-    <button class="lang-btn" onclick="setLang('de')">Deutsch<div class="lang-native">German</div></button>
+    <button class="lang-btn" type="button" onclick="setLang('en')">English<span class="lang-native">English</span></button>
+    <button class="lang-btn" type="button" onclick="setLang('es')">Español<span class="lang-native">Spanish</span></button>
+    <button class="lang-btn" type="button" onclick="setLang('ja')">日本語<span class="lang-native">Japanese</span></button>
+    <button class="lang-btn" type="button" onclick="setLang('ko')">한국어<span class="lang-native">Korean</span></button>
+    <button class="lang-btn" type="button" onclick="setLang('de')">Deutsch<span class="lang-native">German</span></button>
   </div>
 </div>
 
@@ -803,37 +803,37 @@ var currentLang = "en";
 /* ===== FIXED setLang: auto-advances to API key screen ===== */
 function setLang(lang){
   currentLang = lang;
-  idbPut("settings","lang",lang);
-  
+  try{ idbPut("settings","lang",lang); }catch(e){}
+
   var t = I18N[lang];
-  document.getElementById("langSub").textContent = t.langSub;
-  document.getElementById("apikeySub").textContent = t.apikeySub;
-  document.getElementById("apikeyWarn").innerHTML = t.apikeyWarn;
-  document.getElementById("fbSetupSub").textContent = t.fbSetupSub;
-  document.getElementById("authSub").textContent = t.authSub;
-  document.getElementById("authToggle").innerHTML = t.authToggle;
-  document.querySelector("#authScreen .s-skip").textContent = t.skipAuth;
-  document.getElementById("r2Sub").innerHTML = t.r2Sub;
-  document.getElementById("emptyOnline").textContent = t.emptyOnline;
-  document.getElementById("emptyHint").textContent = t.emptyHint;
-  document.getElementById("notifLabel").textContent = t.notifLabel;
-  document.getElementById("syncInd").textContent = t.syncInd;
-  document.getElementById("diaryText").placeholder = t.diaryPlaceholder;
-  document.getElementById("paintZone").innerHTML = t.paintZone+'<br><span style="font-size:10px;color:var(--text-tertiary)">Bulk upload with resume</span>';
-  document.getElementById("memorySearchInput").placeholder = t.searchPlaceholder;
-  // anniTitle updated dynamically in renderAnniversary()
-  document.getElementById("anniSub").textContent = t.anniversarySub;
-  
-  // updateHeader() deferred to initApp() — avoids PRESETS/MODELS undefined error during onboarding
+  var el;
+  if(el=document.getElementById("langSub")) el.textContent = t.langSub;
+  if(el=document.getElementById("apikeySub")) el.textContent = t.apikeySub;
+  if(el=document.getElementById("apikeyWarn")) el.innerHTML = t.apikeyWarn;
+  if(el=document.getElementById("fbSetupSub")) el.textContent = t.fbSetupSub;
+  if(el=document.getElementById("authSub")) el.textContent = t.authSub;
+  if(el=document.getElementById("authToggle")) el.innerHTML = t.authToggle;
+  var skipEl=document.querySelector("#authScreen .s-skip");
+  if(skipEl) skipEl.textContent = t.skipAuth;
+  if(el=document.getElementById("r2Sub")) el.innerHTML = t.r2Sub;
+  if(el=document.getElementById("emptyOnline")) el.textContent = t.emptyOnline;
+  if(el=document.getElementById("emptyHint")) el.textContent = t.emptyHint;
+  if(el=document.getElementById("notifLabel")) el.textContent = t.notifLabel;
+  if(el=document.getElementById("syncInd")) el.textContent = t.syncInd;
+  if(el=document.getElementById("diaryText")) el.placeholder = t.diaryPlaceholder;
+  if(el=document.getElementById("paintZone")) el.innerHTML = t.paintZone+'<br><span style="font-size:10px;color:var(--text-tertiary)">Bulk upload with resume</span>';
+  if(el=document.getElementById("memorySearchInput")) el.placeholder = t.searchPlaceholder;
+  if(el=document.getElementById("anniSub")) el.textContent = t.anniversarySub;
 
   document.querySelectorAll(".lang-btn").forEach(function(b){
-    b.classList.toggle("active", b.getAttribute("onclick").includes("'"+lang+"'"));
+    var oncl = b.getAttribute("onclick") || "";
+    b.classList.toggle("active", oncl.indexOf("'"+lang+"'")>=0);
   });
 
-  /* === AUTO-ADVANCE === */
-  if(!document.getElementById("langScreen").classList.contains("hidden")){
+  // Always advance to API key screen
+  setTimeout(function(){
     showScreen("apikeyScreen");
-  }
+  }, 50);
 }
 
 /* === INDEXEDDB ENGINE === */
@@ -946,7 +946,10 @@ function initFB(cfg){
 /* === ONBOARDING FLOW === */
 function showScreen(id){
   var screens=["langScreen","apikeyScreen","fbSetupScreen","authScreen","r2SetupScreen","app"];
-  screens.forEach(function(s){document.getElementById(s).classList.toggle("hidden",s!==id)});
+  screens.forEach(function(s){
+    var el=document.getElementById(s);
+    if(el) el.classList.toggle("hidden", s!==id);
+  });
 }
 
 function goToAdvancedSetup(){
