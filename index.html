@@ -316,7 +316,6 @@ input:focus,textarea:focus{outline:none}
 /* Anniversary Panel */
 .anni-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.92);backdrop-filter:blur(24px);z-index:100;overflow-y:auto;padding:24px;padding-top:max(60px,env(safe-area-inset-top));padding-bottom:max(24px,env(safe-area-inset-bottom));animation:fade-in .4s}
 .anni-close{position:fixed;top:max(16px,env(safe-area-inset-top));right:16px;width:44px;height:44px;border-radius:50%;background:rgba(255,255,255,0.1);backdrop-filter:blur(10px);border:none;color:#fff;font-size:22px;cursor:pointer;display:flex;align-items:center;justify-content:center;z-index:101;transition:all 0.2s}
-.anni-close:hover{background:rgba(255,255,255,0.2)}
 .anni-header{text-align:center;margin-bottom:32px}
 .anni-title{font-family:'Space Mono',monospace;font-size:28px;color:var(--accent);margin-bottom:8px;letter-spacing:2px}
 .anni-sub{font-size:14px;color:var(--text-tertiary)}
@@ -337,77 +336,6 @@ input:focus,textarea:focus{outline:none}
 .mode-badge{display:inline-block;padding:3px 10px;border-radius:20px;font-size:9px;font-weight:700;letter-spacing:1px;text-transform:uppercase;margin-left:8px}
 .mode-starter{background:rgba(74,222,128,0.12);color:var(--success);border:1px solid rgba(74,222,128,0.2)}
 .mode-advanced{background:rgba(92,157,255,0.12);color:var(--accent);border:1px solid rgba(92,157,255,0.2)}
-
-/* ===== DIGITAL REPORT CHARTS ===== */
-.report-tabs{display:flex;gap:8px;margin-bottom:20px;overflow-x:auto;scrollbar-width:none;padding-bottom:4px}
-.report-tabs::-webkit-scrollbar{display:none}
-.report-tab{flex-shrink:0;padding:10px 18px;border:1px solid var(--glass-border);border-radius:var(--radius-md);background:var(--glass-highlight);backdrop-filter:blur(10px);color:var(--text-tertiary);font-family:inherit;font-size:12px;font-weight:700;letter-spacing:1px;cursor:pointer;transition:all 0.25s ease}
-.report-tab.active{border-color:rgba(92,157,255,0.4);color:var(--accent);background:rgba(92,157,255,0.08);box-shadow:0 0 20px rgba(92,157,255,0.08)}
-.report-section{display:none}
-.report-section.active{display:block}
-
-.chart-wrap{position:relative;width:100%;margin:14px 0}
-.chart-title{font-size:11px;color:var(--accent);letter-spacing:2px;margin-bottom:10px;font-weight:700;opacity:0.9}
-
-/* Radial Heatmap */
-.radial-wrap{width:260px;height:260px;margin:0 auto;position:relative}
-.radial-label{position:absolute;font-size:9px;color:var(--text-tertiary);transform:translate(-50%,-50%)}
-.radial-seg{transition:opacity 0.3s}
-.radial-seg:hover{opacity:0.7}
-
-/* Punch Card */
-.punch-wrap{width:100%;overflow-x:auto;padding-bottom:8px}
-.punch-svg{min-width:560px}
-.punch-cell{fill:var(--accent);transition:all 0.2s}
-.punch-cell:hover{fill:#fff}
-
-/* Calendar Grid */
-.cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:6px}
-.cal-cell{aspect-ratio:1;border-radius:6px;background:rgba(255,255,255,0.04);transition:all 0.2s;position:relative}
-.cal-cell.has-data{background:var(--accent)}
-.cal-cell:hover{transform:scale(1.15);z-index:2}
-.cal-tooltip{position:absolute;bottom:calc(100%+6px);left:50%;transform:translateX(-50%);background:rgba(8,12,20,0.95);border:1px solid var(--glass-border);border-radius:8px;padding:8px 10px;font-size:11px;color:var(--text-secondary);white-space:nowrap;pointer-events:none;opacity:0;transition:opacity 0.2s;z-index:10}
-.cal-cell:hover .cal-tooltip{opacity:1}
-
-/* Trend Line */
-.trend-wrap{width:100%;height:180px;position:relative}
-.trend-svg{width:100%;height:100%}
-.trend-path{fill:none;stroke:var(--accent);stroke-width:2;stroke-linecap:round;filter:drop-shadow(0 0 6px var(--accent-glow))}
-.trend-area{fill:rgba(92,157,255,0.08);stroke:none}
-.trend-peak{fill:var(--warning);filter:drop-shadow(0 0 6px rgba(251,191,36,0.5));cursor:pointer;transition:all 0.2s}
-.trend-peak:hover{r:6;fill:#fff}
-.trend-tooltip{position:absolute;background:rgba(8,12,20,0.95);border:1px solid var(--glass-border);border-radius:8px;padding:10px 12px;font-size:11px;color:var(--text-secondary);pointer-events:none;opacity:0;transition:opacity 0.2s;z-index:10;max-width:200px;line-height:1.5}
-.trend-tooltip b{color:var(--warning);display:block;margin-bottom:4px}
-
-/* Topic Cloud */
-.topic-cloud{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;align-items:center;padding:16px 8px}
-.topic-word{display:inline-block;padding:6px 14px;border-radius:20px;background:rgba(92,157,255,0.08);border:1px solid rgba(92,157,255,0.15);color:var(--text-primary);font-weight:600;transition:all 0.25s ease;cursor:default;white-space:nowrap}
-.topic-word:hover{background:rgba(92,157,255,0.2);border-color:rgba(92,157,255,0.4);transform:translateY(-2px) scale(1.05)}
-.topic-cat-dev{color:#5C9DFF;border-color:rgba(92,157,255,0.3);background:rgba(92,157,255,0.08)}
-.topic-cat-life{color:#4ADE80;border-color:rgba(74,222,128,0.3);background:rgba(74,222,128,0.08)}
-.topic-cat-art{color:#F472B6;border-color:rgba(244,114,182,0.3);background:rgba(244,114,182,0.08)}
-.topic-cat-work{color:#FBBF24;border-color:rgba(251,191,36,0.3);background:rgba(251,191,36,0.08)}
-
-/* Treemap */
-.treemap-wrap{width:100%;height:220px;position:relative;border-radius:var(--radius-md);overflow:hidden;background:rgba(255,255,255,0.02);border:1px solid var(--glass-border)}
-.treemap-block{position:absolute;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:#fff;text-shadow:0 1px 4px rgba(0,0,0,0.8);transition:all 0.2s;cursor:default;border:1px solid rgba(0,0,0,0.2)}
-.treemap-block:hover{filter:brightness(1.2);z-index:2}
-
-/* Sentiment Bar */
-.sentiment-wrap{display:flex;align-items:flex-end;gap:3px;height:120px;padding:10px 4px}
-.sentiment-cell{flex:1;border-radius:4px;min-height:4px;transition:all 0.3s ease;position:relative}
-.sentiment-cell:hover{filter:brightness(1.3);transform:scaleY(1.1)}
-.sentiment-labels{display:flex;gap:3px;margin-top:6px}
-.sentiment-label{flex:1;text-align:center;font-size:9px;color:var(--text-tertiary);transform:rotate(-35deg);transform-origin:top center;white-space:nowrap}
-.sentiment-legend{display:flex;gap:12px;justify-content:center;margin-top:14px;font-size:11px;color:var(--text-tertiary)}
-.sentiment-legend span{display:flex;align-items:center;gap:6px}
-.sentiment-dot{width:8px;height:8px;border-radius:50%}
-
-/* Insight Button */
-.insight-btn{width:100%;padding:14px;background:linear-gradient(135deg,rgba(92,157,255,0.15),rgba(59,130,246,0.1));border:1px solid rgba(92,157,255,0.25);border-radius:var(--radius-md);color:var(--accent);font-family:'Space Mono',monospace;font-weight:700;font-size:13px;letter-spacing:1px;cursor:pointer;margin-bottom:16px;transition:all 0.2s}
-.insight-btn:active{transform:scale(0.98)}
-.insight-btn:disabled{opacity:0.4;cursor:not-allowed}
-
 </style>
 <base target="_blank">
 </head>
@@ -639,12 +567,12 @@ input:focus,textarea:focus{outline:none}
     </div>
   </div>
 
-  <!-- Anniversary / Digital Report Overlay -->
+  <!-- Anniversary Overlay -->
   <div id="anniversaryOverlay" class="anni-overlay hidden">
     <button class="anni-close" onclick="closeAnniversary()">&#10005;</button>
     <div class="anni-header">
       <div class="anni-title" id="anniTitle">30 Days Together</div>
-      <div class="anni-sub" id="anniSub">Your digital report with Jarvis</div>
+      <div class="anni-sub" id="anniSub">Your journey with Jarvis</div>
     </div>
     <div id="anniversaryContent"></div>
   </div>
@@ -682,13 +610,7 @@ var I18N = {
     starter:"Starter",
     advanced:"Advanced",
     anniversaryTitle:"days with Jarvis",
-    anniversarySub:"Your digital report with Jarvis",
-    reportOverview:"OVERVIEW",
-    reportActivity:"ACTIVITY",
-    reportTopics:"TOPICS",
-    reportSentiment:"SENTIMENT",
-    reportInsightBtn:"Generate AI Deep Insights",
-    reportInsightLoading:"Analyzing your month..."
+    anniversarySub:"Your journey with Jarvis"
   },
   es:{
     langSub:"Selecciona tu idioma",
@@ -715,13 +637,7 @@ var I18N = {
     starter:"Inicio",
     advanced:"Avanzado",
     anniversaryTitle:"días con Jarvis",
-    anniversarySub:"Tu informe digital con Jarvis",
-    reportOverview:"RESUMEN",
-    reportActivity:"ACTIVIDAD",
-    reportTopics:"TEMAS",
-    reportSentiment:"SENTIMIENTO",
-    reportInsightBtn:"Generar Análisis Profundo con IA",
-    reportInsightLoading:"Analizando tu mes..."
+    anniversarySub:"Tu viaje con Jarvis"
   },
   ja:{
     langSub:"言語を選択してください",
@@ -748,13 +664,7 @@ var I18N = {
     starter:"スターター",
     advanced:"アドバンスド",
     anniversaryTitle:"日目 Jarvisとの時間",
-    anniversarySub:"Jarvisとのデジタルレポート",
-    reportOverview:"概要",
-    reportActivity:"アクティビティ",
-    reportTopics:"トピック",
-    reportSentiment:"感情",
-    reportInsightBtn:"AI深層分析を生成",
-    reportInsightLoading:"今月を分析中..."
+    anniversarySub:"Jarvisとの旅"
   },
   ko:{
     langSub:"언어를 선택하세요",
@@ -780,14 +690,8 @@ var I18N = {
     thinking:"생각 중...",
     starter:"스타터",
     advanced:"고급",
-    anniversaryTitle:"일째 Jarvis와 함께한 시간",
-    anniversarySub:"Jarvis와의 디지털 리포트",
-    reportOverview:"개요",
-    reportActivity:"활동",
-    reportTopics:"주제",
-    reportSentiment:"감정",
-    reportInsightBtn:"AI 심층 인사이트 생성",
-    reportInsightLoading:"이번 달을 분석 중..."
+    anniversaryTitle:"日째 Jarvis와 함께한 시간",
+    anniversarySub:"Jarvis와의 여정"
   },
   de:{
     langSub:"Wähle deine Sprache",
@@ -814,13 +718,7 @@ var I18N = {
     starter:"Starter",
     advanced:"Erweitert",
     anniversaryTitle:"Tage mit Jarvis",
-    anniversarySub:"Dein digitaler Bericht mit Jarvis",
-    reportOverview:"ÜBERSICHT",
-    reportActivity:"AKTIVITÄT",
-    reportTopics:"THEMEN",
-    reportSentiment:"STIMMUNG",
-    reportInsightBtn:"KI-Tiefenanalyse generieren",
-    reportInsightLoading:"Analysiere deinen Monat..."
+    anniversarySub:"Deine Reise mit Jarvis"
   }
 };
 
@@ -847,12 +745,16 @@ function setLang(lang){
   document.getElementById("diaryText").placeholder = t.diaryPlaceholder;
   document.getElementById("paintZone").innerHTML = t.paintZone+'<br><span style="font-size:10px;color:var(--text-tertiary)">Bulk upload with resume</span>';
   document.getElementById("memorySearchInput").placeholder = t.searchPlaceholder;
+  // anniTitle updated dynamically in renderAnniversary()
   document.getElementById("anniSub").textContent = t.anniversarySub;
   
+  // updateHeader() deferred to initApp() — avoids PRESETS/MODELS undefined error during onboarding
+
   document.querySelectorAll(".lang-btn").forEach(function(b){
     b.classList.toggle("active", b.getAttribute("onclick").includes("'"+lang+"'"));
   });
 
+  /* === AUTO-ADVANCE === */
   if(!document.getElementById("langScreen").classList.contains("hidden")){
     showScreen("apikeyScreen");
   }
@@ -1139,6 +1041,7 @@ idbOpen().then(function(){
       document.getElementById("diaryText").placeholder = t.diaryPlaceholder;
       document.getElementById("paintZone").innerHTML = t.paintZone+'<br><span style="font-size:10px;color:var(--text-tertiary)">Bulk upload with resume</span>';
       document.getElementById("memorySearchInput").placeholder = t.searchPlaceholder;
+      // anniTitle updated dynamically in renderAnniversary()
       document.getElementById("anniSub").textContent = t.anniversarySub;
     }
     
@@ -1146,6 +1049,7 @@ idbOpen().then(function(){
       if(saved && saved.uid && !currentUser && loadFbCfg()){
         orKey = saved.orKey || "";
         R2_WORKER = saved.r2Url || "";
+        // Let onAuth handle screen navigation when auth state resolves
       }
     });
     
@@ -1837,7 +1741,7 @@ function handlePaintUpload(fl){
   files.forEach(function(f){if(ex[fileFP(f)])sk.push(f.name);else nf.push(f)});
   var total=nf.length,skipped=sk.length;
   if(!total){
-    area.innerHTML='<div class="upload-panel"><div class="upload-title"><span class="upload-done">All '+skipped+" exist</span></div></div>';
+    area.innerHTML='<div class="upload-panel"><div class="upload-title"><span class="upload-done">All '+skipped+" exist</span></div></div>";
     setTimeout(function(){area.innerHTML=""},3000);
     document.getElementById("paintInput").value="";
     return;
@@ -2497,139 +2401,14 @@ function renderMemorySearch(){
   res.innerHTML = html;
 }
 
-/* =========================================================
-   DIGITAL REPORT (30-Day Visualization)
-   ========================================================= */
-var reportInsights = null; // cache for AI-generated insights
-
-function getThirtyDayStats(){
-  var now = Date.now();
-  var thirtyDaysAgo = now - 30*86400000;
-  var hourCounts = new Array(24).fill(0);
-  var dayHourCounts = Array(7).fill(null).map(function(){return new Array(24).fill(0);});
-  var dayCounts = {};
-  var dayKeywords = {};
-  var peak = {date:"",count:0};
-
-  function addTs(ts){
-    if(!ts || ts < thirtyDaysAgo) return;
-    var d = new Date(ts);
-    var h = d.getHours();
-    var day = d.getDay();
-    var dateStr = d.toISOString().split("T")[0];
-    hourCounts[h]++;
-    dayHourCounts[day][h]++;
-    dayCounts[dateStr] = (dayCounts[dateStr]||0) + 1;
-    if(dayCounts[dateStr] > peak.count){ peak.count = dayCounts[dateStr]; peak.date = dateStr; }
-  }
-
-  chatSessionsCache.forEach(function(c){ if(c.ts) addTs(c.ts); });
-  diaryCache.forEach(function(d){ if(d.ts) addTs(d.ts); else if(d.date){ var t = new Date(d.date).getTime(); if(t>thirtyDaysAgo) addTs(t); } });
-  memCache.episodic.forEach(function(e){ if(e.ts) addTs(e.ts); else if(e.date){ var t = new Date(e.date).getTime(); if(t>thirtyDaysAgo) addTs(t); } });
-
-  // keyword extraction for peak day
-  Object.keys(dayCounts).forEach(function(dateStr){
-    var kws = [];
-    diaryCache.forEach(function(d){ if(d.date===dateStr && d.text){ kws.push(d.text.split(/\s+/).slice(0,3).join(" ")); } });
-    memCache.episodic.forEach(function(e){ if(e.date===dateStr && e.summary){ kws.push(e.summary); } });
-    dayKeywords[dateStr] = kws.slice(0,2).join(", ") || "Active day";
-  });
-
-  return {hourCounts:hourCounts, dayHourCounts:dayHourCounts, dayCounts:dayCounts, dayKeywords:dayKeywords, peak:peak, thirtyDaysAgo:thirtyDaysAgo};
-}
-
-function getSentimentLocal(){
-  var now = Date.now();
-  var thirtyDaysAgo = now - 30*86400000;
-  var result = [];
-  var posWords = /(good|great|happy|joy|love|awesome|좋|행복|즐거|기쁨|사랑|대박|최고|감사|재미|신나|흥미|성공|달성|완료|휴식|편안)/i;
-  var negWords = /(bad|sad|angry|hate|terrible|awful|싫|슬픔|화남|짜증|최악|힘들|스트레스|불안|걱정|실패|아픔|피곤|지침)/i;
-  var focWords = /(work|project|code|study|focus|deep|몰입|집중|개발|코딩|공부|작업|설계|디버깅|배포|회의)/i;
-
-  for(var i=29;i>=0;i--){
-    var d = new Date(now - i*86400000);
-    var dateStr = d.toISOString().split("T")[0];
-    var texts = [];
-    diaryCache.forEach(function(x){ if(x.date===dateStr && x.text) texts.push(x.text); });
-    memCache.episodic.forEach(function(x){ if(x.date===dateStr && x.summary) texts.push(x.summary); });
-
-    var score = 0, mood = "calm", total = texts.length;
-    texts.forEach(function(txt){
-      if(posWords.test(txt)) score += 1;
-      if(negWords.test(txt)) score -= 1;
-      if(focWords.test(txt)) score += 0.5;
-    });
-    if(!total){ score = 0; mood = "calm"; }
-    else if(score > 0.5){ mood = "positive"; }
-    else if(score < -0.5){ mood = "negative"; }
-    else if(focWords.test(texts.join(" "))){ mood = "focused"; }
-    else { mood = "calm"; }
-
-    result.push({date:dateStr, score:Math.max(-1,Math.min(1,score)), mood:mood});
-  }
-  return result;
-}
-
-function generateDeepInsights(){
-  var btn = document.getElementById("insightBtn");
-  if(!btn || !orKey) return;
-  var t = I18N[currentLang];
-  btn.disabled = true;
-  btn.textContent = t.reportInsightLoading;
-
-  var diaryText = diaryCache.slice(0,20).map(function(d){return d.date+": "+d.text;}).join("\n");
-  var episodicText = memCache.episodic.slice(0,10).map(function(e){return e.date+": "+e.summary;}).join("\n");
-  var themeText = memCache.themes.slice(0,10).map(function(th){return th.theme+"("+th.frequency+")";}).join(", ");
-
-  var prompt = "Analyze this user's last 30 days and return ONLY JSON.\n\n"+
-    "[DIARY]\n"+diaryText+"\n\n"+
-    "[EVENTS]\n"+episodicText+"\n\n"+
-    "[EXISTING THEMES]\n"+themeText+"\n\n"+
-    "Return JSON schema:\n"+
-    "{\"topics\":[{\"word\":\"short topic keyword\",\"category\":\"dev|life|art|work\",\"freq\":number}],\"sentiment\":[{\"date\":\"YYYY-MM-DD\",\"score\":-1to1,\"mood\":\"positive|focused|calm|negative\"}],\"peakDays\":[{\"date\":\"YYYY-MM-DD\",\"summary\":\"what happened\",\"keywords\":[\"topic1\",\"topic2\"]}]}\n"+
-    "Rules: - Topics must be concise 1-2 word subject summaries, not generic. - Use Korean if user content is Korean. - Do not wrap in markdown.";
-
-  fetch("https://openrouter.ai/api/v1/chat/completions",{
-    method:"POST",
-    headers:{"Content-Type":"application/json","Authorization":"Bearer "+orKey},
-    body:JSON.stringify({model:MODELS[activeModel].id,messages:[{role:"user",content:prompt}],max_tokens:1200})
-  }).then(function(r){return r.json();}).then(function(data){
-    try{
-      var c = data.choices[0].message.content.replace(/```json\n?|\n?```/g,"").trim();
-      reportInsights = JSON.parse(c);
-      // cache locally for 1 hour
-      localStorage.setItem("jarvis_report_insights", JSON.stringify({ts:Date.now(), data:reportInsights}));
-    }catch(e){console.error("[JARVIS] Insight parse error",e);}
-    btn.disabled = false;
-    btn.textContent = t.reportInsightBtn;
-    renderAnniversary(); // refresh
-  }).catch(function(e){
-    console.error("[JARVIS] Insight API error",e);
-    btn.disabled = false;
-    btn.textContent = t.reportInsightBtn;
-  });
-}
-
+/* === ANNIVERSARY REPORT === */
 function openAnniversary(){
   document.getElementById("anniversaryOverlay").classList.remove("hidden");
-  // restore cached insights
-  var cached = localStorage.getItem("jarvis_report_insights");
-  if(cached){
-    try{ var p = JSON.parse(cached); if(Date.now() - p.ts < 3600000) reportInsights = p.data; }catch(e){}
-  }
   renderAnniversary();
 }
 
 function closeAnniversary(){
   document.getElementById("anniversaryOverlay").classList.add("hidden");
-}
-
-function switchReportTab(tab){
-  var tabs = ["overview","activity","topics","sentiment"];
-  tabs.forEach(function(t){
-    document.getElementById("tab-"+t).classList.toggle("active", t===tab);
-    document.getElementById("sec-"+t).classList.toggle("active", t===tab);
-  });
 }
 
 function renderAnniversary(){
@@ -2644,341 +2423,67 @@ function renderAnniversary(){
   });
   var days = Math.floor((Date.now() - firstTs) / 86400000);
   if(days < 1) days = 1;
-
-  var stats = getThirtyDayStats();
-  var sentiment = (reportInsights && reportInsights.sentiment) ? reportInsights.sentiment : getSentimentLocal();
-
+  
+  var newNodes = memCache.semantic.length;
+  var newRelations = memCache.relations.length;
+  var newThemes = memCache.themes.length;
+  var diaryCount = diaryCache.length;
+  var chatCount = chatSessionsCache.reduce(function(a,c){return a+(c.messageCount||0)},0);
+  
   var html = '';
-
-  // Tabs
-  html += '<div class="report-tabs">';
-  html += '<button class="report-tab active" id="tab-overview" onclick="switchReportTab(\'overview\')">'+t.reportOverview+'</button>';
-  html += '<button class="report-tab" id="tab-activity" onclick="switchReportTab(\'activity\')">'+t.reportActivity+'</button>';
-  html += '<button class="report-tab" id="tab-topics" onclick="switchReportTab(\'topics\')">'+t.reportTopics+'</button>';
-  html += '<button class="report-tab" id="tab-sentiment" onclick="switchReportTab(\'sentiment\')">'+t.reportSentiment+'</button>';
-  html += '</div>';
-
-  // AI Insight Button
-  html += '<button class="insight-btn" id="insightBtn" onclick="generateDeepInsights()">'+t.reportInsightBtn+'</button>';
-
-  // ===== OVERVIEW =====
-  html += '<div class="report-section active" id="sec-overview">';
+  
   html += '<div class="anni-card" style="text-align:center">';
   html += '<div style="font-size:48px;margin-bottom:8px">&#127881;</div>';
   html += '<div style="font-size:32px;font-family:\'Space Mono\',monospace;color:var(--accent);font-weight:700">'+days+'</div>';
   html += '<div style="font-size:13px;color:var(--text-tertiary)">'+t.anniversarySub+'</div>';
   html += '</div>';
+  
   html += '<div class="anni-card">';
   html += '<div class="anni-card-title">MEMORY STATISTICS</div>';
-  html += '<div class="anni-stat"><span class="anni-stat-label">Semantic Nodes</span><span class="anni-stat-value">'+memCache.semantic.length+'</span></div>';
-  html += '<div class="anni-stat"><span class="anni-stat-label">Relations Formed</span><span class="anni-stat-value">'+memCache.relations.length+'</span></div>';
-  html += '<div class="anni-stat"><span class="anni-stat-label">Recurring Themes</span><span class="anni-stat-value">'+memCache.themes.length+'</span></div>';
-  html += '<div class="anni-stat"><span class="anni-stat-label">Diary Entries</span><span class="anni-stat-value">'+diaryCache.length+'</span></div>';
-  html += '<div class="anni-stat"><span class="anni-stat-label">Messages Exchanged</span><span class="anni-stat-value">'+chatSessionsCache.reduce(function(a,c){return a+(c.messageCount||0)},0)+'</span></div>';
+  html += '<div class="anni-stat"><span class="anni-stat-label">Semantic Nodes</span><span class="anni-stat-value">'+newNodes+'</span></div>';
+  html += '<div class="anni-stat"><span class="anni-stat-label">Relations Formed</span><span class="anni-stat-value">'+newRelations+'</span></div>';
+  html += '<div class="anni-stat"><span class="anni-stat-label">Recurring Themes</span><span class="anni-stat-value">'+newThemes+'</span></div>';
+  html += '<div class="anni-stat"><span class="anni-stat-label">Diary Entries</span><span class="anni-stat-value">'+diaryCount+'</span></div>';
+  html += '<div class="anni-stat"><span class="anni-stat-label">Messages Exchanged</span><span class="anni-stat-value">'+chatCount+'</span></div>';
   html += '</div>';
+  
   if(memCache.episodic.length || memCache.semantic.length){
     html += '<div class="anni-card">';
-    html += '<div class="anni-card-title">KEY MOMENTS</div><div class="anni-timeline">';
+    html += '<div class="anni-card-title">KEY MOMENTS</div>';
+    html += '<div class="anni-timeline">';
+    
     var events = [];
-    memCache.episodic.slice(0,5).forEach(function(e){ events.push({date:e.date, text:e.summary, type:'episodic'}); });
-    memCache.semantic.slice(0,5).forEach(function(s){ events.push({date:fmtDate(s.firstSeen), text:"Learned: "+s.content, type:'semantic'}); });
+    memCache.episodic.slice(0,5).forEach(function(e){
+      events.push({date:e.date, text:e.summary, type:'episodic'});
+    });
+    memCache.semantic.slice(0,5).forEach(function(s){
+      events.push({date:fmtDate(s.firstSeen), text:"Learned: "+s.content, type:'semantic'});
+    });
     events.sort(function(a,b){return (a.date||"").localeCompare(b.date||"");});
+    
     events.forEach(function(ev){
-      html += '<div class="anni-event"><div class="anni-event-date">'+esc(ev.date)+'</div><div class="anni-event-text">'+esc(ev.text)+'</div></div>';
+      html += '<div class="anni-event">';
+      html += '<div class="anni-event-date">'+esc(ev.date)+'</div>';
+      html += '<div class="anni-event-text">'+esc(ev.text)+'</div>';
+      html += '</div>';
     });
     html += '</div></div>';
   }
-  html += '</div>'; // end overview
-
-  // ===== ACTIVITY =====
-  html += '<div class="report-section" id="sec-activity">';
   
-  // Radial Heatmap
-  html += '<div class="anni-card">';
-  html += '<div class="chart-title">ACTIVITY BY HOUR (RADIAL)</div>';
-  html += '<div class="radial-wrap" id="radialWrap"></div>';
-  html += '</div>';
+  if(memCache.relations.length){
+    html += '<div class="anni-card">';
+    html += '<div class="anni-card-title">NEW CONNECTIONS</div>';
+    memCache.relations.slice(0,6).forEach(function(r){
+      html += '<div style="padding:8px 0;font-size:13px;color:var(--text-secondary);border-bottom:1px solid rgba(255,255,255,0.04)">';
+      html += '<span style="color:var(--accent)">'+esc(r.source)+'</span> &rarr; <span style="color:var(--accent)">'+esc(r.target)+'</span>';
+      html += ' <span style="color:var(--text-tertiary);font-size:11px">('+r.type+')</span>';
+      html += '</div>';
+    });
+    html += '</div>';
+  }
   
-  // Punch Card
-  html += '<div class="anni-card">';
-  html += '<div class="chart-title">WEEKLY PUNCH CARD</div>';
-  html += '<div class="punch-wrap"><svg class="punch-svg" id="punchSvg" viewBox="0 0 720 200"></svg></div>';
-  html += '</div>';
-  
-  // Calendar Grid + Trend Line
-  html += '<div class="anni-card">';
-  html += '<div class="chart-title">30-DAY ACTIVITY GRID</div>';
-  html += '<div class="cal-grid" id="calGrid" style="margin-bottom:16px"></div>';
-  html += '<div class="chart-title">ACTIVITY TREND</div>';
-  html += '<div class="trend-wrap" id="trendWrap"></div>';
-  html += '</div>';
-  
-  html += '</div>'; // end activity
-
-  // ===== TOPICS =====
-  html += '<div class="report-section" id="sec-topics">';
-  html += '<div class="anni-card">';
-  html += '<div class="chart-title">TOPIC CLOUD</div>';
-  html += '<div class="topic-cloud" id="topicCloud"></div>';
-  html += '</div>';
-  html += '<div class="anni-card">';
-  html += '<div class="chart-title">CATEGORY TREEMAP</div>';
-  html += '<div class="treemap-wrap" id="treemapWrap"></div>';
-  html += '</div>';
-  html += '</div>'; // end topics
-
-  // ===== SENTIMENT =====
-  html += '<div class="report-section" id="sec-sentiment">';
-  html += '<div class="anni-card">';
-  html += '<div class="chart-title">30-DAY SENTIMENT FLOW</div>';
-  html += '<div style="font-size:12px;color:var(--text-tertiary);margin-bottom:10px">Color bar shows daily emotional tone from diary & conversations.</div>';
-  html += '<div class="sentiment-wrap" id="sentimentWrap"></div>';
-  html += '<div class="sentiment-legend">';
-  html += '<span><span class="sentiment-dot" style="background:#FBBF24"></span>Positive</span>';
-  html += '<span><span class="sentiment-dot" style="background:#4ADE80"></span>Focused</span>';
-  html += '<span><span class="sentiment-dot" style="background:#5C9DFF"></span>Calm</span>';
-  html += '<span><span class="sentiment-dot" style="background:#FF5F5F"></span>Negative</span>';
-  html += '</div>';
-  html += '</div>';
-  html += '</div>'; // end sentiment
-
+  if(!html) html = '<div class="anni-empty">Not enough data yet. Keep chatting!</div>';
   container.innerHTML = html;
-
-  // Render charts after DOM insertion
-  setTimeout(function(){
-    renderRadialHeatmap(stats.hourCounts);
-    renderPunchCard(stats.dayHourCounts);
-    renderCalendarGrid(stats.dayCounts, stats.dayKeywords);
-    renderTrendLine(stats.dayCounts, stats.dayKeywords, stats.peak);
-    renderTopicCloud();
-    renderTreemap();
-    renderSentimentBar(sentiment);
-  }, 50);
-}
-
-/* -------- Chart Renderers -------- */
-function renderRadialHeatmap(hourCounts){
-  var wrap = document.getElementById("radialWrap");
-  if(!wrap) return;
-  var max = Math.max.apply(null, hourCounts) || 1;
-  var svg = document.createElementNS("http://www.w3.org/2000/svg","svg");
-  svg.setAttribute("width","260"); svg.setAttribute("height","260"); svg.setAttribute("viewBox","-130 -130 260 260");
-  var cx=0, cy=0, rIn=45, rOut=120;
-  for(var h=0;h<24;h++){
-    var a1 = (h/24)*Math.PI*2 - Math.PI/2;
-    var a2 = ((h+1)/24)*Math.PI*2 - Math.PI/2;
-    var intensity = hourCounts[h]/max;
-    var path = describeArc(cx,cy,rIn,rOut,a1,a2);
-    var el = document.createElementNS("http://www.w3.org/2000/svg","path");
-    el.setAttribute("d",path);
-    el.setAttribute("fill","rgba(92,157,255,"+(0.08 + intensity*0.92)+")");
-    el.setAttribute("stroke","rgba(0,0,0,0.3)");
-    el.setAttribute("stroke-width","1");
-    el.className.baseVal = "radial-seg";
-    svg.appendChild(el);
-    // label
-    var la = (a1+a2)/2;
-    var lr = rOut + 14;
-    var lx = Math.cos(la)*lr, ly = Math.sin(la)*lr;
-    var txt = document.createElementNS("http://www.w3.org/2000/svg","text");
-    txt.setAttribute("x",lx); txt.setAttribute("y",ly);
-    txt.setAttribute("text-anchor","middle"); txt.setAttribute("dominant-baseline","middle");
-    txt.setAttribute("fill","var(--text-tertiary)"); txt.setAttribute("font-size","9");
-    txt.textContent = h;
-    svg.appendChild(txt);
-  }
-  wrap.appendChild(svg);
-}
-function polarToCartesian(cx,cy,r,angle){return{x:cx+r*Math.cos(angle),y:cy+r*Math.sin(angle)};}
-function describeArc(cx,cy,rIn,rOut,startAngle,endAngle){
-  var startOut=polarToCartesian(cx,cy,rOut,endAngle), startIn=polarToCartesian(cx,cy,rIn,endAngle);
-  var endOut=polarToCartesian(cx,cy,rOut,startAngle), endIn=polarToCartesian(cx,cy,rIn,startAngle);
-  return ["M",startOut.x,startOut.y,"A",rOut,rOut,0,0,0,endOut.x,endOut.y,"L",endIn.x,endIn.y,"A",rIn,rIn,0,0,1,startIn.x,startIn.y,"Z"].join(" ");
-}
-
-function renderPunchCard(dayHourCounts){
-  var svg = document.getElementById("punchSvg");
-  if(!svg) return;
-  var days = ["Sun","Mon","Tue","Wed","Thu","Fri","Sat"];
-  var max = 0;
-  dayHourCounts.forEach(function(row){row.forEach(function(v){if(v>max)max=v;});});
-  if(max<1) max=1;
-  var cellW=28, cellH=22, pad=4, offX=40, offY=10;
-  var g = document.createElementNS("http://www.w3.org/2000/svg","g");
-  for(var d=0;d<7;d++){
-    var txt = document.createElementNS("http://www.w3.org/2000/svg","text");
-    txt.setAttribute("x",offX-8); txt.setAttribute("y",offY + d*(cellH+pad) + cellH/2 + 3);
-    txt.setAttribute("text-anchor","end"); txt.setAttribute("fill","var(--text-tertiary)");
-    txt.setAttribute("font-size","10"); txt.textContent = days[d];
-    g.appendChild(txt);
-    for(var h=0;h<24;h++){
-      var v = dayHourCounts[d][h];
-      var cx = offX + h*(cellW+pad) + cellW/2;
-      var cy = offY + d*(cellH+pad) + cellH/2;
-      var r = v>0 ? 2 + (v/max)*9 : 2;
-      var circle = document.createElementNS("http://www.w3.org/2000/svg","circle");
-      circle.setAttribute("cx",cx); circle.setAttribute("cy",cy); circle.setAttribute("r",r);
-      circle.setAttribute("fill",v>0?"var(--accent)":"rgba(255,255,255,0.04)");
-      circle.className.baseVal = "punch-cell";
-      g.appendChild(circle);
-      if(d===0){
-        var ht = document.createElementNS("http://www.w3.org/2000/svg","text");
-        ht.setAttribute("x",cx); ht.setAttribute("y",offY-4);
-        ht.setAttribute("text-anchor","middle"); ht.setAttribute("fill","var(--text-tertiary)");
-        ht.setAttribute("font-size","8"); ht.textContent = h%3===0?h:"";
-        g.appendChild(ht);
-      }
-    }
-  }
-  svg.appendChild(g);
-}
-
-function renderCalendarGrid(dayCounts, dayKeywords){
-  var grid = document.getElementById("calGrid");
-  if(!grid) return;
-  var now = Date.now();
-  var max = Math.max.apply(null, Object.values(dayCounts)) || 1;
-  for(var i=29;i>=0;i--){
-    var d = new Date(now - i*86400000);
-    var dateStr = d.toISOString().split("T")[0];
-    var count = dayCounts[dateStr] || 0;
-    var cell = document.createElement("div");
-    cell.className = "cal-cell"+(count>0?" has-data":"");
-    if(count>0) cell.style.background = "rgba(92,157,255,"+(0.15 + (count/max)*0.85)+")";
-    var tip = document.createElement("div");
-    tip.className = "cal-tooltip";
-    tip.innerHTML = '<b>'+dateStr+'</b><br>'+(count?count+" events":"No activity")+(dayKeywords[dateStr]?'<br><span style="color:var(--accent)">'+esc(dayKeywords[dateStr])+'</span>':'');
-    cell.appendChild(tip);
-    grid.appendChild(cell);
-  }
-}
-
-function renderTrendLine(dayCounts, dayKeywords, peak){
-  var wrap = document.getElementById("trendWrap");
-  if(!wrap) return;
-  var dates = Object.keys(dayCounts).sort();
-  if(dates.length<2){ wrap.innerHTML='<div style="color:var(--text-tertiary);font-size:12px;text-align:center">Not enough daily data for trend.</div>'; return; }
-  var values = dates.map(function(d){return dayCounts[d];});
-  var max = Math.max.apply(null, values) || 1;
-  var w = wrap.clientWidth || 300;
-  var h = 180, pad=30;
-  var svg = document.createElementNS("http://www.w3.org/2000/svg","svg");
-  svg.setAttribute("width","100%"); svg.setAttribute("height",h); svg.setAttribute("class","trend-svg");
-  svg.setAttribute("viewBox","0 0 "+w+" "+h);
-  
-  // area path
-  var points = values.map(function(v,i){
-    var x = pad + (i/(values.length-1))*(w-pad*2);
-    var y = h - pad - (v/max)*(h-pad*2);
-    return [x,y];
-  });
-  var areaD = "M"+points[0][0]+","+(h-pad) + " L"+points.map(function(p){return p[0]+","+p[1];}).join(" L") + " L"+points[points.length-1][0]+","+(h-pad)+" Z";
-  var area = document.createElementNS("http://www.w3.org/2000/svg","path");
-  area.setAttribute("d",areaD); area.setAttribute("class","trend-area");
-  svg.appendChild(area);
-  
-  // line path
-  var lineD = "M"+points.map(function(p){return p[0]+","+p[1];}).join(" L");
-  var line = document.createElementNS("http://www.w3.org/2000/svg","path");
-  line.setAttribute("d",lineD); line.setAttribute("class","trend-path");
-  svg.appendChild(line);
-  
-  // peak tooltip
-  var peakIdx = dates.indexOf(peak.date);
-  if(peakIdx>=0){
-    var px = points[peakIdx][0], py = points[peakIdx][1];
-    var circ = document.createElementNS("http://www.w3.org/2000/svg","circle");
-    circ.setAttribute("cx",px); circ.setAttribute("cy",py); circ.setAttribute("r",5);
-    circ.setAttribute("class","trend-peak");
-    svg.appendChild(circ);
-    
-    var tip = document.createElement("div");
-    tip.className = "trend-tooltip";
-    tip.style.left = Math.max(10, Math.min(w-210, px-100)) + "px";
-    tip.style.top = (py - 70) + "px";
-    tip.innerHTML = '<b>PEAK: '+esc(peak.date)+'</b>'+(dayKeywords[peak.date]?'<br>'+esc(dayKeywords[peak.date]):'')+'<br><span style="color:var(--text-tertiary)">'+peak.count+' activities</span>';
-    wrap.appendChild(tip);
-    // show on load if peak exists
-    setTimeout(function(){tip.style.opacity=1;},300);
-    circ.addEventListener("mouseenter",function(){tip.style.opacity=1;});
-    circ.addEventListener("mouseleave",function(){tip.style.opacity=0;});
-  }
-  wrap.appendChild(svg);
-}
-
-function renderTopicCloud(){
-  var container = document.getElementById("topicCloud");
-  if(!container) return;
-  var topics = [];
-  if(reportInsights && reportInsights.topics){
-    topics = reportInsights.topics;
-  } else {
-    // fallback to memCache themes + semantic types
-    var map = {};
-    memCache.themes.forEach(function(t){ map[t.theme] = (map[t.theme]||0) + (t.frequency||1); });
-    memCache.semantic.forEach(function(s){ if(s.content){ var k=s.content.split(/\s+/).slice(0,2).join(" "); map[k] = (map[k]||0)+1; } });
-    topics = Object.keys(map).map(function(k){return {word:k, freq:map[k], category:"general"};});
-  }
-  if(!topics.length){ container.innerHTML='<div style="color:var(--text-tertiary);font-size:12px">No topic data yet.</div>'; return; }
-  topics.sort(function(a,b){return b.freq-a.freq;});
-  var max = topics[0].freq || 1;
-  var catClass = {"dev":"topic-cat-dev","life":"topic-cat-life","art":"topic-cat-art","work":"topic-cat-work"};
-  topics.slice(0,24).forEach(function(t){
-    var span = document.createElement("span");
-    span.className = "topic-word "+(catClass[t.category]||"");
-    span.textContent = t.word;
-    span.style.fontSize = Math.max(11, 10 + (t.freq/max)*18) + "px";
-    span.style.opacity = 0.5 + (t.freq/max)*0.5;
-    if(Math.random()>0.7) span.style.transform = "rotate("+(Math.random()*6-3)+"deg)";
-    container.appendChild(span);
-  });
-}
-
-function renderTreemap(){
-  var wrap = document.getElementById("treemapWrap");
-  if(!wrap) return;
-  // group by semantic type
-  var groups = {};
-  memCache.semantic.forEach(function(s){ groups[s.type||"general"] = (groups[s.type||"general"]||0)+1; });
-  if(!Object.keys(groups).length){ wrap.innerHTML='<div style="color:var(--text-tertiary);font-size:12px;display:flex;align-items:center;justify-content:center;height:100%">No category data.</div>'; return; }
-  var total = Object.values(groups).reduce(function(a,b){return a+b;},0);
-  var colors = {"interest":"#5C9DFF","project":"#4ADE80","value":"#F472B6","emotion":"#FBBF24","goal":"#A78BFA","preference":"#2DD4BF","food":"#FB923C","general":"#64748B"};
-  var x=0, y=0, rowH=110, w=wrap.clientWidth||300;
-  Object.keys(groups).forEach(function(key){
-    var count = groups[key];
-    var pct = count/total;
-    var bw = Math.max(40, pct*w);
-    var div = document.createElement("div");
-    div.className = "treemap-block";
-    div.style.left = x+"px"; div.style.top = y+"px";
-    div.style.width = bw+"px"; div.style.height = rowH+"px";
-    div.style.background = colors[key]||colors.general;
-    div.style.opacity = 0.7 + pct*0.3;
-    div.textContent = key.toUpperCase()+" "+count;
-    wrap.appendChild(div);
-    x += bw;
-    if(x > w-40){ x=0; y+=rowH; }
-  });
-}
-
-function renderSentimentBar(sentimentData){
-  var wrap = document.getElementById("sentimentWrap");
-  if(!wrap) return;
-  var colors = {positive:"#FBBF24", focused:"#4ADE80", calm:"#5C9DFF", negative:"#FF5F5F"};
-  sentimentData.forEach(function(d){
-    var bar = document.createElement("div");
-    bar.className = "sentiment-cell";
-    bar.style.background = colors[d.mood] || colors.calm;
-    bar.style.height = Math.max(8, (Math.abs(d.score)+0.2)*100) + "%";
-    bar.style.opacity = 0.4 + Math.abs(d.score)*0.6;
-    var tip = document.createElement("div");
-    tip.className = "cal-tooltip";
-    tip.innerHTML = '<b>'+d.date+'</b><br>'+d.mood+' ('+d.score.toFixed(1)+')';
-    tip.style.bottom = "calc(100% + 6px)";
-    tip.style.whiteSpace = "nowrap";
-    bar.appendChild(tip);
-    wrap.appendChild(bar);
-  });
 }
 
 function clearChat(){
