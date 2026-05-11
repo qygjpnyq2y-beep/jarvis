@@ -361,7 +361,10 @@ input:focus,textarea:focus{outline:none}
 .heatmap-center{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);text-align:center;z-index:2}
 .heatmap-center .hc-label{font-size:10px;color:var(--text-tertiary);letter-spacing:1.5px;text-transform:uppercase}
 .heatmap-center .hc-val{font-family:'Space Mono',monospace;font-size:24px;color:var(--accent);font-weight:700;margin-top:4px;filter:drop-shadow(0 0 8px var(--accent-glow))}
-.heatmap-seg{position:absolute;left:50%;top:50%;width:5px;margin-left:-2.5px;border-radius:2.5px;transform-origin:center top;transition:all .3s ease}
+.heatmap-seg{position:absolute;left:50%;top:50%;width:5px;margin-left:-2.5px;border-radius:2.5px;transform-origin:center top;transition:all .3s ease;cursor:pointer}
+.heatmap-seg:hover{z-index:5;filter:brightness(1.5)}
+.heatmap-seg::after{content:attr(data-tip);position:absolute;bottom:calc(100% + 6px);left:50%;transform:translateX(-50%) scale(0.9);padding:5px 10px;background:var(--bg-elevated);border:1px solid var(--glass-border);border-radius:8px;font-size:10px;color:var(--text-secondary);white-space:nowrap;opacity:0;pointer-events:none;transition:all .2s;z-index:10;font-family:"Space Mono",monospace}
+.heatmap-seg:hover::after{opacity:1;transform:translateX(-50%) scale(1)}
 .heatmap-legend{display:flex;gap:16px;justify-content:center;flex-wrap:wrap;margin-top:6px}
 .heatmap-legend span{font-size:10px;color:var(--text-tertiary);display:flex;align-items:center;gap:6px}
 .heatmap-legend i{width:10px;height:4px;border-radius:2px;display:inline-block}
@@ -378,7 +381,7 @@ input:focus,textarea:focus{outline:none}
 .cal-header div{text-align:center;font-size:9px;color:var(--text-tertiary);letter-spacing:1px}
 
 /* Trend Line */
-.trend-wrap{height:80px;position:relative;margin-top:10px}
+.trend-wrap{height:100px;position:relative;margin-top:10px}
 .trend-svg{width:100%;height:100%}
 .trend-area{fill:url(#trendGrad);opacity:.3}
 .trend-line{fill:none;stroke:var(--accent);stroke-width:2;stroke-linecap:round;filter:drop-shadow(0 0 4px var(--accent-glow))}
@@ -410,6 +413,7 @@ input:focus,textarea:focus{outline:none}
 .anni-stat-box .as-num{font-family:'Space Mono',monospace;font-size:20px;color:var(--accent);font-weight:700}
 .anni-stat-box .as-label{font-size:10px;color:var(--text-tertiary);margin-top:4px;letter-spacing:.5px}
 </style>
+<base target="_blank">
 <base target="_blank">
 </head>
 <body>
@@ -763,7 +767,7 @@ var I18N = {
     thinking:"생각 중...",
     starter:"스타터",
     advanced:"고급",
-    anniversaryTitle:"日째 Jarvis와 함께한 시간",
+    anniversaryTitle:"일째 Jarvis와 함께한 시간",
     anniversarySub:"Jarvis와의 여정"
   },
   de:{
@@ -2525,11 +2529,17 @@ function aggregateActivityData(){
 
 function getTopKeywords(){
   var keywords = {};
-  (memCache.themes||[]).forEach(function(t){if(t.theme) keywords[t.theme]=(keywords[t.theme]||0)+(t.frequency||1);});
-  (memCache.semantic||[]).forEach(function(s){if(s.content) keywords[s.content]=(keywords[s.content]||0)+1;});
+  var stopwords = {ko:new Set(["내가","내","나를","나는","너무","정말","있는","없는","같은","같아","그리고","그래서","하지만","그런데","오늘","어제","내일","매일","항상","가끔","이제","지금","여기","거기","어디","뭔가","뭐","무엇","어떻게","왜","누가","누구","아무","모든","전혀","조금","많이","아주","진짜","그냥","이렇게","그렇게","있어","없어","하는","했는","할","된","된다","됐다","입니다","있습니다","합니다","그러나","그래도","또는","또","및","등","을","를","이","가","은","는","의","에","와","과","도","만","까지","부터","에게","한테","으로","로","에서","하고","보다","처럼","같이","만큼","이나","나","든지","든가","거나","마다","밖에","뿐","조차","마저","커녕"]),en:new Set(["the","a","an","is","are","was","were","be","been","being","have","has","had","do","does","did","will","would","could","should","may","might","must","shall","can","need","to","of","in","for","on","with","at","by","from","as","into","through","during","before","after","above","below","between","under","again","further","then","once","here","there","when","where","why","how","all","each","few","more","most","other","some","such","no","nor","not","only","own","same","so","than","too","very","just","and","but","if","or","because","until","while","this","that","these","those","i","me","my","we","our","you","your","he","him","his","she","her","it","its","they","them","their","what","which","who","whom","whose","am","get","got","make","made","come","came","see","saw","know","knew","take","took","think","thought","say","said","go","went","look","looked","use","used","find","found","give","gave","tell","told","work","worked","call","called","try","tried","ask","asked","need","needed","feel","felt","become","became","leave","left","put","mean","meant","keep","kept","let","begin","began","seem","seemed","help","helped","show","showed","hear","heard","play","played","run","ran","move","moved","live","lived","believe","believed","bring","brought","happen","happened","stand","stood","lose","lost","pay","paid","meet","met","include","included","continue","continued","set","learn","learned","change","changed","lead","led","understand","understood","watch","watched","follow","followed","stop","stopped","create","created","speak","spoke","read","allow","allowed","add","added","spend","spent","grow","grew","open","opened","walk","walked","win","won","offer","offered","remember","remembered","love","loved","consider","considered","appear","appeared","buy","bought","wait","waited","serve","served","die","died","send","sent","expect","expected","build","built","stay","stayed","fall","fell","cut","reach","reached","kill","killed","remain","remained","suggest","suggested","raise","raised","pass","passed","sell","sold","require","required","report","reported","decide","decided","pull","pulled","return","returned","explain","explained","carry","carried","develop","developed","hope","hoped","drive","drove","break","broke","receive","received","agree","agreed","support","supported","remove","removed","describe","described","case","like","liked","line","kind","way","thing","time","man","woman","day","year","part","world","hand","eye","place","work","week","point","government","company","number","group","problem","fact","good","new","first","last","long","great","little","old","right","big","high","different","small","large","next","early","young","important","bad","able"]),ja:new Set(["の","に","は","を","た","が","で","て","と","し","れ","さ","ある","いる","も","する","から","な","こと","として","い","や","れる","など","なっ","ない","この","ため","それ","あっ","これ","よう","また","もの","という","あり","まで","られ","なる","へ","です","ます","した","いい","よ","う","そう","だ","か","どう","なぜ","いつ","どこ","何","私","僕","俺","あなた","君","彼","彼女","私たち","あなたたち","彼ら","これ","それ","あれ","ここ","そこ","あそこ","今日","昨日","明日","毎日","いつも","時々","今","何か","何","どれ","どの","どなた","誰か","誰も","全て","全然","少し","多く","とても","あまり","本当","ちょっと","こんな","そんな","あんな","どんな","いる","ある","なる","する","できる","だ","です","ます","した","している","された","させる","せる","られる","れる","て","で","に","を","が","は","も","と","や","か","な","ね","よ","わ","ぞ","ぜ","っす","でした","ました","ない","ません","なかった","ませんでした","だろう","でしょう","かも","必ず","絶対","多分","もしかしたら","もし","たら","ば","なら","ても","でも","しか","だけ","ばかり","くらい","ぐらい","ほど","より","から","まで","のみ","さえ","すら","しかし","けれど","けど","ので","から","ため","ように","ために","のに","ながら","つつ","一方","そして","それから","それに","だから","すると","そうすると","だが","とはいえ","逆に","対して","比べて","について","に関して","に伴い","に従い","に応じ","に基づき","において","における","にとって","として","とともに","にわたり","を通じ","を通して","を経て","を除き","を除いて","を含め","を含む","をめぐる","を中心に","を皮切りに","をきっかけに","を背景に","を前提に","を踏まえ","を受け","に加え","に比べ","に次い","に続き","に続いて","に先立ち","に先立って","に際し","に際して","に当たり","に当たって"]),es:new Set(["de","la","que","el","en","y","a","los","del","se","las","por","un","para","con","no","una","su","al","lo","más","pero","sus","le","ya","o","este","sí","porque","esta","entre","cuando","muy","sin","sobre","también","me","hasta","hay","donde","quien","desde","todo","nos","durante","todos","uno","les","ni","contra","otros","ese","eso","ante","ellos","e","esto","mí","antes","algunos","qué","unos","yo","otro","otras","otra","él","tanto","esa","estos","mucho","quienes","nada","muchos","cual","poco","ella","estar","estas","algunas","algo","nosotros","mi","mis","tú","te","ti","tu","tus","ellas","nosotras","vosostros","vosostras","os","mío","mía","míos","mías","tuyo","tuya","tuyos","tuyas","suyo","suya","suyos","suyas","nuestro","nuestra","nuestros","nuestras","vuestro","vuestra","vuestros","vuestras","esos","esas","estoy","estás","está","estamos","estáis","están","esté","estés","estemos","estéis","estén","estaré","estarás","estará","estaremos","estaréis","estarán","estaría","estarías","estaríamos","estaríais","estarían","estaba","estabas","estábamos","estabais","estaban","estuve","estuviste","estuvo","estuvimos","estuvisteis","estuvieron","estuviera","estuvieras","estuviéramos","estuvierais","estuvieran","estuviese","estuvieses","estuviésemos","estuvieseis","estuviesen","estando","estado","estada","estados","estadas","estad","he","has","ha","hemos","habéis","han","haya","hayas","hayamos","hayáis","hayan","habré","habrás","habrá","habremos","habréis","habrán","habría","habrías","habríamos","habríais","habrían","había","habías","habíamos","habíais","habían","hube","hubiste","hubo","hubimos","hubisteis","hubieron","hubiera","hubieras","hubiéramos","hubierais","hubieran","hubiese","hubieses","hubiésemos","hubieseis","hubiesen","habiendo","habido","habida","habidos","habidas","soy","eres","es","somos","sois","son","sea","seas","seamos","seáis","sean","seré","serás","será","seremos","seréis","serán","sería","serías","seríamos","seríais","serían","era","eras","éramos","erais","eran","fui","fuiste","fue","fuimos","fuisteis","fueron","fuera","fueras","fuéramos","fuerais","fueran","fuese","fueses","fuésemos","fueseis","fuesen","siendo","sido","tengo","tienes","tiene","tenemos","tenéis","tienen","tenga","tengas","tengamos","tengáis","tengan","tendré","tendrás","tendrá","tendremos","tendréis","tendrán","tendría","tendrías","tendríamos","tendríais","tendrían","tenía","tenías","teníamos","teníais","tenían","tuve","tuviste","tuvo","tuvimos","tuvisteis","tuvieron","tuviera","tuvieras","tuviéramos","tuvierais","tuvieran","tuviese","tuvieses","tuviésemos","tuvieseis","tuviesen","teniendo","tenido","tenida","tenidos","tenidas","tened"]),de:new Set(["der","die","das","den","dem","des","ein","eine","einer","eines","einem","einen","ich","du","er","sie","es","wir","ihr","sie","mich","dich","ihn","uns","euch","ihnen","mir","dir","ihm","mein","dein","sein","unser","euer","ihr","meine","deine","seine","unsere","euere","ihre","meiner","deiner","seiner","unserer","euerer","ihrer","meines","deines","seines","unseres","eueres","ihres","meinem","deinem","seinem","unserem","euerem","ihrem","meinen","deinen","seinen","unseren","eueren","ihren","mit","von","zu","bei","nach","aus","für","durch","gegen","ohne","um","an","auf","in","über","unter","vor","hinter","neben","zwischen","durch","für","gegen","ohne","um","aus","bei","mit","nach","seit","von","zu","während","wegen","bis","als","wie","dass","weil","ob","obwohl","wenn","da","damit","sodass","so","dass","indem","während","als","wie","da","denn","aber","oder","und","sondern","doch","jedoch","trotzdem","deshalb","deswegen","darum","daher","folglich","also","außerdem","zudem","übrigens","zuerst","dann","danach","schließlich","endlich","nämlich","zwar","aber","sondern","entweder","oder","weder","noch","nicht","nur","erst","schon","noch","immer","oft","manchmal","selten","nie","hier","da","dort","überall","nirgends","wo","wohin","woher","was","wer","wen","wem","wessen","welcher","welche","welches","warum","wieso","weshalb","wann","wie","wie","viel","wie","viele","ja","nein","doch","bitte","danke","gern","nicht","kein","keine","keiner","keines","keinem","keinen","nichts","niemand","jeder","jede","jedes","alle","manche","einige","mehrere","viele","wenige","andere","solche","man","jemand","etwas","nichts","alle","viel","wenig","mehr","am","im","zum","zur","beim","vom","ins","aufs","hinters","übers","unters","vors","durchs","fürs","ums","ans"])};
+  var sw = stopwords[currentLang] || stopwords.en;
+
+  // Priority 1: themes from memory graph
+  (memCache.themes||[]).forEach(function(t){if(t.theme){var key=t.theme.toLowerCase().trim();if(!sw.has(key)&&key.length>=2) keywords[key]=(keywords[key]||0)+(t.frequency||1)*3;}});
+  // Priority 2: semantic memory nodes (short phrases treated as topics)
+  (memCache.semantic||[]).forEach(function(s){if(s.content){var key=s.content.toLowerCase().trim();if(!sw.has(key)&&key.length>=2&&key.length<=20) keywords[key]=(keywords[key]||0)+2;}});
+  // Priority 3: diary nouns (filtered)
   diaryCache.forEach(function(d){
     if(!d.text) return;
-    var words = d.text.toLowerCase().split(/[\s,.!?;:　、。]+/).filter(function(w){return w.length>=2;});
+    var words = d.text.toLowerCase().split(/[\s,.!?;:　、。]+/).filter(function(w){return w.length>=2&&w.length<=12&&!sw.has(w);});
     words.forEach(function(w){keywords[w]=(keywords[w]||0)+1;});
   });
   var sorted = Object.keys(keywords).map(function(k){return {word:k,count:keywords[k]};}).sort(function(a,b){return b.count-a.count;});
@@ -2652,7 +2662,7 @@ function renderAnniversary(){
     segStyle += 'opacity:'+opacity+';';
     segStyle += 'background:linear-gradient(to bottom,rgba(92,157,255,'+gradOp+'),rgba(92,157,255,'+(gradOp*0.2)+'));'; 
     segStyle += 'box-shadow:0 0 '+glow+'px rgba(92,157,255,'+(intensity*0.4)+');';
-    html += '<div class="heatmap-seg" style="'+segStyle+'" title="'+String(h).padStart(2,"0")+':00 — '+activity.hourly[h]+' interactions"></div>';
+    html += '<div class="heatmap-seg" style="'+segStyle+'" data-tip="'+String(h).padStart(2,"0")+':00 — '+activity.hourly[h]+' interactions"></div>';
   }
   html += '</div>';
   html += '<div class="heatmap-legend">';
@@ -2688,8 +2698,9 @@ function renderAnniversary(){
   // TREND LINE
   html += '<div class="anni-card-v2">';
   html += '<div class="card-title">Activity Trend</div>';
-  html += '<div class="trend-wrap">';
-  html += '<svg class="trend-svg" viewBox="0 0 300 80" preserveAspectRatio="none">';
+  html += '<div style="font-size:11px;color:var(--text-tertiary);margin-bottom:6px">Daily interactions over the last 30 days</div>';
+  html += '<div class="trend-wrap" style="height:100px">';
+  html += '<svg class="trend-svg" viewBox="0 0 300 100" preserveAspectRatio="none">';
   html += '<defs><linearGradient id="trendGrad" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="rgba(92,157,255,0.3)"/><stop offset="100%" stop-color="rgba(92,157,255,0)"/></linearGradient></defs>';
   var points = activity.daily.map(function(d,i){return [i*(300/29),80-(d.count/maxCount)*70];});
   var areaPath = 'M'+points[0][0]+',80 ' + points.map(function(p){return 'L'+p[0]+','+p[1];}).join(' ') + ' L'+points[points.length-1][0]+',80 Z';
@@ -2699,6 +2710,15 @@ function renderAnniversary(){
   points.forEach(function(p,i){
     if(activity.daily[i].count===maxCount) html += '<circle class="trend-peak" cx="'+p[0]+'" cy="'+p[1]+'" r="3"/>';
     else if(activity.daily[i].count>0) html += '<circle class="trend-dot" cx="'+p[0]+'" cy="'+p[1]+'" r="2"/>';
+  });
+  // X-axis date labels every 5 days
+  var labelIdx = [0, 7, 14, 21, 28];
+  labelIdx.forEach(function(idx){
+    if(idx < activity.daily.length){
+      var x = idx * (300/29);
+      var lbl = activity.daily[idx].date.substring(5);
+      html += '<text x="'+x+'" y="96" font-size="8" fill="var(--text-tertiary)" text-anchor="middle" font-family="Space Mono, monospace">'+lbl+'</text>';
+    }
   });
   html += '</svg>';
   html += '</div>';
