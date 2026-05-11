@@ -90,7 +90,7 @@ input:focus,textarea:focus{outline:none}
 .lang-btn{padding:16px;border:1px solid var(--glass-border);border-radius:var(--radius-md);background:var(--glass-highlight);backdrop-filter:blur(10px);color:var(--text-secondary);font-family:inherit;font-size:14px;cursor:pointer;transition:all 0.25s ease;text-align:center}
 .lang-btn:hover{border-color:rgba(92,157,255,0.3);color:var(--accent)}
 .lang-btn.active{border-color:rgba(92,157,255,0.4);color:var(--accent);background:rgba(92,157,255,0.08);box-shadow:0 0 20px rgba(92,157,255,0.08)}
-.lang-native{font-size:11px;color:var(--text-tertiary);margin-top:2px;display:block;pointer-events:none}
+.lang-native{font-size:11px;color:var(--text-tertiary);margin-top:2px}
 
 #app{height:100dvh;display:flex;flex-direction:column;overflow:hidden;background:radial-gradient(ellipse at 50% 0%,rgba(92,157,255,0.06) 0%,transparent 50%),var(--bg-deep)}
 
@@ -336,83 +336,7 @@ input:focus,textarea:focus{outline:none}
 .mode-badge{display:inline-block;padding:3px 10px;border-radius:20px;font-size:9px;font-weight:700;letter-spacing:1px;text-transform:uppercase;margin-left:8px}
 .mode-starter{background:rgba(74,222,128,0.12);color:var(--success);border:1px solid rgba(74,222,128,0.2)}
 .mode-advanced{background:rgba(92,157,255,0.12);color:var(--accent);border:1px solid rgba(92,157,255,0.2)}
-
-/* === ANNIVERSARY V2: GLASSMORPHISM DASHBOARD === */
-.anni-hero{text-align:center;padding:32px 24px;background:radial-gradient(ellipse at 50% 0%,rgba(92,157,255,0.12) 0%,transparent 70%);border:1px solid rgba(92,157,255,0.15);position:relative;overflow:hidden}
-.anni-hero::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(92,157,255,0.08),transparent);pointer-events:none}
-.anni-hero .anni-big{font-family:'Space Mono',monospace;font-size:56px;font-weight:700;color:var(--accent);letter-spacing:-2px;line-height:1;filter:drop-shadow(0 0 24px var(--accent-glow));position:relative}
-.anni-hero .anni-label{font-size:13px;color:var(--text-tertiary);margin-top:10px;letter-spacing:2px;text-transform:uppercase;position:relative}
-.anni-hero .anni-sub2{font-size:12px;color:var(--text-tertiary);margin-top:6px;opacity:.7;position:relative}
-.anni-section-title{font-size:11px;color:var(--accent);letter-spacing:2.5px;margin:24px 0 14px 4px;font-weight:700;opacity:.9;text-transform:uppercase}
-.anni-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
-@media (max-width:640px){.anni-grid{grid-template-columns:1fr}}
-.anni-card-v2{padding:20px;background:var(--glass-highlight);backdrop-filter:blur(16px) saturate(180%);-webkit-backdrop-filter:blur(16px) saturate(180%);border:1px solid var(--glass-border);border-radius:var(--radius-lg);animation:float-in .5s;position:relative;overflow:hidden}
-.anni-card-v2::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,rgba(92,157,255,0.3),transparent)}
-.anni-card-v2 .card-title{font-size:12px;color:var(--accent);letter-spacing:1.5px;margin-bottom:14px;font-weight:700;opacity:.8}
-
-/* Activity Heatmap - Radial */
-.heatmap-wrap{width:100%;display:flex;flex-direction:column;align-items:center;gap:14px;padding:10px 0}
-.heatmap-radial{position:relative;width:260px;height:260px;margin:0 auto}
-.heatmap-ring{position:absolute;border-radius:50%;border:1px solid rgba(92,157,255,0.06);top:50%;left:50%;transform:translate(-50%,-50%)}
-.heatmap-ring.r1{width:80px;height:80px}
-.heatmap-ring.r2{width:130px;height:130px}
-.heatmap-ring.r3{width:180px;height:180px}
-.heatmap-ring.r4{width:230px;height:230px;border-color:rgba(92,157,255,0.1)}
-.heatmap-center{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);text-align:center;z-index:2}
-.heatmap-center .hc-label{font-size:10px;color:var(--text-tertiary);letter-spacing:1.5px;text-transform:uppercase}
-.heatmap-center .hc-val{font-family:'Space Mono',monospace;font-size:24px;color:var(--accent);font-weight:700;margin-top:4px;filter:drop-shadow(0 0 8px var(--accent-glow))}
-.heatmap-seg{position:absolute;left:50%;top:50%;width:5px;margin-left:-2.5px;border-radius:2.5px;transform-origin:center top;transition:all .3s ease;cursor:pointer}
-.heatmap-seg:hover{z-index:5;filter:brightness(1.5)}
-.heatmap-tooltip{position:absolute;padding:6px 12px;background:var(--bg-elevated);border:1px solid var(--glass-border);border-radius:8px;font-size:11px;color:var(--text-secondary);white-space:nowrap;opacity:0;pointer-events:none;transition:opacity .2s;z-index:10;font-family:"Space Mono",monospace;box-shadow:0 4px 16px rgba(0,0,0,0.4);top:0;left:0}
-.heatmap-legend{display:flex;gap:16px;justify-content:center;flex-wrap:wrap;margin-top:6px}
-.heatmap-legend span{font-size:10px;color:var(--text-tertiary);display:flex;align-items:center;gap:6px}
-.heatmap-legend i{width:10px;height:4px;border-radius:2px;display:inline-block}
-.heatmap-time-label{position:absolute;font-size:9px;color:var(--text-tertiary);font-family:'Space Mono',monospace;transform:translate(-50%,-50%)}
-
-/* Calendar Grid */
-.cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:4px}
-.cal-cell{aspect-ratio:1;border-radius:6px;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.04);display:flex;align-items:center;justify-content:center;font-size:10px;color:var(--text-tertiary);font-family:'Space Mono',monospace;transition:all .2s;position:relative}
-.cal-cell.has-data{background:rgba(92,157,255,0.15);border-color:rgba(92,157,255,0.25);color:var(--accent);box-shadow:0 0 8px rgba(92,157,255,0.1)}
-.cal-cell.high{background:rgba(92,157,255,0.35);border-color:rgba(92,157,255,0.5);color:#fff;font-weight:700;box-shadow:0 0 12px rgba(92,157,255,0.25)}
-.cal-cell .cal-tooltip{position:absolute;bottom:calc(100% + 6px);left:50%;transform:translateX(-50%) scale(0.9);padding:6px 10px;background:var(--bg-elevated);border:1px solid var(--glass-border);border-radius:8px;font-size:10px;color:var(--text-secondary);white-space:nowrap;opacity:0;pointer-events:none;transition:all .2s;z-index:10}
-.cal-cell:hover .cal-tooltip{opacity:1;transform:translateX(-50%) scale(1)}
-.cal-header{display:grid;grid-template-columns:repeat(7,1fr);gap:4px;margin-bottom:6px}
-.cal-header div{text-align:center;font-size:9px;color:var(--text-tertiary);letter-spacing:1px}
-
-/* Trend Line */
-.trend-wrap{height:100px;position:relative;margin-top:10px}
-.trend-svg{width:100%;height:100%}
-.trend-area{fill:url(#trendGrad);opacity:.3}
-.trend-line{fill:none;stroke:var(--accent);stroke-width:2;stroke-linecap:round;filter:drop-shadow(0 0 4px var(--accent-glow))}
-.trend-dot{fill:var(--accent);stroke:var(--bg-deep);stroke-width:2}
-.trend-peak{fill:var(--warning);stroke:var(--bg-deep);stroke-width:2;filter:drop-shadow(0 0 6px rgba(251,191,36,0.4))}
-
-/* Topic Cloud */
-.topic-cloud{display:flex;flex-wrap:wrap;gap:8px;align-items:center;justify-content:center;padding:8px 0}
-.topic-tag{padding:6px 14px;border-radius:20px;background:rgba(92,157,255,0.08);border:1px solid rgba(92,157,255,0.15);color:var(--text-secondary);font-size:12px;transition:all .3s ease;cursor:default;position:relative;overflow:hidden}
-.topic-tag:hover{background:rgba(92,157,255,0.18);border-color:rgba(92,157,255,0.3);transform:translateY(-1px);box-shadow:0 4px 12px rgba(92,157,255,0.1)}
-.topic-tag.popular{background:rgba(92,157,255,0.2);border-color:rgba(92,157,255,0.35);color:var(--accent);font-weight:600;font-size:14px}
-.topic-tag.rare{background:rgba(255,255,255,0.03);border-color:rgba(255,255,255,0.06);color:var(--text-tertiary);font-size:10px}
-
-/* Sentiment Flow */
-.sentiment-bar{display:flex;height:32px;border-radius:var(--radius-md);overflow:hidden;background:rgba(255,255,255,0.03);border:1px solid var(--glass-border);position:relative}
-.sentiment-seg{flex:1;transition:all .3s ease;position:relative;cursor:pointer}
-.sentiment-seg:hover{filter:brightness(1.3)}
-.sentiment-seg .st-tooltip{position:absolute;bottom:calc(100% + 6px);left:50%;transform:translateX(-50%) scale(0.9);padding:5px 10px;background:var(--bg-elevated);border:1px solid var(--glass-border);border-radius:8px;font-size:10px;color:var(--text-secondary);white-space:nowrap;opacity:0;pointer-events:none;transition:all .2s;z-index:10}
-.sentiment-seg:hover .st-tooltip{opacity:1;transform:translateX(-50%) scale(1)}
-.sentiment-legend{display:flex;gap:16px;justify-content:center;margin-top:10px;flex-wrap:wrap}
-.sentiment-legend span{font-size:10px;color:var(--text-tertiary);display:flex;align-items:center;gap:4px}
-.sentiment-legend i{width:8px;height:8px;border-radius:50%;display:inline-block}
-
-/* Key Stats Row */
-.anni-stats-row{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-top:4px}
-@media (max-width:640px){.anni-stats-row{grid-template-columns:repeat(2,1fr)}}
-.anni-stat-box{padding:14px 10px;text-align:center;background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.05);border-radius:var(--radius-md);transition:all .2s}
-.anni-stat-box:hover{border-color:rgba(92,157,255,0.15);background:rgba(92,157,255,0.04)}
-.anni-stat-box .as-num{font-family:'Space Mono',monospace;font-size:20px;color:var(--accent);font-weight:700}
-.anni-stat-box .as-label{font-size:10px;color:var(--text-tertiary);margin-top:4px;letter-spacing:.5px}
 </style>
-<base target="_blank">
 <base target="_blank">
 </head>
 <body>
@@ -422,11 +346,11 @@ input:focus,textarea:focus{outline:none}
   <div class="screen-logo">JARVIS</div>
   <div class="screen-sub" id="langSub">Select your language</div>
   <div class="lang-grid">
-    <button class="lang-btn" type="button" onclick="setLang('en')">English<span class="lang-native">English</span></button>
-    <button class="lang-btn" type="button" onclick="setLang('es')">Español<span class="lang-native">Spanish</span></button>
-    <button class="lang-btn" type="button" onclick="setLang('ja')">日本語<span class="lang-native">Japanese</span></button>
-    <button class="lang-btn" type="button" onclick="setLang('ko')">한국어<span class="lang-native">Korean</span></button>
-    <button class="lang-btn" type="button" onclick="setLang('de')">Deutsch<span class="lang-native">German</span></button>
+    <button class="lang-btn" onclick="setLang('en')">English<div class="lang-native">English</div></button>
+    <button class="lang-btn" onclick="setLang('es')">Español<div class="lang-native">Spanish</div></button>
+    <button class="lang-btn" onclick="setLang('ja')">日本語<div class="lang-native">Japanese</div></button>
+    <button class="lang-btn" onclick="setLang('ko')">한국어<div class="lang-native">Korean</div></button>
+    <button class="lang-btn" onclick="setLang('de')">Deutsch<div class="lang-native">German</div></button>
   </div>
 </div>
 
@@ -766,7 +690,7 @@ var I18N = {
     thinking:"생각 중...",
     starter:"스타터",
     advanced:"고급",
-    anniversaryTitle:"일째 Jarvis와 함께한 시간",
+    anniversaryTitle:"日째 Jarvis와 함께한 시간",
     anniversarySub:"Jarvis와의 여정"
   },
   de:{
@@ -803,37 +727,37 @@ var currentLang = "en";
 /* ===== FIXED setLang: auto-advances to API key screen ===== */
 function setLang(lang){
   currentLang = lang;
-  try{ idbPut("settings","lang",lang); }catch(e){}
-
+  idbPut("settings","lang",lang);
+  
   var t = I18N[lang];
-  var el;
-  if(el=document.getElementById("langSub")) el.textContent = t.langSub;
-  if(el=document.getElementById("apikeySub")) el.textContent = t.apikeySub;
-  if(el=document.getElementById("apikeyWarn")) el.innerHTML = t.apikeyWarn;
-  if(el=document.getElementById("fbSetupSub")) el.textContent = t.fbSetupSub;
-  if(el=document.getElementById("authSub")) el.textContent = t.authSub;
-  if(el=document.getElementById("authToggle")) el.innerHTML = t.authToggle;
-  var skipEl=document.querySelector("#authScreen .s-skip");
-  if(skipEl) skipEl.textContent = t.skipAuth;
-  if(el=document.getElementById("r2Sub")) el.innerHTML = t.r2Sub;
-  if(el=document.getElementById("emptyOnline")) el.textContent = t.emptyOnline;
-  if(el=document.getElementById("emptyHint")) el.textContent = t.emptyHint;
-  if(el=document.getElementById("notifLabel")) el.textContent = t.notifLabel;
-  if(el=document.getElementById("syncInd")) el.textContent = t.syncInd;
-  if(el=document.getElementById("diaryText")) el.placeholder = t.diaryPlaceholder;
-  if(el=document.getElementById("paintZone")) el.innerHTML = t.paintZone+'<br><span style="font-size:10px;color:var(--text-tertiary)">Bulk upload with resume</span>';
-  if(el=document.getElementById("memorySearchInput")) el.placeholder = t.searchPlaceholder;
-  if(el=document.getElementById("anniSub")) el.textContent = t.anniversarySub;
+  document.getElementById("langSub").textContent = t.langSub;
+  document.getElementById("apikeySub").textContent = t.apikeySub;
+  document.getElementById("apikeyWarn").innerHTML = t.apikeyWarn;
+  document.getElementById("fbSetupSub").textContent = t.fbSetupSub;
+  document.getElementById("authSub").textContent = t.authSub;
+  document.getElementById("authToggle").innerHTML = t.authToggle;
+  document.querySelector("#authScreen .s-skip").textContent = t.skipAuth;
+  document.getElementById("r2Sub").innerHTML = t.r2Sub;
+  document.getElementById("emptyOnline").textContent = t.emptyOnline;
+  document.getElementById("emptyHint").textContent = t.emptyHint;
+  document.getElementById("notifLabel").textContent = t.notifLabel;
+  document.getElementById("syncInd").textContent = t.syncInd;
+  document.getElementById("diaryText").placeholder = t.diaryPlaceholder;
+  document.getElementById("paintZone").innerHTML = t.paintZone+'<br><span style="font-size:10px;color:var(--text-tertiary)">Bulk upload with resume</span>';
+  document.getElementById("memorySearchInput").placeholder = t.searchPlaceholder;
+  // anniTitle updated dynamically in renderAnniversary()
+  document.getElementById("anniSub").textContent = t.anniversarySub;
+  
+  // updateHeader() deferred to initApp() — avoids PRESETS/MODELS undefined error during onboarding
 
   document.querySelectorAll(".lang-btn").forEach(function(b){
-    var oncl = b.getAttribute("onclick") || "";
-    b.classList.toggle("active", oncl.indexOf("'"+lang+"'")>=0);
+    b.classList.toggle("active", b.getAttribute("onclick").includes("'"+lang+"'"));
   });
 
-  // Always advance to API key screen
-  setTimeout(function(){
+  /* === AUTO-ADVANCE === */
+  if(!document.getElementById("langScreen").classList.contains("hidden")){
     showScreen("apikeyScreen");
-  }, 50);
+  }
 }
 
 /* === INDEXEDDB ENGINE === */
@@ -946,10 +870,7 @@ function initFB(cfg){
 /* === ONBOARDING FLOW === */
 function showScreen(id){
   var screens=["langScreen","apikeyScreen","fbSetupScreen","authScreen","r2SetupScreen","app"];
-  screens.forEach(function(s){
-    var el=document.getElementById(s);
-    if(el) el.classList.toggle("hidden", s!==id);
-  });
+  screens.forEach(function(s){document.getElementById(s).classList.toggle("hidden",s!==id)});
 }
 
 function goToAdvancedSetup(){
@@ -1409,7 +1330,7 @@ function fileToB64(f){return new Promise(function(r,j){var x=new FileReader();x.
 function fileFP(f){return f.name+"__"+f.size+"__"+f.lastModified}
 function resizeImg(file,max){max=max||1024;return new Promise(function(r){var i=new Image();i.onload=function(){var w=i.width,h=i.height;if(w>max||h>max){var ra=Math.min(max/w,max/h);w=Math.round(w*ra);h=Math.round(h*ra)}var c=document.createElement("canvas");c.width=w;c.height=h;c.getContext("2d").drawImage(i,0,0,w,h);r(c.toDataURL("image/jpeg",0.8).split(",")[1]);URL.revokeObjectURL(i.src)};i.src=URL.createObjectURL(file)})}
 function makeThumb(file,sz){sz=sz||200;return new Promise(function(r){var i=new Image();i.onload=function(){var w=i.width,h=i.height;var ra=Math.min(sz/w,sz/h);var nw=Math.round(w*ra),nh=Math.round(h*ra);var c=document.createElement("canvas");c.width=nw;c.height=nh;c.getContext("2d").drawImage(i,0,0,nw,nh);r(c.toDataURL("image/jpeg",0.65));URL.revokeObjectURL(i.src)};i.src=URL.createObjectURL(file)})}
-function fmtDate(ts){if(!ts)return"";var d=new Date(ts);return d.getFullYear()+"."+String(d.getMonth()+1).padStart(2,"0")+"."+String(d.getDate()).padStart(2,"0")+" "+String(d.getHours()).padStart(2,"0")+":"+String(d.getMinutes()).padStart(2,"0")}
+function fmtDate(ts){if(!ts)return"";return new Date(ts).toLocaleDateString(currentLang==="ko"?"ko-KR":currentLang==="ja"?"ja-JP":currentLang==="de"?"de-DE":"en-US",{year:"numeric",month:"short",day:"numeric",hour:"2-digit",minute:"2-digit"})}
 
 function computeDecay(mem){
   var days = (Date.now() - (mem.lastSeen || mem.ts || Date.now())) / 86400000;
@@ -2490,320 +2411,81 @@ function closeAnniversary(){
   document.getElementById("anniversaryOverlay").classList.add("hidden");
 }
 
-
-/* === DATA AGGREGATION FOR ANNIVERSARY DASHBOARD === */
-function aggregateActivityData(){
-  var now = Date.now();
-  var thirtyDaysAgo = now - 30 * 86400000;
-  var hourly = new Array(24).fill(0);
-  var daily = {};
-  var totalMsgs = 0;
-  var peakDay = {date:"",count:0};
-
-  chatSessionsCache.forEach(function(s){
-    if(!s.ts || s.ts < thirtyDaysAgo) return;
-    var d = new Date(s.ts);
-    var h = d.getHours();
-    var dayKey = d.toISOString().split("T")[0];
-    var count = s.messageCount || (s.messages?s.messages.length:1);
-    hourly[h] += count;
-    daily[dayKey] = (daily[dayKey]||0) + count;
-    totalMsgs += count;
-    if(daily[dayKey] > peakDay.count) peakDay = {date:dayKey,count:daily[dayKey]};
-  });
-
-  diaryCache.forEach(function(d){
-    if(!d.ts || d.ts < thirtyDaysAgo) return;
-    var dayKey = new Date(d.ts).toISOString().split("T")[0];
-    daily[dayKey] = (daily[dayKey]||0) + 1;
-    if(daily[dayKey] > peakDay.count) peakDay = {date:dayKey,count:daily[dayKey]};
-  });
-
-  var filledDaily = [];
-  for(var i=29;i>=0;i--){
-    var d = new Date(now - i*86400000);
-    var key = d.toISOString().split("T")[0];
-    filledDaily.push({date:key,count:daily[key]||0,day:d.getDay()});
-  }
-
-  return {hourly:hourly,daily:filledDaily,total:totalMsgs,peak:peakDay};
-}
-
-function getTopKeywords(){
-  var keywords = {};
-  var stopwords = {ko:new Set(["내가","내","나를","나는","너무","정말","있는","없는","같은","같아","그리고","그래서","하지만","그런데","오늘","어제","내일","매일","항상","가끔","이제","지금","여기","거기","어디","뭔가","뭐","무엇","어떻게","왜","누가","누구","아무","모든","전혀","조금","많이","아주","진짜","그냥","이렇게","그렇게","있어","없어","하는","했는","할","된","된다","됐다","입니다","있습니다","합니다","그러나","그래도","또는","또","및","등","을","를","이","가","은","는","의","에","와","과","도","만","까지","부터","에게","한테","으로","로","에서","하고","보다","처럼","같이","만큼","이나","나","든지","든가","거나","마다","밖에","뿐","조차","마저","커녕"]),en:new Set(["the","a","an","is","are","was","were","be","been","being","have","has","had","do","does","did","will","would","could","should","may","might","must","shall","can","need","to","of","in","for","on","with","at","by","from","as","into","through","during","before","after","above","below","between","under","again","further","then","once","here","there","when","where","why","how","all","each","few","more","most","other","some","such","no","nor","not","only","own","same","so","than","too","very","just","and","but","if","or","because","until","while","this","that","these","those","i","me","my","we","our","you","your","he","him","his","she","her","it","its","they","them","their","what","which","who","whom","whose","am","get","got","make","made","come","came","see","saw","know","knew","take","took","think","thought","say","said","go","went","look","looked","use","used","find","found","give","gave","tell","told","work","worked","call","called","try","tried","ask","asked","need","needed","feel","felt","become","became","leave","left","put","mean","meant","keep","kept","let","begin","began","seem","seemed","help","helped","show","showed","hear","heard","play","played","run","ran","move","moved","live","lived","believe","believed","bring","brought","happen","happened","stand","stood","lose","lost","pay","paid","meet","met","include","included","continue","continued","set","learn","learned","change","changed","lead","led","understand","understood","watch","watched","follow","followed","stop","stopped","create","created","speak","spoke","read","allow","allowed","add","added","spend","spent","grow","grew","open","opened","walk","walked","win","won","offer","offered","remember","remembered","love","loved","consider","considered","appear","appeared","buy","bought","wait","waited","serve","served","die","died","send","sent","expect","expected","build","built","stay","stayed","fall","fell","cut","reach","reached","kill","killed","remain","remained","suggest","suggested","raise","raised","pass","passed","sell","sold","require","required","report","reported","decide","decided","pull","pulled","return","returned","explain","explained","carry","carried","develop","developed","hope","hoped","drive","drove","break","broke","receive","received","agree","agreed","support","supported","remove","removed","describe","described","case","like","liked","line","kind","way","thing","time","man","woman","day","year","part","world","hand","eye","place","work","week","point","government","company","number","group","problem","fact","good","new","first","last","long","great","little","old","right","big","high","different","small","large","next","early","young","important","bad","able"]),ja:new Set(["の","に","は","を","た","が","で","て","と","し","れ","さ","ある","いる","も","する","から","な","こと","として","い","や","れる","など","なっ","ない","この","ため","それ","あっ","これ","よう","また","もの","という","あり","まで","られ","なる","へ","です","ます","した","いい","よ","う","そう","だ","か","どう","なぜ","いつ","どこ","何","私","僕","俺","あなた","君","彼","彼女","私たち","あなたたち","彼ら","これ","それ","あれ","ここ","そこ","あそこ","今日","昨日","明日","毎日","いつも","時々","今","何か","何","どれ","どの","どなた","誰か","誰も","全て","全然","少し","多く","とても","あまり","本当","ちょっと","こんな","そんな","あんな","どんな","いる","ある","なる","する","できる","だ","です","ます","した","している","された","させる","せる","られる","れる","て","で","に","を","が","は","も","と","や","か","な","ね","よ","わ","ぞ","ぜ","っす","でした","ました","ない","ません","なかった","ませんでした","だろう","でしょう","かも","必ず","絶対","多分","もしかしたら","もし","たら","ば","なら","ても","でも","しか","だけ","ばかり","くらい","ぐらい","ほど","より","から","まで","のみ","さえ","すら","しかし","けれど","けど","ので","から","ため","ように","ために","のに","ながら","つつ","一方","そして","それから","それに","だから","すると","そうすると","だが","とはいえ","逆に","対して","比べて","について","に関して","に伴い","に従い","に応じ","に基づき","において","における","にとって","として","とともに","にわたり","を通じ","を通して","を経て","を除き","を除いて","を含め","を含む","をめぐる","を中心に","を皮切りに","をきっかけに","を背景に","を前提に","を踏まえ","を受け","に加え","に比べ","に次い","に続き","に続いて","に先立ち","に先立って","に際し","に際して","に当たり","に当たって"]),es:new Set(["de","la","que","el","en","y","a","los","del","se","las","por","un","para","con","no","una","su","al","lo","más","pero","sus","le","ya","o","este","sí","porque","esta","entre","cuando","muy","sin","sobre","también","me","hasta","hay","donde","quien","desde","todo","nos","durante","todos","uno","les","ni","contra","otros","ese","eso","ante","ellos","e","esto","mí","antes","algunos","qué","unos","yo","otro","otras","otra","él","tanto","esa","estos","mucho","quienes","nada","muchos","cual","poco","ella","estar","estas","algunas","algo","nosotros","mi","mis","tú","te","ti","tu","tus","ellas","nosotras","vosostros","vosostras","os","mío","mía","míos","mías","tuyo","tuya","tuyos","tuyas","suyo","suya","suyos","suyas","nuestro","nuestra","nuestros","nuestras","vuestro","vuestra","vuestros","vuestras","esos","esas","estoy","estás","está","estamos","estáis","están","esté","estés","estemos","estéis","estén","estaré","estarás","estará","estaremos","estaréis","estarán","estaría","estarías","estaríamos","estaríais","estarían","estaba","estabas","estábamos","estabais","estaban","estuve","estuviste","estuvo","estuvimos","estuvisteis","estuvieron","estuviera","estuvieras","estuviéramos","estuvierais","estuvieran","estuviese","estuvieses","estuviésemos","estuvieseis","estuviesen","estando","estado","estada","estados","estadas","estad","he","has","ha","hemos","habéis","han","haya","hayas","hayamos","hayáis","hayan","habré","habrás","habrá","habremos","habréis","habrán","habría","habrías","habríamos","habríais","habrían","había","habías","habíamos","habíais","habían","hube","hubiste","hubo","hubimos","hubisteis","hubieron","hubiera","hubieras","hubiéramos","hubierais","hubieran","hubiese","hubieses","hubiésemos","hubieseis","hubiesen","habiendo","habido","habida","habidos","habidas","soy","eres","es","somos","sois","son","sea","seas","seamos","seáis","sean","seré","serás","será","seremos","seréis","serán","sería","serías","seríamos","seríais","serían","era","eras","éramos","erais","eran","fui","fuiste","fue","fuimos","fuisteis","fueron","fuera","fueras","fuéramos","fuerais","fueran","fuese","fueses","fuésemos","fueseis","fuesen","siendo","sido","tengo","tienes","tiene","tenemos","tenéis","tienen","tenga","tengas","tengamos","tengáis","tengan","tendré","tendrás","tendrá","tendremos","tendréis","tendrán","tendría","tendrías","tendríamos","tendríais","tendrían","tenía","tenías","teníamos","teníais","tenían","tuve","tuviste","tuvo","tuvimos","tuvisteis","tuvieron","tuviera","tuvieras","tuviéramos","tuvierais","tuvieran","tuviese","tuvieses","tuviésemos","tuvieseis","tuviesen","teniendo","tenido","tenida","tenidos","tenidas","tened"]),de:new Set(["der","die","das","den","dem","des","ein","eine","einer","eines","einem","einen","ich","du","er","sie","es","wir","ihr","sie","mich","dich","ihn","uns","euch","ihnen","mir","dir","ihm","mein","dein","sein","unser","euer","ihr","meine","deine","seine","unsere","euere","ihre","meiner","deiner","seiner","unserer","euerer","ihrer","meines","deines","seines","unseres","eueres","ihres","meinem","deinem","seinem","unserem","euerem","ihrem","meinen","deinen","seinen","unseren","eueren","ihren","mit","von","zu","bei","nach","aus","für","durch","gegen","ohne","um","an","auf","in","über","unter","vor","hinter","neben","zwischen","durch","für","gegen","ohne","um","aus","bei","mit","nach","seit","von","zu","während","wegen","bis","als","wie","dass","weil","ob","obwohl","wenn","da","damit","sodass","so","dass","indem","während","als","wie","da","denn","aber","oder","und","sondern","doch","jedoch","trotzdem","deshalb","deswegen","darum","daher","folglich","also","außerdem","zudem","übrigens","zuerst","dann","danach","schließlich","endlich","nämlich","zwar","aber","sondern","entweder","oder","weder","noch","nicht","nur","erst","schon","noch","immer","oft","manchmal","selten","nie","hier","da","dort","überall","nirgends","wo","wohin","woher","was","wer","wen","wem","wessen","welcher","welche","welches","warum","wieso","weshalb","wann","wie","wie","viel","wie","viele","ja","nein","doch","bitte","danke","gern","nicht","kein","keine","keiner","keines","keinem","keinen","nichts","niemand","jeder","jede","jedes","alle","manche","einige","mehrere","viele","wenige","andere","solche","man","jemand","etwas","nichts","alle","viel","wenig","mehr","am","im","zum","zur","beim","vom","ins","aufs","hinters","übers","unters","vors","durchs","fürs","ums","ans"])};
-  var sw = stopwords[currentLang] || stopwords.en;
-
-  // Priority 1: themes from memory graph
-  (memCache.themes||[]).forEach(function(t){if(t.theme){var key=t.theme.toLowerCase().trim();if(!sw.has(key)&&key.length>=2) keywords[key]=(keywords[key]||0)+(t.frequency||1)*3;}});
-  // Priority 2: semantic memory nodes (short phrases treated as topics)
-  (memCache.semantic||[]).forEach(function(s){if(s.content){var key=s.content.toLowerCase().trim();if(!sw.has(key)&&key.length>=2&&key.length<=20) keywords[key]=(keywords[key]||0)+2;}});
-  // Priority 3: diary nouns (filtered)
-  diaryCache.forEach(function(d){
-    if(!d.text) return;
-    var words = d.text.toLowerCase().split(/[\s,.!?;:　、。]+/).filter(function(w){return w.length>=2&&w.length<=12&&!sw.has(w);});
-    words.forEach(function(w){keywords[w]=(keywords[w]||0)+1;});
-  });
-  var sorted = Object.keys(keywords).map(function(k){return {word:k,count:keywords[k]};}).sort(function(a,b){return b.count-a.count;});
-  return sorted.slice(0,15);
-}
-
-function analyzeSentiment(){
-  var positive = /(좋아|행복|최고|멋져|감사|재미|즐거워|기쁘|사랑|좋은|잘했|성공|완벽|대박|신나|great|happy|love|good|best|awesome|perfect|amazing|thanks|fun|joy|excited|calm|peaceful)/i;
-  var negative = /(싫어|화나|짜증|슬퍼|힘들|스트레스|걱정|실패|문제|어려워|나쁜|최악|짜증|bad|hate|angry|sad|tired|stress|worried|fail|problem|hard|worst)/i;
-  var dailySentiment = [];
-  var now = Date.now();
-
-  for(var i=29;i>=0;i--){
-    var d = new Date(now - i*86400000);
-    var key = d.toISOString().split("T")[0];
-    var pos=0, neg=0, neu=0;
-
-    diaryCache.forEach(function(entry){
-      if(!entry.date || !entry.text || entry.date!==key) return;
-      if(positive.test(entry.text)) pos++;
-      else if(negative.test(entry.text)) neg++;
-      else neu++;
-    });
-
-    chatSessionsCache.forEach(function(s){
-      if(!s.ts) return;
-      var sKey = new Date(s.ts).toISOString().split("T")[0];
-      if(sKey!==key || !s.messages) return;
-      s.messages.forEach(function(m){
-        if(m.role!=="user" || !m.content) return;
-        var text = typeof m.content==="string"?m.content:"";
-        if(positive.test(text)) pos++;
-        else if(negative.test(text)) neg++;
-        else neu++;
-      });
-    });
-
-    var total = pos+neg+neu;
-    if(total===0) dailySentiment.push({date:key,type:"neutral",score:0});
-    else if(pos>neg) dailySentiment.push({date:key,type:"positive",score:pos/total});
-    else if(neg>pos) dailySentiment.push({date:key,type:"negative",score:neg/total});
-    else dailySentiment.push({date:key,type:"neutral",score:neu/total});
-  }
-  return dailySentiment;
-}
-
-function showHeatTip(el,txt){
-  var tip=el.parentElement.querySelector('#heatTip');
-  if(!tip)return;
-  var rect=el.getBoundingClientRect();
-  var parent=el.parentElement.getBoundingClientRect();
-  tip.textContent=txt;
-  tip.style.left=(rect.left-parent.left+rect.width/2)+'px';
-  tip.style.top=(rect.top-parent.top-8)+'px';
-  tip.style.transform='translate(-50%,-100%)';
-  tip.style.opacity=1;
-}
-function hideHeatTip(el){
-  var tip=el.parentElement.querySelector('#heatTip');
-  if(tip)tip.style.opacity=0;
-}
 function renderAnniversary(){
   var container = document.getElementById("anniversaryContent");
   var t = I18N[currentLang];
-
-  // Calculate accurate day count
+  
   var firstTs = Date.now();
-  var firstVisit = localStorage.getItem("jarvis_first_seen");
-  if(firstVisit) firstTs = parseInt(firstVisit);
-  chatSessionsCache.forEach(function(c){if(c.ts && c.ts < firstTs) firstTs = c.ts;});
-  diaryCache.forEach(function(d){if(d.ts && d.ts < firstTs) firstTs = d.ts;});
-  memCache.semantic.forEach(function(s){if(s.firstSeen && s.firstSeen < firstTs) firstTs = s.firstSeen;});
-  memCache.episodic.forEach(function(e){if(e.ts && e.ts < firstTs) firstTs = e.ts;});
-
+  var allMems = memCache.semantic.concat(memCache.episodic).concat(diaryCache);
+  allMems.forEach(function(m){
+    var ts = m.ts || m.firstSeen || Date.now();
+    if(ts < firstTs) firstTs = ts;
+  });
   var days = Math.floor((Date.now() - firstTs) / 86400000);
   if(days < 1) days = 1;
-
-  var isCJK = currentLang === "ko" || currentLang === "ja"; document.getElementById("anniTitle").textContent = isCJK ? days + t.anniversaryTitle : days + " " + t.anniversaryTitle;
-  document.getElementById("anniSub").textContent = t.anniversarySub;
-
-  // Aggregate data
-  var activity = aggregateActivityData();
-  var keywords = getTopKeywords();
-  var sentiment = analyzeSentiment();
-
+  
+  var newNodes = memCache.semantic.length;
+  var newRelations = memCache.relations.length;
+  var newThemes = memCache.themes.length;
+  var diaryCount = diaryCache.length;
+  var chatCount = chatSessionsCache.reduce(function(a,c){return a+(c.messageCount||0)},0);
+  
   var html = '';
-
-  // HERO CARD
-  html += '<div class="anni-card anni-hero">';
-  html += '<div class="anni-big">'+days+'</div>';
-  html += '<div class="anni-label">'+t.anniversaryTitle+'</div>';
-  html += '<div class="anni-sub2">'+fmtDate(firstTs)+' ~ '+fmtDate(Date.now())+'</div>';
+  
+  html += '<div class="anni-card" style="text-align:center">';
+  html += '<div style="font-size:48px;margin-bottom:8px">&#127881;</div>';
+  html += '<div style="font-size:32px;font-family:\'Space Mono\',monospace;color:var(--accent);font-weight:700">'+days+'</div>';
+  html += '<div style="font-size:13px;color:var(--text-tertiary)">'+t.anniversarySub+'</div>';
   html += '</div>';
-
-  // KEY STATS ROW
-  html += '<div class="anni-stats-row">';
-  html += '<div class="anni-stat-box"><div class="as-num">'+activity.total+'</div><div class="as-label">Messages</div></div>';
-  html += '<div class="anni-stat-box"><div class="as-num">'+diaryCache.length+'</div><div class="as-label">Diary</div></div>';
-  html += '<div class="anni-stat-box"><div class="as-num">'+memCache.semantic.length+'</div><div class="as-label">Memories</div></div>';
-  html += '<div class="anni-stat-box"><div class="as-num">'+memCache.relations.length+'</div><div class="as-label">Relations</div></div>';
+  
+  html += '<div class="anni-card">';
+  html += '<div class="anni-card-title">MEMORY STATISTICS</div>';
+  html += '<div class="anni-stat"><span class="anni-stat-label">Semantic Nodes</span><span class="anni-stat-value">'+newNodes+'</span></div>';
+  html += '<div class="anni-stat"><span class="anni-stat-label">Relations Formed</span><span class="anni-stat-value">'+newRelations+'</span></div>';
+  html += '<div class="anni-stat"><span class="anni-stat-label">Recurring Themes</span><span class="anni-stat-value">'+newThemes+'</span></div>';
+  html += '<div class="anni-stat"><span class="anni-stat-label">Diary Entries</span><span class="anni-stat-value">'+diaryCount+'</span></div>';
+  html += '<div class="anni-stat"><span class="anni-stat-label">Messages Exchanged</span><span class="anni-stat-value">'+chatCount+'</span></div>';
   html += '</div>';
-
-  // GRID: Heatmap + Calendar
-  html += '<div class="anni-grid">';
-
-  // ACTIVITY HEATMAP
-  html += '<div class="anni-card-v2">';
-  html += '<div class="card-title">Activity Heatmap</div>';
-  html += '<div class="heatmap-wrap">';
-  html += '<div class="heatmap-radial">';
-  // Background rings
-  html += '<div class="heatmap-ring r1"></div><div class="heatmap-ring r2"></div><div class="heatmap-ring r3"></div><div class="heatmap-ring r4"></div>';
-  // Time labels at cardinal positions
-  var timeLabels = [[0,-105],[6,105],[12,-105],[18,105]]; // [hour, y offset approx]
-  // Actually place them precisely
-  html += '<div class="heatmap-time-label" style="top:8px;left:50%">00</div>';
-  html += '<div class="heatmap-time-label" style="top:50%;right:8px;left:auto;transform:translate(0,-50%)">06</div>';
-  html += '<div class="heatmap-time-label" style="bottom:8px;top:auto;left:50%">12</div>';
-  html += '<div class="heatmap-time-label" style="top:50%;left:8px;transform:translate(0,-50%)">18</div>';
-  // Center info
-  var peakH = activity.hourly.indexOf(Math.max.apply(null,activity.hourly));
-  html += '<div class="heatmap-center"><div class="hc-label">Peak Hour</div><div class="hc-val">'+String(peakH).padStart(2,"0")+':00</div></div>';
-  html += '<div class="heatmap-tooltip" id="heatTip"></div>';
-  // Radial bars
-  var maxH = Math.max.apply(null,activity.hourly)||1;
-  var baseR = 42;
-  var maxLen = 68;
-  for(var h=0;h<24;h++){
-    var intensity = activity.hourly[h]/maxH;
-    var barLen = baseR + intensity*maxLen;
-    var opacity = Math.max(0.2, 0.08 + intensity*0.92);
-    var glow = intensity*12;
-    var rot = h*15 - 90;
-    var gradOp = Math.max(0.2, opacity);
-    var segStyle = 'transform:rotate('+rot+'deg) translateY(-'+baseR+'px) scaleY('+(barLen/baseR).toFixed(2)+');';
-    segStyle += 'opacity:'+opacity+';';
-    segStyle += 'height:'+baseR+'px;';
-    segStyle += 'background:linear-gradient(to bottom,rgba(92,157,255,'+gradOp+'),rgba(92,157,255,'+(gradOp*0.2)+'));'; 
-    segStyle += 'box-shadow:0 0 '+glow+'px rgba(92,157,255,'+(intensity*0.4)+');';
-    var tipText = String(h).padStart(2,"0")+':00 — '+activity.hourly[h]+' interactions';
-    html += '<div class="heatmap-seg" style="'+segStyle+'" onmouseenter="showHeatTip(this,''+tipText.replace(/'/g,"\'")+'')" onmouseleave="hideHeatTip(this)"></div>';
-  }
-  html += '</div>';
-  html += '<div class="heatmap-legend">';
-  html += '<span><i style="background:rgba(92,157,255,0.12)"></i> Low</span>';
-  html += '<span><i style="background:rgba(92,157,255,0.5)"></i> Mid</span>';
-  html += '<span><i style="background:rgba(92,157,255,0.9)"></i> High</span>';
-  html += '</div>';
-  html += '</div>';
-  html += '</div>';
-
-  // CALENDAR GRID
-  html += '<div class="anni-card-v2">';
-  html += '<div class="card-title">30-Day Activity</div>';
-  html += '<div class="cal-header"><div>S</div><div>M</div><div>T</div><div>W</div><div>T</div><div>F</div><div>S</div></div>';
-  html += '<div class="cal-grid">';
-  var maxCount = Math.max.apply(null,activity.daily.map(function(d){return d.count;}))||1;
-  activity.daily.forEach(function(d){
-    var intensity = d.count/maxCount;
-    var cls = 'cal-cell';
-    if(intensity>0.6) cls += ' high';
-    else if(intensity>0) cls += ' has-data';
-    var tooltip = d.date + (d.count?': '+d.count+' interactions':': no activity');
-    html += '<div class="'+cls+'"><span class="cal-tooltip">'+esc(tooltip)+'</span>'+new Date(d.date).getDate()+'</div>';
-  });
-  html += '</div>';
-  if(activity.peak.count){
-    html += '<div style="font-size:11px;color:var(--text-tertiary);margin-top:10px;text-align:center">Peak: <span style="color:var(--accent)">'+activity.peak.date+'</span> with '+activity.peak.count+' interactions</div>';
-  }
-  html += '</div>';
-
-  html += '</div>'; // end anni-grid
-
-  // TREND LINE
-  html += '<div class="anni-card-v2">';
-  html += '<div class="card-title">Activity Trend</div>';
-  html += '<div style="font-size:11px;color:var(--text-tertiary);margin-bottom:6px">Daily interactions over the last 30 days</div>';
-  html += '<div class="trend-wrap" style="height:100px">';
-  html += '<svg class="trend-svg" viewBox="0 0 300 100" preserveAspectRatio="none">';
-  html += '<defs><linearGradient id="trendGrad" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="rgba(92,157,255,0.3)"/><stop offset="100%" stop-color="rgba(92,157,255,0)"/></linearGradient></defs>';
-  var points = activity.daily.map(function(d,i){return [i*(300/29),80-(d.count/maxCount)*70];});
-  var areaPath = 'M'+points[0][0]+',80 ' + points.map(function(p){return 'L'+p[0]+','+p[1];}).join(' ') + ' L'+points[points.length-1][0]+',80 Z';
-  var linePath = 'M'+points.map(function(p){return p[0]+','+p[1];}).join(' L');
-  html += '<path class="trend-area" d="'+areaPath+'"/>';
-  html += '<path class="trend-line" d="'+linePath+'"/>';
-  points.forEach(function(p,i){
-    if(activity.daily[i].count===maxCount) html += '<circle class="trend-peak" cx="'+p[0]+'" cy="'+p[1]+'" r="3"/>';
-    else if(activity.daily[i].count>0) html += '<circle class="trend-dot" cx="'+p[0]+'" cy="'+p[1]+'" r="2"/>';
-  });
-  // X-axis date labels every ~7 days
-  var labelIdx = [0, 7, 14, 21, 28];
-  labelIdx.forEach(function(idx){
-    if(idx < activity.daily.length){
-      var x = idx * (300/29);
-      var lbl = activity.daily[idx].date.substring(5);
-      var anchor = idx===0 ? 'start' : idx===28 ? 'end' : 'middle';
-      var xPos = idx===0 ? 6 : idx===28 ? 294 : x;
-      html += '<text x="'+xPos+'" y="94" font-size="9" fill="#8A9BB0" text-anchor="'+anchor+'" font-family="Space Mono, monospace">'+lbl+'</text>';
-    }
-  });
-  html += '</svg>';
-  html += '</div>';
-  html += '</div>';
-
-  // TOPIC CLOUD
-  html += '<div class="anni-card-v2">';
-  html += '<div class="card-title">Top Topics</div>';
-  html += '<div class="topic-cloud">';
-  if(keywords.length){
-    var maxK = keywords[0].count;
-    keywords.forEach(function(k,i){
-      var cls = 'topic-tag';
-      if(i<3) cls += ' popular';
-      else if(k.count===1) cls += ' rare';
-      var size = 10 + (k.count/maxK)*6;
-      html += '<div class="'+cls+'" style="font-size:'+size+'px">'+esc(k.word)+'</div>';
-    });
-  }else{
-    html += '<div style="color:var(--text-tertiary);font-size:13px;text-align:center;padding:12px">No topic data yet. Chat more to build your topic cloud.</div>';
-  }
-  html += '</div>';
-  html += '</div>';
-
-  // SENTIMENT FLOW
-  html += '<div class="anni-card-v2">';
-  html += '<div class="card-title">Sentiment Flow (30 Days)</div>';
-  html += '<div class="sentiment-bar">';
-  sentiment.forEach(function(s){
-    var color = s.type==="positive"?'rgba(74,222,128,0.6)':s.type==="negative"?'rgba(255,95,95,0.5)':'rgba(138,155,176,0.3)';
-    var label = s.date + ': ' + s.type;
-    html += '<div class="sentiment-seg" style="background:'+color+'"><span class="st-tooltip">'+esc(label)+'</span></div>';
-  });
-  html += '</div>';
-  html += '<div class="sentiment-legend">';
-  html += '<span><i style="background:rgba(74,222,128,0.6)"></i> Positive</span>';
-  html += '<span><i style="background:rgba(138,155,176,0.3)"></i> Neutral</span>';
-  html += '<span><i style="background:rgba(255,95,95,0.5)"></i> Negative</span>';
-  html += '</div>';
-  html += '</div>';
-
-  // KEY MOMENTS (keep original timeline)
+  
   if(memCache.episodic.length || memCache.semantic.length){
-    html += '<div class="section-label">Key Moments</div>';
-    html += '<div class="anni-card-v2">';
+    html += '<div class="anni-card">';
+    html += '<div class="anni-card-title">KEY MOMENTS</div>';
     html += '<div class="anni-timeline">';
+    
     var events = [];
-    memCache.episodic.slice(0,8).forEach(function(e){events.push({date:e.date,text:e.summary,type:'episodic'});});
-    memCache.semantic.slice(0,8).forEach(function(s){events.push({date:fmtDate(s.firstSeen),text:"Learned: "+s.content,type:'semantic'});});
+    memCache.episodic.slice(0,5).forEach(function(e){
+      events.push({date:e.date, text:e.summary, type:'episodic'});
+    });
+    memCache.semantic.slice(0,5).forEach(function(s){
+      events.push({date:fmtDate(s.firstSeen), text:"Learned: "+s.content, type:'semantic'});
+    });
     events.sort(function(a,b){return (a.date||"").localeCompare(b.date||"");});
+    
     events.forEach(function(ev){
       html += '<div class="anni-event">';
       html += '<div class="anni-event-date">'+esc(ev.date)+'</div>';
       html += '<div class="anni-event-text">'+esc(ev.text)+'</div>';
       html += '</div>';
     });
-    html += '</div>';
+    html += '</div></div>';
+  }
+  
+  if(memCache.relations.length){
+    html += '<div class="anni-card">';
+    html += '<div class="anni-card-title">NEW CONNECTIONS</div>';
+    memCache.relations.slice(0,6).forEach(function(r){
+      html += '<div style="padding:8px 0;font-size:13px;color:var(--text-secondary);border-bottom:1px solid rgba(255,255,255,0.04)">';
+      html += '<span style="color:var(--accent)">'+esc(r.source)+'</span> &rarr; <span style="color:var(--accent)">'+esc(r.target)+'</span>';
+      html += ' <span style="color:var(--text-tertiary);font-size:11px">('+r.type+')</span>';
+      html += '</div>';
+    });
     html += '</div>';
   }
-
+  
   if(!html) html = '<div class="anni-empty">Not enough data yet. Keep chatting!</div>';
   container.innerHTML = html;
 }
+
 function clearChat(){
   saveChatSession();
   startNewSession();
