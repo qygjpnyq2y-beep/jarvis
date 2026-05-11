@@ -351,17 +351,21 @@ input:focus,textarea:focus{outline:none}
 .anni-card-v2 .card-title{font-size:12px;color:var(--accent);letter-spacing:1.5px;margin-bottom:14px;font-weight:700;opacity:.8}
 
 /* Activity Heatmap - Radial */
-.heatmap-wrap{width:100%;display:flex;flex-direction:column;align-items:center;gap:12px}
-.heatmap-radial{position:relative;width:220px;height:220px;margin:0 auto}
-.heatmap-ring{position:absolute;inset:0;border-radius:50%;border:1px solid rgba(92,157,255,0.08)}
+.heatmap-wrap{width:100%;display:flex;flex-direction:column;align-items:center;gap:14px;padding:10px 0}
+.heatmap-radial{position:relative;width:260px;height:260px;margin:0 auto}
+.heatmap-ring{position:absolute;border-radius:50%;border:1px solid rgba(92,157,255,0.06);top:50%;left:50%;transform:translate(-50%,-50%)}
+.heatmap-ring.r1{width:80px;height:80px}
+.heatmap-ring.r2{width:130px;height:130px}
+.heatmap-ring.r3{width:180px;height:180px}
+.heatmap-ring.r4{width:230px;height:230px;border-color:rgba(92,157,255,0.1)}
 .heatmap-center{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);text-align:center;z-index:2}
-.heatmap-center .hc-label{font-size:10px;color:var(--text-tertiary);letter-spacing:1px}
-.heatmap-center .hc-val{font-family:'Space Mono',monospace;font-size:22px;color:var(--accent);font-weight:700}
-.heatmap-seg{position:absolute;width:2px;height:28px;background:rgba(92,157,255,0.06);transform-origin:bottom center;border-radius:1px;transition:all .3s ease}
-.heatmap-seg.active{background:linear-gradient(to top,var(--accent),rgba(92,157,255,0.3));box-shadow:0 0 8px rgba(92,157,255,0.3)}
-.heatmap-legend{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin-top:8px}
-.heatmap-legend span{font-size:10px;color:var(--text-tertiary);display:flex;align-items:center;gap:4px}
-.heatmap-legend i{width:8px;height:8px;border-radius:2px;display:inline-block}
+.heatmap-center .hc-label{font-size:10px;color:var(--text-tertiary);letter-spacing:1.5px;text-transform:uppercase}
+.heatmap-center .hc-val{font-family:'Space Mono',monospace;font-size:24px;color:var(--accent);font-weight:700;margin-top:4px;filter:drop-shadow(0 0 8px var(--accent-glow))}
+.heatmap-seg{position:absolute;left:50%;top:50%;width:5px;margin-left:-2.5px;border-radius:2.5px;transform-origin:center top;transition:all .3s ease}
+.heatmap-legend{display:flex;gap:16px;justify-content:center;flex-wrap:wrap;margin-top:6px}
+.heatmap-legend span{font-size:10px;color:var(--text-tertiary);display:flex;align-items:center;gap:6px}
+.heatmap-legend i{width:10px;height:4px;border-radius:2px;display:inline-block}
+.heatmap-time-label{position:absolute;font-size:9px;color:var(--text-tertiary);font-family:'Space Mono',monospace;transform:translate(-50%,-50%)}
 
 /* Calendar Grid */
 .cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:4px}
@@ -1399,7 +1403,7 @@ function fileToB64(f){return new Promise(function(r,j){var x=new FileReader();x.
 function fileFP(f){return f.name+"__"+f.size+"__"+f.lastModified}
 function resizeImg(file,max){max=max||1024;return new Promise(function(r){var i=new Image();i.onload=function(){var w=i.width,h=i.height;if(w>max||h>max){var ra=Math.min(max/w,max/h);w=Math.round(w*ra);h=Math.round(h*ra)}var c=document.createElement("canvas");c.width=w;c.height=h;c.getContext("2d").drawImage(i,0,0,w,h);r(c.toDataURL("image/jpeg",0.8).split(",")[1]);URL.revokeObjectURL(i.src)};i.src=URL.createObjectURL(file)})}
 function makeThumb(file,sz){sz=sz||200;return new Promise(function(r){var i=new Image();i.onload=function(){var w=i.width,h=i.height;var ra=Math.min(sz/w,sz/h);var nw=Math.round(w*ra),nh=Math.round(h*ra);var c=document.createElement("canvas");c.width=nw;c.height=nh;c.getContext("2d").drawImage(i,0,0,nw,nh);r(c.toDataURL("image/jpeg",0.65));URL.revokeObjectURL(i.src)};i.src=URL.createObjectURL(file)})}
-function fmtDate(ts){if(!ts)return"";return new Date(ts).toLocaleDateString(currentLang==="ko"?"ko-KR":currentLang==="ja"?"ja-JP":currentLang==="de"?"de-DE":"en-US",{year:"numeric",month:"short",day:"numeric",hour:"2-digit",minute:"2-digit"})}
+function fmtDate(ts){if(!ts)return"";var d=new Date(ts);return d.getFullYear()+"."+String(d.getMonth()+1).padStart(2,"0")+"."+String(d.getDate()).padStart(2,"0")+" "+String(d.getHours()).padStart(2,"0")+":"+String(d.getMinutes()).padStart(2,"0")}
 
 function computeDecay(mem){
   var days = (Date.now() - (mem.lastSeen || mem.ts || Date.now())) / 86400000;
@@ -2588,7 +2592,7 @@ function renderAnniversary(){
   var days = Math.floor((Date.now() - firstTs) / 86400000);
   if(days < 1) days = 1;
 
-  document.getElementById("anniTitle").textContent = days + " " + t.anniversaryTitle;
+  var isCJK = currentLang === "ko" || currentLang === "ja"; document.getElementById("anniTitle").textContent = isCJK ? days + t.anniversaryTitle : days + " " + t.anniversaryTitle;
   document.getElementById("anniSub").textContent = t.anniversarySub;
 
   // Aggregate data
@@ -2621,18 +2625,38 @@ function renderAnniversary(){
   html += '<div class="card-title">Activity Heatmap</div>';
   html += '<div class="heatmap-wrap">';
   html += '<div class="heatmap-radial">';
-  html += '<div class="heatmap-center"><div class="hc-label">Peak Hour</div><div class="hc-val">'+activity.hourly.indexOf(Math.max.apply(null,activity.hourly))+':00</div></div>';
+  // Background rings
+  html += '<div class="heatmap-ring r1"></div><div class="heatmap-ring r2"></div><div class="heatmap-ring r3"></div><div class="heatmap-ring r4"></div>';
+  // Time labels at cardinal positions
+  var timeLabels = [[0,-105],[6,105],[12,-105],[18,105]]; // [hour, y offset approx]
+  // Actually place them precisely
+  html += '<div class="heatmap-time-label" style="top:8px;left:50%">00</div>';
+  html += '<div class="heatmap-time-label" style="top:50%;right:8px;left:auto;transform:translate(0,-50%)">06</div>';
+  html += '<div class="heatmap-time-label" style="bottom:8px;top:auto;left:50%">12</div>';
+  html += '<div class="heatmap-time-label" style="top:50%;left:8px;transform:translate(0,-50%)">18</div>';
+  // Center info
+  var peakH = activity.hourly.indexOf(Math.max.apply(null,activity.hourly));
+  html += '<div class="heatmap-center"><div class="hc-label">Peak Hour</div><div class="hc-val">'+String(peakH).padStart(2,"0")+':00</div></div>';
+  // Radial bars
   var maxH = Math.max.apply(null,activity.hourly)||1;
+  var baseR = 42;
+  var maxLen = 68;
   for(var h=0;h<24;h++){
     var intensity = activity.hourly[h]/maxH;
-    var opacity = 0.05 + intensity*0.95;
-    var height = 20 + intensity*28;
-    var rot = h*15;
-    html += '<div class="heatmap-seg" style="transform:rotate('+rot+'deg);height:'+height+'px;opacity:'+opacity+';background:linear-gradient(to top,rgba(92,157,255,'+opacity+'),transparent);" title="'+h+':00 - '+activity.hourly[h]+' msgs"></div>';
+    var barLen = baseR + intensity*maxLen;
+    var opacity = 0.08 + intensity*0.92;
+    var glow = intensity*12;
+    var rot = h*15 - 90; // -90 puts 0 at top (12 o'clock)
+    var gradOp = Math.max(0.15, opacity);
+    var segStyle = 'transform:rotate('+rot+'deg) translateY(-'+baseR+'px) scaleY('+(barLen/baseR).toFixed(2)+');';
+    segStyle += 'opacity:'+opacity+';';
+    segStyle += 'background:linear-gradient(to bottom,rgba(92,157,255,'+gradOp+'),rgba(92,157,255,'+(gradOp*0.2)+'));'; 
+    segStyle += 'box-shadow:0 0 '+glow+'px rgba(92,157,255,'+(intensity*0.4)+');';
+    html += '<div class="heatmap-seg" style="'+segStyle+'" title="'+String(h).padStart(2,"0")+':00 — '+activity.hourly[h]+' interactions"></div>';
   }
   html += '</div>';
   html += '<div class="heatmap-legend">';
-  html += '<span><i style="background:rgba(92,157,255,0.1)"></i> Low</span>';
+  html += '<span><i style="background:rgba(92,157,255,0.12)"></i> Low</span>';
   html += '<span><i style="background:rgba(92,157,255,0.5)"></i> Mid</span>';
   html += '<span><i style="background:rgba(92,157,255,0.9)"></i> High</span>';
   html += '</div>';
