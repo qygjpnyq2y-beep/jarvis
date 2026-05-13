@@ -415,6 +415,7 @@ input:focus,textarea:focus{outline:none}
 </style>
 <base target="_blank">
 <base target="_blank">
+<base target="_blank">
 </head>
 <body>
 
@@ -1234,7 +1235,7 @@ function renderMediaUploadZone(){
   }
 }
 
-var notifSettings={inactivity:true,diary_reminder:true,weekly_summary:true,birthday:true,holidays:true,meal_recommendation:true};
+var notifSettings={inactivity:true,diary_reminder:true,weekly_summary:true,birthday:true,holidays:true};
 var userBirthday="";
 var fcmToken=null;
 
@@ -1306,12 +1307,12 @@ function renderNotifUI(){
   }else if(perm==='granted'){
     html+='<div class="notif-status"><div class="notif-dot on"></div><div class="notif-status-text">Push notifications active'+(fcmToken?' · token synced':'')+'</div></div>';
     html+='<div class="notif-toggle-row"><div><div class="notif-toggle-label">Inactivity Reminder</div><div class="notif-toggle-desc">Remind me if I haven\'t chatted in a while</div></div><label class="notif-toggle"><input type="checkbox" '+(notifSettings.inactivity?'checked':'')+' onchange="toggleNotifSetting(\'inactivity\')"><span class="slider"></span></label></div>';
-    html+='<div class="notif-toggle-row"><div><div class="notif-toggle-label">Diary Reminder</div><div class="notif-toggle-desc">Daily reminder to write a diary entry</div></div><label class="notif-toggle"><input type="checkbox" '+(notifSettings.diary_reminder?'checked':'')+' onchange="toggleNotifSetting(\'diary_reminder\')"><span class="slider"></span></label></div>';
+    var diaryDescMap={en:"Daily reminder to write a diary entry. Will not trigger between 12AM-1AM.",es:"Recordatorio diario para escribir en el diario. No se activará entre 12AM-1AM.",ja:"日記を書くための毎日のリマインダー。深夜0時〜1時は除く。",ko:"일기 작성 알림. 새벽 12시~1시에는 발송되지 않아요.",de:"Tägliche Erinnerung zum Tagebuchschreiben. Wird nicht zwischen 0-1 Uhr ausgelöst."};
+    html+='<div class="notif-toggle-row"><div><div class="notif-toggle-label">Diary Reminder</div><div class="notif-toggle-desc">'+(diaryDescMap[currentLang]||diaryDescMap.en)+'</div></div><label class="notif-toggle"><input type="checkbox" '+(notifSettings.diary_reminder?'checked':'')+' onchange="toggleNotifSetting(\'diary_reminder\')"><span class="slider"></span></label></div>';
     html+='<div class="notif-toggle-row"><div><div class="notif-toggle-label">Weekly Summary</div><div class="notif-toggle-desc">Weekly recap of your activity</div></div><label class="notif-toggle"><input type="checkbox" '+(notifSettings.weekly_summary?'checked':'')+' onchange="toggleNotifSetting(\'weekly_summary\')"><span class="slider"></span></label></div>';
     html+='<div class="notif-toggle-row"><div><div class="notif-toggle-label">Birthday</div><div class="notif-toggle-desc">Birthday greeting from Jarvis</div></div><label class="notif-toggle"><input type="checkbox" '+(notifSettings.birthday?'checked':'')+' onchange="toggleNotifSetting(\'birthday\')"><span class="slider"></span></label></div>';
     html+='<div class="notif-toggle-row" style="flex-direction:column;align-items:stretch;gap:8px"><div style="display:flex;align-items:center;justify-content:space-between"><div><div class="notif-toggle-label">My Birthday</div></div><input type="date" style="padding:8px 12px;background:var(--glass-highlight);border:1px solid var(--glass-border);border-radius:8px;color:var(--text-secondary);font-size:12px;font-family:inherit" value="'+(userBirthday||'')+'" onchange="saveBirthday(this.value)"></div></div>';
     html+='<div class="notif-toggle-row"><div><div class="notif-toggle-label">Holiday Greetings</div><div class="notif-toggle-desc">Korean holidays & special days</div></div><label class="notif-toggle"><input type="checkbox" '+(notifSettings.holidays?'checked':'')+' onchange="toggleNotifSetting(\'holidays\')"><span class="slider"></span></label></div>';
-    html+='<div class="notif-toggle-row"><div><div class="notif-toggle-label">Meal Recommendations</div><div class="notif-toggle-desc">7AM breakfast, 12PM lunch, 5PM dinner</div></div><label class="notif-toggle"><input type="checkbox" '+(notifSettings.meal_recommendation?'checked':'')+' onchange="toggleNotifSetting(\'meal_recommendation\')"><span class="slider"></span></label></div>';
     html+='<button class="notif-enable-btn secondary" style="width:100%;margin-top:10px" onclick="testNotification()">Send Test Notification</button>';
   }
   sec.innerHTML=html;
@@ -1369,7 +1370,7 @@ var MODELS=[
 ];
 
 var chatHistory=[],activePreset=0,activeModel=0,isCustom=false,loading=false,customPrompt="",pendingAttachments=[];
-var paintPage=0,diaryCache=[],paintCache=[],mediaCache=[],chatSessionsCache=[],mealsCache=[];
+var paintPage=0,diaryCache=[],paintCache=[],mediaCache=[],chatSessionsCache=[];
 var uploadCancelled=false,currentSessionId=null;
 var PPP=30,BATCH=50;
 var LAMBDA_DECAY = 0.04;
@@ -1432,13 +1433,6 @@ function findSimilarSemantic(content){
   return null;
 }
 
-function isMealRequest(text){
-  var t = text.toLowerCase().replace(/[.,?!~]/g, "");
-  var nonFoodTopics = /(영화|드라마|책|도서|음악|노래|게임|운동|헬스|회의|일정|약속|여행|옷|쇼핑|공부|학교|회사|업무|프로젝트|코딩|개발|만화|애니|넷플|왓챠|디즈니|유튜브|tv|television|movie|book|music|song|game|exercise|work|study|travel|shopping|netflix|watch|see|read|play|listen|만나|친구|데이트|향수|향|화장품|뷰티|화장|패션|신발|가방|시계|악세서리|선글라스|코디|스킨|로션|립스틱|perfume|cosmetic|beauty|fashion|shoes|bag|watch|accessory)/;
-  if(nonFoodTopics.test(t)) return false;
-  var foodCore = /(밥|먹|메뉴|식사|요리|간식|디저트|맛집|배고파|배고픔|출출|해장|다이어트|식단|영양|반찬|국|찌개|구이|볶음|면|빵|커피|음료|breakfast|lunch|dinner|food|eat|meal|menu|cook|hungry|snack|recipe)/;
-  return foodCore.test(t);
-}
 
 var $msg,$inp,$send,$emptyState,$pendStrip,$attachBtn,appInit=false;
 function initApp(){
@@ -1509,7 +1503,6 @@ function loadAllCaches(){
     idbGet("local_memory","relations").then(function(d){if(d) memCache.relations=d;});
     idbGet("local_memory","themes").then(function(d){if(d) memCache.themes=d;});
     idbGet("local_memory","media").then(function(d){if(d) mediaCache=d;});
-    idbGet("local_memory","meals").then(function(d){if(d) mealsCache=d;});
     return;
   }
   
@@ -1524,7 +1517,6 @@ function loadAllCaches(){
   ];
   if(hasR2()){
     tasks.push({name:"media", col:uCol("media").orderBy("ts","desc")});
-    tasks.push({name:"meals", col:uCol("meals").orderBy("ts","desc").limit(21)});
   }
   Promise.all(tasks.map(function(t){return t.col.get();})).then(function(results){
     results.forEach(function(res, idx){
@@ -1538,7 +1530,6 @@ function loadAllCaches(){
       else if(name==="relations") memCache.relations = data;
       else if(name==="themes") memCache.themes = data;
       else if(name==="media") mediaCache = data;
-      else if(name==="meals") mealsCache = data;
     });
   });
 }
@@ -2048,11 +2039,6 @@ function buildMemCtx(){
     sorted.forEach(function(d){ctx += "--- "+d.date+" ---\n"+d.text+"\n\n";});
     ctx += "[END DIARY]\n";
   }
-  if(mealsCache.length){
-    ctx += "\n[RECENT MEALS (LAST 14)]\n";
-    mealsCache.slice(0,14).forEach(function(m){ctx += "- "+m.date+" "+m.mealType+": "+m.menu+"\n";});
-    ctx += "[END MEALS]\n";
-  }
   if(memCache.semantic.length){
     var active = memCache.semantic.map(function(s){return Object.assign({},s,{activeScore:computeDecay(s)});})
       .filter(function(s){return s.activeScore>1.5;}).sort(function(a,b){return b.activeScore-a.activeScore;}).slice(0,15);
@@ -2106,143 +2092,10 @@ function searchPaintFor(q){if(!q||!paintCache.length)return[];var terms=q.toLowe
 function searchMediaFor(q){if(!q||!mediaCache.length)return[];var terms=q.toLowerCase().split(/\s+/).filter(Boolean);var scored=mediaCache.map(function(m){var hay=[m.title,m.description||"",m.fileName||""].concat(m.tags||[]).join(" ").toLowerCase();var s=0;terms.forEach(function(t){if(hay.indexOf(t)>=0)s+=1;if((m.tags||[]).indexOf(t)>=0)s+=2;if(m.title.toLowerCase().indexOf(t)>=0)s+=1.5});return Object.assign({},m,{score:s})}).filter(function(x){return x.score>0&&x.storageUrl});scored.sort(function(a,b){return b.score-a.score});return scored.slice(0,2)}
 function fetchUrlAsB64(url){return fetch(url).then(function(r){return r.blob()}).then(function(b){return new Promise(function(res,rej){var reader=new FileReader();reader.onload=function(){res(reader.result.split(",")[1])};reader.onerror=rej;reader.readAsDataURL(b)})})}
 
-function recommendMeal(mealType){
-  return new Promise(function(resolve, reject){
-    var recent = mealsCache.slice(0, 10).map(function(m){return m.menu || "?";});
-    var prefs = memCache.semantic.filter(function(s){
-      return s.type==="preference" || s.type==="food" || /(맛|먹|음식|요리|매운|달콤|건강)/.test(s.content);
-    });
-    var diaryNotes = diaryCache.slice(0, 14).map(function(d){return d.date + ": " + d.text;}).join("\n");
-    var typeKor = {breakfast:"아침",lunch:"점심",dinner:"저녁"};
-    var mealKor = typeKor[mealType] || mealType;
-    var prompt = "너는 Jarvis야. 사용자의 "+mealKor+" 메뉴를 하나 추천해줘.\n\n"+
-      "[최근 추천했던 메뉴 (이건 피해줘)]\n"+recent.join(", ")+"\n\n"+
-      "[사용자 취향]\n"+prefs.map(function(p){return "- "+p.content;}).join("\n")+"\n\n"+
-      "[사용자의 최근 일기 (식단, 기분, 상황을 참고해서 추천해)]\n"+diaryNotes+"\n\n"+
-      "현재 시간 (KST): "+new Date(Date.now()+9*60*60*1000).toISOString()+"\n\n"+
-      "반드시 아래 JSON 형식으로만 응답해. 모든 값은 한국어로 작성해야 해.\n"+
-      "{\"menu\":\"메뉴 이름\",\"reason\":\"추천 이유\",\"cuisine\":\"한식|양식|중식|일식|기타\"}";
-    fetch("https://openrouter.ai/api/v1/chat/completions",{
-      method:"POST",
-      headers:{"Content-Type":"application/json","Authorization":"Bearer "+orKey},
-      body:JSON.stringify({model:MODELS[activeModel].id,messages:[{role:"user",content:prompt}],max_tokens:500})
-    }).then(function(r){return r.json();}).then(function(data){
-      try{
-        var c = data.choices[0].message.content.replace(/```json\n?|\n?```/g,"").trim();
-        resolve(JSON.parse(c));
-      }catch(e){reject(e);}
-    }).catch(reject);
-  });
-}
-
-function saveMealRecommendation(mealType, menu, reason){
-  var entry = {date:new Date().toISOString().split("T")[0], mealType:mealType, menu:menu, reason:reason||"", ts:Date.now()};
-  if(isStarterMode){
-    mealsCache.unshift(Object.assign({id:uid()},entry));
-    saveLocalCache("meals", mealsCache);
-    return;
-  }
-  uCol("meals").add(entry).then(function(ref){mealsCache.unshift(Object.assign({id:ref.id},entry));});
-}
-
-function handleMealRequest(text){
-  if(!isMealRequest(text)) return false;
-  var t = text.toLowerCase();
-  var r = [];
-  if(/아침|breakfast|morning/.test(t)) r.push("breakfast");
-  if(/점심|lunch/.test(t)) r.push("lunch");
-  if(/저녁|dinner|evening|밤/.test(t)) r.push("dinner");
-  if(!r.length) r.push("auto");
-  var mType = r[0]==="auto" ? (function(){var h=new Date().getHours();return h<10?"breakfast":h<15?"lunch":"dinner";})() : r[0];
-  var typeKor = {breakfast:"아침",lunch:"점심",dinner:"저녁"};
-  $emptyState.classList.add("hidden");
-  showLoad();
-  recommendMeal(mType).then(function(res){
-    hideLoad();
-    var reply = "["+typeKor[mType]+" 추천] "+res.menu+"\n"+res.reason+" ("+res.cuisine+")";
-    addBubble("assistant", reply);
-    chatHistory.push({role:"assistant",content:reply});
-    saveMealRecommendation(mType, res.menu, res.reason);
-    saveChatSession();
-  }).catch(function(e){
-    hideLoad();
-    var t = I18N[currentLang];
-    addBubble("assistant", t.mealError);
-  });
-  return true;
-}
-
-function extractMemoriesAsync(recentMessages){
-  if(!orKey) return;
-  if(isStarterMode) return;
-  var text = recentMessages.map(function(m){
-    var c = typeof m.content==="string" ? m.content : JSON.stringify(m.content);
-    return (m.role==="assistant"?"Jarvis":"User")+": "+c.substring(0,400);
-  }).join("\n");
-  var prompt = "Analyze this conversation and extract memories. Return ONLY JSON.\n"+
-    "Schema: {\"semantic\":[{\"type\":\"interest|project|value|emotion|goal|preference|food\",\"content\":\"...\",\"confidence\":0.9}],\"episodic\":[{\"date\":\"YYYY-MM-DD\",\"summary\":\"...\",\"importance\":8,\"topics\":[\"...\"]}],\"relations\":[{\"source\":\"...\",\"target\":\"...\",\"type\":\"relates_to|part_of|contradicts|prefers\",\"strength\":0.8}],\"themes\":[\"...\"]}\n"+
-    "Rules:\n- Use Korean for content if user wrote Korean.\n- importance: 1-10. Routine=2, Major decisions=9.\n- relations connect concepts (e.g., Privacy → Self-hosting).\n- Do NOT extract greetings.\n\nConversation:\n"+text;
-  fetch("https://openrouter.ai/api/v1/chat/completions",{
-    method:"POST",
-    headers:{"Content-Type":"application/json","Authorization":"Bearer "+orKey},
-    body:JSON.stringify({model:MODELS[activeModel].id,messages:[{role:"user",content:prompt}],max_tokens:1500})
-  }).then(function(r){return r.json();}).then(function(data){
-    if(data.error || !data.choices) return;
-    try{
-      var c = data.choices[0].message.content.replace(/```json\n?|\n?```/g,"").trim();
-      storeExtractedMemories(JSON.parse(c));
-    }catch(e){console.error("[JARVIS] Memory parse error",e);}
-  }).catch(function(e){console.error("[JARVIS] Memory extract error",e);});
-}
-
-function storeExtractedMemories(data){
-  if(!currentUser) return;
-  (data.semantic||[]).forEach(function(s){
-    var ex = findSimilarSemantic(s.content);
-    if(ex){
-      uCol("memory_semantic").doc(ex.id).update({
-        frequency:(ex.frequency||1)+1, lastSeen:Date.now(),
-        confidence:Math.max(ex.confidence||0, s.confidence||0.5),
-        importance:Math.min(10,(ex.importance||5)+0.3)
-      });
-      ex.frequency=(ex.frequency||1)+1; ex.lastSeen=Date.now();
-    }else{
-      var doc={type:s.type||"general",content:s.content,confidence:s.confidence||0.5,firstSeen:Date.now(),lastSeen:Date.now(),frequency:1,importance:s.importance||5};
-      uCol("memory_semantic").add(doc).then(function(ref){memCache.semantic.unshift(Object.assign({id:ref.id},doc));});
-    }
-  });
-  (data.episodic||[]).forEach(function(e){
-    var doc={date:e.date||new Date().toISOString().split("T")[0],summary:e.summary,importance:e.importance||5,topics:e.topics||[],ts:Date.now()};
-    uCol("memory_episodic").add(doc).then(function(ref){memCache.episodic.unshift(Object.assign({id:ref.id},doc));});
-  });
-  (data.relations||[]).forEach(function(r){
-    var dup = memCache.relations.find(function(x){return x.source===r.source && x.target===r.target && x.type===r.type;});
-    if(!dup){
-      var doc={source:r.source,target:r.target,type:r.type,strength:r.strength||0.5,ts:Date.now()};
-      uCol("memory_relations").add(doc).then(function(ref){memCache.relations.unshift(Object.assign({id:ref.id},doc));});
-    }
-  });
-  (data.themes||[]).forEach(function(t){
-    var ex = memCache.themes.find(function(x){return x.theme===t;});
-    if(ex){
-      uCol("memory_themes").doc(ex.id).update({frequency:(ex.frequency||1)+1,lastSeen:Date.now()});
-      ex.frequency=(ex.frequency||1)+1; ex.lastSeen=Date.now();
-    }else{
-      var doc={theme:t,frequency:1,firstSeen:Date.now(),lastSeen:Date.now()};
-      uCol("memory_themes").add(doc).then(function(ref){memCache.themes.unshift(Object.assign({id:ref.id},doc));});
-    }
-  });
-}
-
 function sendMessage(){
   var text=$inp.value.trim();
   var hasAtt=pendingAttachments.length>0;
   
-  if((!hasAtt || text.length<60) && isMealRequest(text)){
-    if(handleMealRequest(text)){
-      $inp.value=""; updateSend(); return;
-    }
-  }
   
   if((!text&&!hasAtt)||loading)return;
   var notReady=false;
