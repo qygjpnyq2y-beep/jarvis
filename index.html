@@ -416,6 +416,7 @@ input:focus,textarea:focus{outline:none}
 <base target="_blank">
 <base target="_blank">
 <base target="_blank">
+<base target="_blank">
 </head>
 <body>
 
@@ -1561,6 +1562,8 @@ function saveChatSession(){
     for(var j=0;j<chatSessionsCache.length;j++){if(chatSessionsCache[j].sessionId===currentSessionId){existing=chatSessionsCache[j];break}}
     if(existing){Object.assign(existing,data);}else{chatSessionsCache.unshift(Object.assign({id:uid()},data));}
     saveLocalCache("chats", chatSessionsCache);
+    // REAL-TIME Anniversary refresh
+    if(!document.getElementById("anniversaryOverlay").classList.contains("hidden")){renderAnniversary();}
     return;
   }
   var existing=null;
@@ -1568,8 +1571,12 @@ function saveChatSession(){
   if(existing){
     uCol("chats").doc(existing.id).set(data);
     Object.assign(existing,data);
+    if(!document.getElementById("anniversaryOverlay").classList.contains("hidden")){renderAnniversary();}
   }else{
-    uCol("chats").add(data).then(function(ref){chatSessionsCache.unshift(Object.assign({id:ref.id},data))});
+    uCol("chats").add(data).then(function(ref){
+      chatSessionsCache.unshift(Object.assign({id:ref.id},data));
+      if(!document.getElementById("anniversaryOverlay").classList.contains("hidden")){renderAnniversary();}
+    });
   }
 }
 
@@ -2091,6 +2098,98 @@ function buildMemCtx(){
 function searchPaintFor(q){if(!q||!paintCache.length)return[];var terms=q.toLowerCase().split(/\s+/).filter(Boolean);var scored=paintCache.map(function(p){var hay=[p.title,p.description].concat(p.tags||[]).join(" ").toLowerCase();var s=0;terms.forEach(function(t){if(hay.indexOf(t)>=0)s+=1;if((p.tags||[]).indexOf(t)>=0)s+=2;if(p.title.toLowerCase().indexOf(t)>=0)s+=1.5});return Object.assign({},p,{score:s})}).filter(function(x){return x.score>0});scored.sort(function(a,b){return b.score-a.score});return scored.slice(0,5)}
 function searchMediaFor(q){if(!q||!mediaCache.length)return[];var terms=q.toLowerCase().split(/\s+/).filter(Boolean);var scored=mediaCache.map(function(m){var hay=[m.title,m.description||"",m.fileName||""].concat(m.tags||[]).join(" ").toLowerCase();var s=0;terms.forEach(function(t){if(hay.indexOf(t)>=0)s+=1;if((m.tags||[]).indexOf(t)>=0)s+=2;if(m.title.toLowerCase().indexOf(t)>=0)s+=1.5});return Object.assign({},m,{score:s})}).filter(function(x){return x.score>0&&x.storageUrl});scored.sort(function(a,b){return b.score-a.score});return scored.slice(0,2)}
 function fetchUrlAsB64(url){return fetch(url).then(function(r){return r.blob()}).then(function(b){return new Promise(function(res,rej){var reader=new FileReader();reader.onload=function(){res(reader.result.split(",")[1])};reader.onerror=rej;reader.readAsDataURL(b)})})}
+
+function extractMemoriesAsync(recentMessages){
+  if(!orKey) return;
+  var text = recentMessages.map(function(m){
+    var c = typeof m.content==="string" ? m.content : JSON.stringify(m.content);
+    return (m.role==="assistant"?"Jarvis":"User")+": "+c.substring(0,400);
+  }).join("\n");
+  var prompt = "Analyze this conversation and extract memories. Return ONLY JSON.\n"+
+    "Schema: {\"semantic\":[{\"type\":\"interest|project|value|emotion|goal|preference|food\",\"content\":\"...\",\"confidence\":0.9}],\"episodic\":[{\"date\":\"YYYY-MM-DD\",\"summary\":\"...\",\"importance\":8,\"topics\":[\"...\"]}],\"relations\":[{\"source\":\"...\",\"target\":\"...\",\"type\":\"relates_to|part_of|contradicts|prefers\",\"strength\":0.8}],\"themes\":[\"...\"]}\n"+
+    "Rules:\n- Use Korean for content if user wrote Korean.\n- importance: 1-10. Routine=2, Major decisions=9.\n- relations connect concepts (e.g., Privacy → Self-hosting).\n- Do NOT extract greetings.\n\nConversation:\n"+text;
+  fetch("https://openrouter.ai/api/v1/chat/completions",{
+    method:"POST",
+    headers:{"Content-Type":"application/json","Authorization":"Bearer "+orKey},
+    body:JSON.stringify({model:MODELS[activeModel].id,messages:[{role:"user",content:prompt}],max_tokens:1500})
+  }).then(function(r){return r.json();}).then(function(data){
+    if(data.error || !data.choices) return;
+    try{
+      var c = data.choices[0].message.content.replace(/```json\n?|\n?```/g,"").trim();
+      storeExtractedMemories(JSON.parse(c));
+    }catch(e){console.error("[JARVIS] Memory parse error",e);}
+  }).catch(function(e){console.error("[JARVIS] Memory extract error",e);});
+}
+
+function storeExtractedMemories(data){
+  (data.semantic||[]).forEach(function(s){
+    var ex = findSimilarSemantic(s.content);
+    if(ex){
+      if(!isStarterMode && currentUser){
+        uCol("memory_semantic").doc(ex.id).update({
+          frequency:(ex.frequency||1)+1, lastSeen:Date.now(),
+          confidence:Math.max(ex.confidence||0, s.confidence||0.5),
+          importance:Math.min(10,(ex.importance||5)+0.3)
+        });
+      }
+      ex.frequency=(ex.frequency||1)+1; ex.lastSeen=Date.now();
+    }else{
+      var doc={type:s.type||"general",content:s.content,confidence:s.confidence||0.5,firstSeen:Date.now(),lastSeen:Date.now(),frequency:1,importance:s.importance||5};
+      if(!isStarterMode && currentUser){
+        uCol("memory_semantic").add(doc).then(function(ref){memCache.semantic.unshift(Object.assign({id:ref.id},doc));});
+      } else {
+        var id=uid();
+        memCache.semantic.unshift(Object.assign({id:id},doc));
+        if(isStarterMode) saveLocalCache("semantic", memCache.semantic);
+      }
+    }
+  });
+  (data.episodic||[]).forEach(function(e){
+    var doc={date:e.date||new Date().toISOString().split("T")[0],summary:e.summary,importance:e.importance||5,topics:e.topics||[],ts:Date.now()};
+    if(!isStarterMode && currentUser){
+      uCol("memory_episodic").add(doc).then(function(ref){memCache.episodic.unshift(Object.assign({id:ref.id},doc));});
+    } else {
+      var id=uid();
+      memCache.episodic.unshift(Object.assign({id:id},doc));
+      if(isStarterMode) saveLocalCache("episodic", memCache.episodic);
+    }
+  });
+  (data.relations||[]).forEach(function(r){
+    var dup = memCache.relations.find(function(x){return x.source===r.source && x.target===r.target && x.type===r.type;});
+    if(!dup){
+      var doc={source:r.source,target:r.target,type:r.type,strength:r.strength||0.5,ts:Date.now()};
+      if(!isStarterMode && currentUser){
+        uCol("memory_relations").add(doc).then(function(ref){memCache.relations.unshift(Object.assign({id:ref.id},doc));});
+      } else {
+        var id=uid();
+        memCache.relations.unshift(Object.assign({id:id},doc));
+        if(isStarterMode) saveLocalCache("relations", memCache.relations);
+      }
+    }
+  });
+  (data.themes||[]).forEach(function(t){
+    var ex = memCache.themes.find(function(x){return x.theme===t;});
+    if(ex){
+      if(!isStarterMode && currentUser){
+        uCol("memory_themes").doc(ex.id).update({frequency:(ex.frequency||1)+1,lastSeen:Date.now()});
+      }
+      ex.frequency=(ex.frequency||1)+1; ex.lastSeen=Date.now();
+    }else{
+      var doc={theme:t,frequency:1,firstSeen:Date.now(),lastSeen:Date.now()};
+      if(!isStarterMode && currentUser){
+        uCol("memory_themes").add(doc).then(function(ref){memCache.themes.unshift(Object.assign({id:ref.id},doc));});
+      } else {
+        var id=uid();
+        memCache.themes.unshift(Object.assign({id:id},doc));
+        if(isStarterMode) saveLocalCache("themes", memCache.themes);
+      }
+    }
+  });
+  // REAL-TIME: refresh Graph if visible
+  if(document.getElementById("memGraph").classList.contains("active")){
+    renderMemoryGraph();
+  }
+}
 
 function sendMessage(){
   var text=$inp.value.trim();
