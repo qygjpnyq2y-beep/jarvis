@@ -417,6 +417,7 @@ input:focus,textarea:focus{outline:none}
 <base target="_blank">
 <base target="_blank">
 <base target="_blank">
+<base target="_blank">
 </head>
 <body>
 
@@ -2115,7 +2116,12 @@ function extractMemoriesAsync(recentMessages){
   }).then(function(r){return r.json();}).then(function(data){
     if(data.error || !data.choices) return;
     try{
-      var c = data.choices[0].message.content.replace(/```json\n?|\n?```/g,"").trim();
+      var raw = data.choices[0].message.content;
+      var c = raw.replace(/```json\n?|\n?```/g,"").trim();
+      // Fallback: find first { to last }
+      var startIdx = c.indexOf('{');
+      var endIdx = c.lastIndexOf('}');
+      if(startIdx!==-1 && endIdx!==-1 && endIdx>startIdx) c = c.substring(startIdx,endIdx+1);
       storeExtractedMemories(JSON.parse(c));
     }catch(e){console.error("[JARVIS] Memory parse error",e);}
   }).catch(function(e){console.error("[JARVIS] Memory extract error",e);});
@@ -2189,6 +2195,15 @@ function storeExtractedMemories(data){
   if(document.getElementById("memGraph").classList.contains("active")){
     renderMemoryGraph();
   }
+}
+
+function addLocalEpisodic(summary){
+  var doc={date:new Date().toISOString().split("T")[0],summary:summary,importance:3,topics:[],ts:Date.now()};
+  var id=uid();
+  memCache.episodic.unshift(Object.assign({id:id},doc));
+  if(isStarterMode) saveLocalCache("episodic",memCache.episodic);
+  else if(currentUser) uCol("memory_episodic").add(doc);
+  if(document.getElementById("memGraph").classList.contains("active")) renderMemoryGraph();
 }
 
 function sendMessage(){
@@ -2269,6 +2284,7 @@ function sendMessage(){
   mediaFetchPromise.then(function(){
     var userMsg=userContent.length===1&&userContent[0].type==="text"?{role:"user",content:userContent[0].text}:{role:"user",content:userContent};
     chatHistory.push(userMsg);
+    saveChatSession(); // REAL-TIME: update Anniversary immediately after user sends message
     var messages=[sysMsg].concat(chatHistory);
     fetch("https://openrouter.ai/api/v1/chat/completions",{
       method:"POST",
@@ -2289,10 +2305,20 @@ function sendMessage(){
       if(chatHistory.length&&chatHistory[chatHistory.length-1].role==="user")chatHistory.pop();
     }).then(function(){
       loading=false;$inp.disabled=false;$inp.focus();updateSend();
-      var userCount = chatHistory.filter(function(m){return m.role==="user";}).length;
-      if(userCount > 0 && userCount % 3 === 0){
-        setTimeout(function(){ extractMemoriesAsync(chatHistory.slice(-6)); }, 600);
+      // REAL-TIME: update Anniversary immediately after assistant replies
+      saveChatSession();
+      // REAL-TIME: add local episodic entry immediately for Graph
+      var lastUser = chatHistory.filter(function(m){return m.role==="user";}).pop();
+      var lastAssistant = chatHistory.filter(function(m){return m.role==="assistant";}).pop();
+      if(lastUser){
+        var userText = typeof lastUser.content==="string" ? lastUser.content : JSON.stringify(lastUser.content);
+        addLocalEpisodic("User: "+userText.substring(0,60));
       }
+      if(lastAssistant){
+        addLocalEpisodic("Jarvis: "+lastAssistant.content.substring(0,60));
+      }
+      // Background AI memory extraction (every message, throttled by setTimeout)
+      setTimeout(function(){ extractMemoriesAsync(chatHistory.slice(-6)); }, 600);
     });
   });
 }
@@ -2540,6 +2566,8 @@ function analyzeSentiment(){
 
 function renderAnniversary(){
   var container = document.getElementById("anniversaryContent");
+  var overlay = document.getElementById("anniversaryOverlay");
+  var scrollTop = overlay ? overlay.scrollTop : 0;
   var t = I18N[currentLang];
 
   // Calculate accurate day count
@@ -2733,6 +2761,7 @@ function renderAnniversary(){
 
   if(!html) html = '<div class="anni-empty">Not enough data yet. Keep chatting!</div>';
   container.innerHTML = html;
+  if(overlay) overlay.scrollTop = scrollTop;
 }
 function clearChat(){
   saveChatSession();
