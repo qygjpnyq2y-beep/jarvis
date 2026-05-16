@@ -414,11 +414,6 @@ input:focus,textarea:focus{outline:none}
 .anni-stat-box .as-label{font-size:10px;color:var(--text-tertiary);margin-top:4px;letter-spacing:.5px}
 </style>
 <base target="_blank">
-<base target="_blank">
-<base target="_blank">
-<base target="_blank">
-<base target="_blank">
-<base target="_blank">
 </head>
 <body>
 
@@ -510,7 +505,7 @@ input:focus,textarea:focus{outline:none}
   <div class="messages" id="messages">
     <div class="empty-state" id="emptyState">
       <div class="empty-glyph">JARVIS</div>
-      <div class="empty-text"><span id="emptyName"></span> <span id="emptyOnline">is online</span>.<br><small id="emptyHint">Say something or attach a file.</small></div>
+      <div class="empty-text"><span id="emptyName"></span> <span id="emptyOnline">is online</span>.<<br><small id="emptyHint">Say something or attach a file.</small></div>
     </div>
   </div>
   <div class="input-bar">
@@ -669,7 +664,7 @@ var I18N = {
   en:{
     langSub:"Select your language",
     apikeySub:"Enter your OpenRouter API key to start.",
-    apikeyWarn:"<strong>Security Notice:</strong> This key is stored locally in your browser. For production, route requests through a proxy (e.g., Firebase Functions) to avoid exposing keys in network tabs.",
+    apikeyWarn:"<<strong>Security Notice:</strong> This key is stored locally in your browser. For production, route requests through a proxy (e.g., Firebase Functions) to avoid exposing keys in network tabs.",
     fbSetupSub:"Connect Firebase for cloud sync, backup, and media storage.",
     authSub:"Sign in to sync your memories across devices.",
     authToggle:"No account? <span>Sign up</span>",
@@ -696,7 +691,7 @@ var I18N = {
   es:{
     langSub:"Selecciona tu idioma",
     apikeySub:"Introduce tu clave de API de OpenRouter para comenzar.",
-    apikeyWarn:"<strong>Aviso de seguridad:</strong> Esta clave se almacena localmente en tu navegador. Para producción, enruta las solicitudes a través de un proxy (por ejemplo, Firebase Functions) para evitar exponer las claves.",
+    apikeyWarn:"<<strong>Aviso de seguridad:</strong> Esta clave se almacena localmente en tu navegador. Para producción, enruta las solicitudes a través de un proxy (por ejemplo, Firebase Functions) para evitar exponer las claves.",
     fbSetupSub:"Conecta Firebase para sincronización en la nube, respaldo y almacenamiento de medios.",
     authSub:"Inicia sesión para sincronizar tus recuerdos entre dispositivos.",
     authToggle:"¿No tienes cuenta? <span>Regístrate</span>",
@@ -723,7 +718,7 @@ var I18N = {
   ja:{
     langSub:"言語を選択してください",
     apikeySub:"OpenRouter APIキーを入力して開始してください。",
-    apikeyWarn:"<strong>セキュリティ通知:</strong> このキーはブラウザのローカルストレージに保存されます。本番環境では、ネットワークタブでの露出を避けるため、Firebase Functionsなどのプロキシを経由してください。",
+    apikeyWarn:"<<strong>セキュリティ通知:</strong> このキーはブラウザのローカルストレージに保存されます。本番環境では、ネットワークタブでの露出を避けるため、Firebase Functionsなどのプロキシを経由してください。",
     fbSetupSub:"クラウド同期、バックアップ、メディアストレージのためFirebaseを接続します。",
     authSub:"デバイス間で思い出を同期するためにサインインしてください。",
     authToggle:"アカウントをお持ちでないですか？ <span>登録</span>",
@@ -750,7 +745,7 @@ var I18N = {
   ko:{
     langSub:"언어를 선택하세요",
     apikeySub:"OpenRouter API 키를 입력하면 바로 시작할 수 있어요.",
-    apikeyWarn:"<strong>보안 안내:</strong> 이 키는 브라우저 로컬 스토리지에 저장됩니다. 실제 배포 시에는 네트워크 탭 노출을 방지하기 위해 Firebase Functions 등 프록시 서버를 거치는 것을 권장합니다.",
+    apikeyWarn:"<<strong>보안 안내:</strong> 이 키는 브라우저 로컬 스토리지에 저장됩니다. 실제 배포 시에는 네트워크 탭 노출을 방지하기 위해 Firebase Functions 등 프록시 서버를 거치는 것을 권장합니다.",
     fbSetupSub:"클라우드 동기화, 백업, 미디어 저장을 위해 Firebase를 연결하세요.",
     authSub:"기기 간 추억을 동기화하려면 로그인하세요.",
     authToggle:"계정이 없어요? <span>가입하기</span>",
@@ -777,7 +772,7 @@ var I18N = {
   de:{
     langSub:"Wähle deine Sprache",
     apikeySub:"Gib deinen OpenRouter API-Schlüssel ein, um zu starten.",
-    apikeyWarn:"<strong>Sicherheitshinweis:</strong> Dieser Schlüssel wird lokal im Browser gespeichert. Für Produktionsumgebungen leite Anfragen über einen Proxy (z. B. Firebase Functions), um Schlüssel im Netzwerk-Tab zu verbergen.",
+    apikeyWarn:"<<strong>Sicherheitshinweis:</strong> Dieser Schlüssel wird lokal im Browser gespeichert. Für Produktionsumgebungen leite Anfragen über einen Proxy (z. B. Firebase Functions), um Schlüssel im Netzwerk-Tab zu verbergen.",
     fbSetupSub:"Verbinde Firebase für Cloud-Sync, Backup und Medienspeicher.",
     authSub:"Melde dich an, um Erinnerungen geräteübergreifend zu synchronisieren.",
     authToggle:"Kein Konto? <span>Registrieren</span>",
@@ -824,18 +819,14 @@ function setLang(lang){
   document.getElementById("notifLabel").textContent = t.notifLabel;
   document.getElementById("syncInd").textContent = t.syncInd;
   document.getElementById("diaryText").placeholder = t.diaryPlaceholder;
-  document.getElementById("paintZone").innerHTML = t.paintZone+'<br><span style="font-size:10px;color:var(--text-tertiary)">Bulk upload with resume</span>';
+  document.getElementById("paintZone").innerHTML = t.paintZone+'<<br><span style="font-size:10px;color:var(--text-tertiary)">Bulk upload with resume</span>';
   document.getElementById("memorySearchInput").placeholder = t.searchPlaceholder;
-  // anniTitle updated dynamically in renderAnniversary()
   document.getElementById("anniSub").textContent = t.anniversarySub;
-  
-  // updateHeader() deferred to initApp() — avoids PRESETS/MODELS undefined error during onboarding
 
   document.querySelectorAll(".lang-btn").forEach(function(b){
     b.classList.toggle("active", b.getAttribute("onclick").includes("'"+lang+"'"));
   });
 
-  /* === AUTO-ADVANCE === */
   if(!document.getElementById("langScreen").classList.contains("hidden")){
     showScreen("apikeyScreen");
   }
@@ -900,7 +891,7 @@ if(window.Capacitor && window.Capacitor.Plugins){
   try{ Cap.Keyboard.setResizeMode({mode:'body'}); }catch(e){}
 }
 
-if('serviceWorker' in navigator){navigator.serviceWorker.getRegistrations().then(function(regs){for(var i=0;i<regs.length;i++){if(regs[i].active&&regs[i].active.scriptURL&&regs[i].active.scriptURL.indexOf('firebase-messaging-sw.js')===-1){regs[i].unregister()}}})}
+if('serviceWorker' in navigator){navigator.serviceWorker.getRegistrations().then(function(regs){for(var i=0;i<<regs.length;i++){if(regs[i].active&&regs[i].active.scriptURL&&regs[i].active.scriptURL.indexOf('firebase-messaging-sw.js')===-1){regs[i].unregister()}}})}
 var VAPID_KEY="BBIUA4HAkibFF2uU84nT8Gm-XrHJVcn7F9i0YU2X7Jj0ABd4E7jxnyWcWh99gteXG1R2HSaGjN5P-GB0b33cJO8";
 
 /* === GLOBAL STATE === */
@@ -929,11 +920,8 @@ function initFB(cfg){
     auth = firebase.auth();
     fstore = firebase.firestore();
     
-    try {
-      fstore.enablePersistence({synchronizeTabs:true}).catch(function(err){
-        console.warn("[JARVIS] Persistence error:", err.code);
-      });
-    } catch(e) { console.warn("[JARVIS] enablePersistence not supported", e); }
+    // Removed deprecated enablePersistence call to avoid warnings
+    // Firestore 10.12.2 handles persistence automatically via cache settings
     
     try {
       auth.setPersistence(firebase.auth.Auth.Persistence.LOCAL).catch(function(e){
@@ -1038,7 +1026,7 @@ function toggleAuthMode(){
   authMode=authMode==="signin"?"signup":"signin";
   document.querySelector("#authScreen .s-btn").textContent=authMode==="signin"?"SIGN IN":"SIGN UP";
   var t = I18N[currentLang];
-  document.querySelector("#authScreen .s-toggle").innerHTML=authMode==="signin"?t.authToggle.replace("Sign up","<span>Sign up</span>"):'Have account? <span>Sign in</span>';
+  document.querySelector("#authScreen .s-toggle").innerHTML=authMode==="signin"?t.authToggle.replace("Sign up","<<span>Sign up</span>"):'Have account? <span>Sign in</span>';
   document.getElementById("authError").textContent="";
 }
 
@@ -1049,7 +1037,7 @@ function doAuth(){
   err.textContent="";
   err.style.color = "#FF5F5F";
   if(!e||!p){err.textContent="Enter email and password.";return}
-  if(p.length<6){err.textContent="6+ characters.";return}
+  if(p.length<<6){err.textContent="6+ characters.";return}
   var promise;
   if(authMode==="signup")promise=auth.createUserWithEmailAndPassword(e,p);
   else promise=auth.signInWithEmailAndPassword(e,p);
@@ -1123,9 +1111,8 @@ idbOpen().then(function(){
       document.getElementById("notifLabel").textContent = t.notifLabel;
       document.getElementById("syncInd").textContent = t.syncInd;
       document.getElementById("diaryText").placeholder = t.diaryPlaceholder;
-      document.getElementById("paintZone").innerHTML = t.paintZone+'<br><span style="font-size:10px;color:var(--text-tertiary)">Bulk upload with resume</span>';
+      document.getElementById("paintZone").innerHTML = t.paintZone+'<<br><span style="font-size:10px;color:var(--text-tertiary)">Bulk upload with resume</span>';
       document.getElementById("memorySearchInput").placeholder = t.searchPlaceholder;
-      // anniTitle updated dynamically in renderAnniversary()
       document.getElementById("anniSub").textContent = t.anniversarySub;
     }
     
@@ -1133,7 +1120,6 @@ idbOpen().then(function(){
       if(saved && saved.uid && !currentUser && loadFbCfg()){
         orKey = saved.orKey || "";
         R2_WORKER = saved.r2Url || "";
-        // Let onAuth handle screen navigation when auth state resolves
       }
     });
     
@@ -1162,7 +1148,7 @@ window.addEventListener('load', function(){
 
 function saveORKey(){
   var k=document.getElementById("orKeyInput").value.trim();
-  if(k.length<10) return;
+  if(k.length<<10) return;
   orKey=k;
   localStorage.setItem(LS_OR, orKey);
   if(currentUser) localStorage.setItem("ork_"+currentUser.uid, orKey);
@@ -1237,7 +1223,7 @@ function renderMediaUploadZone(){
   if(hasR2()){
     zone.innerHTML='<div class="paint-upload-zone" onclick="document.getElementById(\'mediaInput\').click()">Drop music or video files<br><span style="font-size:10px;color:var(--text-tertiary)">MP3, WAV, MP4, WebM</span></div>';
   }else{
-    zone.innerHTML='<div class="paint-upload-zone" style="border-color:rgba(255,95,95,0.15);color:var(--text-tertiary);cursor:default">'+t.mediaDisabled+'<br><span style="font-size:10px;color:var(--text-tertiary)">'+t.mediaDisabledHint+'</span></div>';
+    zone.innerHTML='<div class="paint-upload-zone" style="border-color:rgba(255,95,95,0.15);color:var(--text-tertiary);cursor:default">'+t.mediaDisabled+'<<br><span style="font-size:10px;color:var(--text-tertiary)">'+t.mediaDisabledHint+'</span></div>';
   }
 }
 
@@ -1389,11 +1375,34 @@ function uCol(c){
   return fstore.collection("users").doc(currentUser.uid).collection(c);
 }
 
+/* === UNIFIED saveLocalCache (removed duplicate definition bug) === */
 function saveLocalCache(name, data){
-  if(!isStarterMode) return Promise.resolve();
-  return idbPut("local_memory", name, data).catch(function(err){
-    console.error("[JARVIS] IDB save failed for", name, err);
-    throw err;
+  if(isStarterMode){
+    return idbPut("local_memory", name, data).catch(function(err){
+      console.error("[JARVIS] IDB save failed for", name, err);
+    });
+  }
+  return Promise.resolve();
+}
+
+/* === SAFE FIRESTORE WRITE with exponential backoff === */
+function safeFirestoreAdd(collectionRef, data, maxRetries){
+  maxRetries = maxRetries || 5;
+  return new Promise(function(resolve, reject){
+    function attempt(retryCount){
+      collectionRef.add(data).then(function(ref){
+        resolve(ref);
+      }).catch(function(err){
+        if((err.code === 'resource-exhausted' || err.code === 'unavailable' || err.message && err.message.indexOf('maximum allowed queued writes')>-1) && retryCount < maxRetries){
+          var delay = Math.min(Math.pow(2, retryCount) * 800 + Math.random() * 1000, 10000);
+          console.warn("[JARVIS] Firestore write throttled, retrying in "+delay+"ms (attempt "+(retryCount+1)+"/"+maxRetries+")");
+          setTimeout(function(){ attempt(retryCount + 1); }, delay);
+        } else {
+          reject(err);
+        }
+      });
+    }
+    attempt(0);
   });
 }
 
@@ -1401,7 +1410,7 @@ function uid(){return Date.now().toString(36)+Math.random().toString(36).substr(
 function esc(s){var d=document.createElement("div");d.textContent=s;return d.innerHTML}
 function fmtMsg(s){
   var t=esc(s);
-  t=t.replace(/\*\*(.+?)\*\*/g,'<strong style="font-weight:700;color:var(--text-primary)">$1</strong>');
+  t=t.replace(/\*\*(.+?)\*\*/g,'<<strong style="font-weight:700;color:var(--text-primary)">$1</strong>');
   return t;
 }
 function scrollBot(){if($msg)$msg.scrollTop=$msg.scrollHeight}
@@ -1413,8 +1422,76 @@ function fileCatByName(n){var e=n.split(".").pop().toLowerCase();if(["jpg","jpeg
 function fileExt(n){var p=n.split(".");return p.length>1?p.pop().toLowerCase():"file"}
 function fileToB64(f){return new Promise(function(r,j){var x=new FileReader();x.onload=function(){r(x.result.split(",")[1])};x.onerror=function(){j()};x.readAsDataURL(f)})}
 function fileFP(f){return f.name+"__"+f.size+"__"+f.lastModified}
-function resizeImg(file,max){max=max||1024;return new Promise(function(r){var i=new Image();i.onload=function(){var w=i.width,h=i.height;if(w>max||h>max){var ra=Math.min(max/w,max/h);w=Math.round(w*ra);h=Math.round(h*ra)}var c=document.createElement("canvas");c.width=w;c.height=h;c.getContext("2d").drawImage(i,0,0,w,h);r(c.toDataURL("image/jpeg",0.8).split(",")[1]);URL.revokeObjectURL(i.src)};i.src=URL.createObjectURL(file)})}
-function makeThumb(file,sz){sz=sz||200;return new Promise(function(r){var i=new Image();i.onload=function(){var w=i.width,h=i.height;var ra=Math.min(sz/w,sz/h);var nw=Math.round(w*ra),nh=Math.round(h*ra);var c=document.createElement("canvas");c.width=nw;c.height=nh;c.getContext("2d").drawImage(i,0,0,nw,nh);r(c.toDataURL("image/jpeg",0.65));URL.revokeObjectURL(i.src)};i.src=URL.createObjectURL(file)})}
+
+/* === HEIC-AWARE IMAGE PROCESSING with timeout === */
+function isHeic(name){
+  var ext = name.split(".").pop().toLowerCase();
+  return ext === "heic" || ext === "heif";
+}
+
+function resizeImg(file,max){
+  max=max||1024;
+  return new Promise(function(resolve, reject){
+    var timeout = setTimeout(function(){
+      reject(new Error("Image processing timeout. HEIC/HEIF files are not supported by browser canvas. Please convert to JPEG first."));
+    }, 12000);
+    var i=new Image();
+    i.onload=function(){
+      clearTimeout(timeout);
+      var w=i.width,h=i.height;
+      if(w===0||h===0){reject(new Error("Empty image"));return;}
+      if(w>max||h>max){var ra=Math.min(max/w,max/h);w=Math.round(w*ra);h=Math.round(h*ra)}
+      var c=document.createElement("canvas");
+      c.width=w;c.height=h;
+      c.getContext("2d").drawImage(i,0,0,w,h);
+      try {
+        var dataUrl = c.toDataURL("image/jpeg",0.8);
+        resolve(dataUrl.split(",")[1]);
+      } catch(e) {
+        reject(new Error("Canvas export failed: " + e.message));
+      }
+      URL.revokeObjectURL(i.src);
+    };
+    i.onerror = function(){
+      clearTimeout(timeout);
+      reject(new Error("Failed to load image. File may be HEIC/HEIF which browser canvas cannot decode."));
+    };
+    i.src=URL.createObjectURL(file);
+  });
+}
+
+function makeThumb(file,sz){
+  sz=sz||200;
+  return new Promise(function(resolve, reject){
+    var timeout = setTimeout(function(){
+      reject(new Error("Thumbnail timeout"));
+    }, 12000);
+    var i=new Image();
+    i.onload=function(){
+      clearTimeout(timeout);
+      var w=i.width,h=i.height;
+      if(w===0||h===0){reject(new Error("Empty image"));return;}
+      var ra=Math.min(sz/w,sz/h);
+      var nw=Math.round(w*ra),nh=Math.round(h*ra);
+      var c=document.createElement("canvas");
+      c.width=nw;c.height=nh;
+      c.getContext("2d").drawImage(i,0,0,nw,nh);
+      try {
+        var dataUrl = c.toDataURL("image/jpeg",0.65);
+        resolve(dataUrl);
+      } catch(e) {
+        reject(new Error("Canvas export failed: " + e.message));
+      }
+      URL.revokeObjectURL(i.src);
+    };
+    i.onerror = function(){
+      clearTimeout(timeout);
+      reject(new Error("Failed to load image for thumbnail"));
+    };
+    i.src=URL.createObjectURL(file);
+  });
+}
+
 function fmtDate(ts){if(!ts)return"";var d=new Date(ts);return d.getFullYear()+"."+String(d.getMonth()+1).padStart(2,"0")+"."+String(d.getDate()).padStart(2,"0")+" "+String(d.getHours()).padStart(2,"0")+":"+String(d.getMinutes()).padStart(2,"0")}
 
 function computeDecay(mem){
@@ -1430,7 +1507,7 @@ function computeDecay(mem){
 function findSimilarSemantic(content){
   var c = content.toLowerCase().trim();
   var words = c.split(/\s+/).filter(function(w){return w.length>1;});
-  for(var i=0;i<memCache.semantic.length;i++){
+  for(var i=0;i<<memCache.semantic.length;i++){
     var s = memCache.semantic[i];
     if(s.content.toLowerCase().trim() === c) return s;
     var match = 0;
@@ -1463,7 +1540,7 @@ function initApp(){
   document.addEventListener("paste",function(e){
     var files=[];
     var items=e.clipboardData?e.clipboardData.items:null;
-    if(items)for(var i=0;i<items.length;i++)if(items[i].kind==="file"){var f=items[i].getAsFile();if(f)files.push(f)}
+    if(items)for(var i=0;i<<items.length;i++)if(items[i].kind==="file"){var f=items[i].getAsFile();if(f)files.push(f)}
     if(files.length)handleFiles(files);
   });
   var pz=document.getElementById("paintZone");
@@ -1541,10 +1618,6 @@ function loadAllCaches(){
   });
 }
 
-function saveLocalCache(name, data){
-  if(isStarterMode) idbPut("local_memory", name, data);
-}
-
 function startNewSession(){currentSessionId=uid();chatHistory=[]}
 
 function saveChatSession(){
@@ -1554,7 +1627,7 @@ function saveChatSession(){
     return{role:m.role,content:c.substring(0,500)};
   });
   var firstU=null;
-  for(var i=0;i<msgs.length;i++){if(msgs[i].role==="user"){firstU=msgs[i];break}}
+  for(var i=0;i<<msgs.length;i++){if(msgs[i].role==="user"){firstU=msgs[i];break}}
   var data={
     sessionId:currentSessionId,
     preview:(firstU?firstU.content:"New chat").substring(0,100),
@@ -1565,7 +1638,7 @@ function saveChatSession(){
   };
   if(isStarterMode){
     var existing=null;
-    for(var j=0;j<chatSessionsCache.length;j++){if(chatSessionsCache[j].sessionId===currentSessionId){existing=chatSessionsCache[j];break}}
+    for(var j=0;j<<chatSessionsCache.length;j++){if(chatSessionsCache[j].sessionId===currentSessionId){existing=chatSessionsCache[j];break}}
     if(existing){Object.assign(existing,data);}else{chatSessionsCache.unshift(Object.assign({id:uid()},data));}
     saveLocalCache("chats", chatSessionsCache).catch(function(e){});
     if(!document.getElementById("anniversaryOverlay").classList.contains("hidden")){renderAnniversary();}
@@ -1577,13 +1650,13 @@ function saveChatSession(){
     return;
   }
   var existing=null;
-  for(var j=0;j<chatSessionsCache.length;j++){if(chatSessionsCache[j].sessionId===currentSessionId){existing=chatSessionsCache[j];break}}
+  for(var j=0;j<<chatSessionsCache.length;j++){if(chatSessionsCache[j].sessionId===currentSessionId){existing=chatSessionsCache[j];break}}
   if(existing){
     col.doc(existing.id).set(data).catch(function(err){console.error("[JARVIS] Chat save error:",err);});
     Object.assign(existing,data);
     if(!document.getElementById("anniversaryOverlay").classList.contains("hidden")){renderAnniversary();}
   }else{
-    col.add(data).then(function(ref){
+    safeFirestoreAdd(col, data).then(function(ref){
       chatSessionsCache.unshift(Object.assign({id:ref.id},data));
       if(!document.getElementById("anniversaryOverlay").classList.contains("hidden")){renderAnniversary();}
     }).catch(function(err){console.error("[JARVIS] Chat add error:",err);});
@@ -1592,7 +1665,7 @@ function saveChatSession(){
 
 function loadChatSession(sid){
   var s=null;
-  for(var i=0;i<chatSessionsCache.length;i++){if(chatSessionsCache[i].sessionId===sid){s=chatSessionsCache[i];break}}
+  for(var i=0;i<<chatSessionsCache.length;i++){if(chatSessionsCache[i].sessionId===sid){s=chatSessionsCache[i];break}}
   if(!s)return;
   currentSessionId=s.sessionId;
   chatHistory=s.messages.map(function(m){return{role:m.role,content:m.content}});
@@ -1629,7 +1702,7 @@ function renderChats(){
     d.onclick=function(){loadChatSession(c.sessionId)};
     var src=c.source||"web";
     var srcLabel=src==="openclaw"?"OC":src==="voice"?"VC":"WEB";
-    d.innerHTML='<div class="chat-item-header"><div class="diary-date">'+fmtDate(c.ts)+" · "+srcLabel+" · "+(c.messageCount||0)+' msgs</div><button class="chat-item-del" onclick="event.stopPropagation();delChat(\''+c.id+"')\">&#10005;</button></div>"+'<div class="chat-item-preview">'+esc(c.preview||"")+"</div>";
+    d.innerHTML='<div class="chat-item-header"><div class="diary-date">'+fmtDate(c.ts)+" · "+srcLabel+" · "+(c.messageCount||0)+' msgs</div><button class="chat-item-del" onclick="event.stopPropagation();delChat(\''+c.id+"')\">&#10005;</button></div>"+'<<div class="chat-item-preview">'+esc(c.preview||"")+"</div>";
     list.appendChild(d);
   });
 }
@@ -1720,7 +1793,7 @@ function openLB(url,t){
   var lb=document.createElement("div");
   lb.className="lightbox";
   lb.onclick=function(){lb.remove()};
-  lb.innerHTML=(t==="image"?'<img src="'+url+'">':'<video src="'+url+'" controls autoplay style="max-width:92vw;max-height:88vh;border-radius:var(--radius-md)"></video>')+'<button class="lightbox-close" onclick="event.stopPropagation();this.parentElement.remove()">&#10005;</button>';
+  lb.innerHTML=(t==="image"?'<img src="'+url+'">':'<<video src="'+url+'" controls autoplay style="max-width:92vw;max-height:88vh;border-radius:var(--radius-md)"></video>')+'<<button class="lightbox-close" onclick="event.stopPropagation();this.parentElement.remove()">&#10005;</button>';
   document.body.appendChild(lb);
 }
 
@@ -1744,7 +1817,7 @@ function addDiary(){
     renderDiary();
     return;
   }
-  col.add(entry).then(function(ref){
+  safeFirestoreAdd(col, entry).then(function(ref){
     diaryCache.unshift(Object.assign({id:ref.id},entry));
     document.getElementById("diaryText").value="";
     renderDiary();
@@ -1775,7 +1848,7 @@ function renderDiary(){
   list.innerHTML="";
   diaryCache.forEach(function(e){
     var d=document.createElement("div");d.className="diary-entry";
-    d.innerHTML='<div class="diary-header"><div class="diary-date">'+esc(e.date)+'</div><button class="diary-del" onclick="delDiary(\''+e.id+"')\">&#10005;</button></div>"+'<div class="diary-preview">'+esc(e.text)+"</div>";
+    d.innerHTML='<div class="diary-header"><div class="diary-date">'+esc(e.date)+'</div><button class="diary-del" onclick="delDiary(\''+e.id+"')\">&#10005;</button></div>"+'<<div class="diary-preview">'+esc(e.text)+"</div>";
     list.appendChild(d);
   });
 }
@@ -1791,8 +1864,8 @@ function advancedDiarySearch(query){
   });
   var graphConcepts = [];
   memCache.relations.forEach(function(r){
-    if(relatedConcepts.indexOf(r.source.toLowerCase())>=0 && graphConcepts.indexOf(r.target.toLowerCase())<0) graphConcepts.push(r.target.toLowerCase());
-    if(relatedConcepts.indexOf(r.target.toLowerCase())>=0 && graphConcepts.indexOf(r.source.toLowerCase())<0) graphConcepts.push(r.source.toLowerCase());
+    if(relatedConcepts.indexOf(r.source.toLowerCase())>=0 && graphConcepts.indexOf(r.target.toLowerCase())<<0) graphConcepts.push(r.target.toLowerCase());
+    if(relatedConcepts.indexOf(r.target.toLowerCase())>=0 && graphConcepts.indexOf(r.source.toLowerCase())<<0) graphConcepts.push(r.source.toLowerCase());
   });
   var allConcepts = relatedConcepts.concat(graphConcepts);
   var scored = diaryCache.map(function(d){
@@ -1844,12 +1917,28 @@ function handlePaintUpload(fl){
     document.getElementById("paintInput").value="";
     return;
   }
+  
+  // HEIC pre-check
+  var heicFiles = nf.filter(function(f){return isHeic(f.name);});
+  if(heicFiles.length){
+    alert("HEIC/HEIF files detected ("+heicFiles.map(function(f){return f.name;}).join(", ")+"). Browser canvas cannot process these. Please convert to JPEG in Photos app before uploading.");
+    nf = nf.filter(function(f){return !isHeic(f.name);});
+    total = nf.length;
+    if(!total){
+      area.innerHTML='<div class="upload-panel"><div class="upload-title"><span class="upload-skipped">HEIC skipped — convert to JPEG</span></div></div>';
+      setTimeout(function(){area.innerHTML="";},3000);
+      document.getElementById("paintInput").value="";
+      return;
+    }
+  }
+  
   var up=0,bn=0,tb=Math.ceil(total/BATCH),failed=0;
   function rp(cf){
     var pct=Math.round((up/total)*100);
     area.innerHTML='<div class="upload-panel"><div class="upload-header"><div class="upload-title">Uploading</div><button class="upload-cancel" onclick="uploadCancelled=true">Cancel</button></div><div class="upload-stats">'+up+"/"+total+" · Batch "+bn+"/"+tb+(failed?' · <span style="color:var(--danger)">'+failed+" failed</span>":"")+'</div><div class="upload-bar"><div class="upload-bar-fill" style="width:'+pct+'%"></div></div><div class="upload-detail">'+(cf?esc(cf):"...")+(skipped?' <span class="upload-skipped">('+skipped+" skipped)</span>":"")+"</div></div>";
   }
   rp("");
+  
   function processBatch(b){
     if(b>=total||uploadCancelled){
       area.innerHTML='<div class="upload-panel"><div class="upload-title"><span class="'+(uploadCancelled?"upload-skipped":"upload-done")+'">'+(uploadCancelled?"Cancelled - "+up+"/"+total:"Done - "+up+" uploaded"+(failed?" · "+failed+" failed":""))+"</span></div></div>";
@@ -1861,16 +1950,20 @@ function handlePaintUpload(fl){
     }
     bn++;
     var batch=nf.slice(b,b+BATCH);
+    
     function processFile(fi){
       if(fi>=batch.length||uploadCancelled){
         renderPaintings();
-        processBatch(b+BATCH);
+        // Delay between batches to avoid Firestore rate limit
+        setTimeout(function(){ processBatch(b+BATCH); }, 600);
         return;
       }
       var f=batch[fi];
       rp(f.name);
+      
       Promise.all([makeThumb(f,200),resizeImg(f,1024)]).then(function(res){
         var entry={title:f.name.replace(/\.[^.]+$/,""),description:"",tags:[],date:new Date().toISOString().split("T")[0],thumb:res[0],full:res[1],mime:"image/jpeg",ts:Date.now(),fingerprint:fileFP(f)};
+        
         if(isStarterMode){
           paintCache.unshift(Object.assign({id:uid()},entry));
           return saveLocalCache("paintings", paintCache).then(function(){
@@ -1884,17 +1977,18 @@ function handlePaintUpload(fl){
             up++;
           });
         }
-        return col.add(entry).then(function(ref){
+        return safeFirestoreAdd(col, entry).then(function(ref){
           paintCache.unshift(Object.assign({id:ref.id},entry));
           up++;
         });
       }).catch(function(err){
         failed++;
         console.error("[JARVIS] Image processing error:", err);
-        showInAppNotif("Save failed", "Could not process image: "+(err.message||err));
+        showInAppNotif("Save failed", (err.message||"Could not process image"));
       }).then(function(){
         rp("");
-        processFile(fi+1);
+        // Delay between individual files to respect Firestore write limit
+        setTimeout(function(){ processFile(fi+1); }, 400);
       });
     }
     processFile(0);
@@ -1916,7 +2010,7 @@ function renderPaintings(){
   var grid=document.getElementById("paintGrid");
   grid.innerHTML="";
   var end=Math.min((paintPage+1)*PPP,list.length);
-  for(var i=0;i<end;i++){(function(p){
+  for(var i=0;i<<end;i++){(function(p){
     var c=document.createElement("div");
     c.className="paint-card";
     c.onclick=function(){openPD(p.id)};
@@ -1924,7 +2018,7 @@ function renderPaintings(){
     grid.appendChild(c);
   })(list[i])}
   var btn=document.getElementById("paintMore");
-  if(end<list.length){btn.classList.remove("hidden");btn.textContent="Load more ("+(list.length-end)+")"}else btn.classList.add("hidden");
+  if(end<<list.length){btn.classList.remove("hidden");btn.textContent="Load more ("+(list.length-end)+")"}else btn.classList.add("hidden");
 }
 
 function delPaint(id){
@@ -2013,12 +2107,14 @@ function handleMediaUpload(fl){
         var entry={title:f.name.replace(/\.[^.]+$/,""),fileName:f.name,type:f.type.startsWith("audio/")?"music":"video",mimeType:f.type,size:f.size,tags:[],description:"",date:new Date().toISOString().split("T")[0],ts:Date.now(),fingerprint:fileFP(f),r2Key:r2Key,storageUrl:data.downloadUrl};
         var col = uCol("media");
         if(!col) throw new Error("Firestore not ready");
-        return col.add(entry).then(function(ref){mediaCache.unshift(Object.assign({id:ref.id},entry));up++});
+        return safeFirestoreAdd(col, entry).then(function(ref){mediaCache.unshift(Object.assign({id:ref.id},entry));up++});
       });
     }).catch(function(e){
       console.error("[JARVIS] R2 upload error:",e);
       showInAppNotif("Save failed", e.message||"R2 upload failed");
-    }).then(next);
+    }).then(function(){
+      setTimeout(next, 300);
+    });
   }
   next();
 }
@@ -2032,7 +2128,7 @@ function delMedia(id){
     return;
   }
   var m=null;
-  for(var i=0;i<mediaCache.length;i++){if(mediaCache[i].id===id){m=mediaCache[i];break}}
+  for(var i=0;i<<mediaCache.length;i++){if(mediaCache[i].id===id){m=mediaCache[i];break}}
   if(m&&m.r2Key){fetch(R2_WORKER+"/delete",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({key:m.r2Key})}).catch(function(){})}
   var col = uCol("media");
   if(col) col.doc(id).delete().catch(function(err){console.error("[JARVIS] delMedia error:",err);});
@@ -2062,7 +2158,7 @@ function renderMedia(){
     var hasUrl=!!m.storageUrl;
     var d=document.createElement("div");
     d.className="media-item";
-    d.innerHTML='<div class="media-icon"'+(hasUrl?"":" style=\"opacity:.4\"")+'>'+icon+'</div><div class="media-info"><div class="media-name">'+esc(m.title)+(hasUrl?'<span style="color:var(--success);font-size:10px;margin-left:8px">\u266B</span>':'')+'</div><div class="media-meta">'+m.type+" · "+size+(hasUrl?"":" · no audio")+'</div></div>'+(hasUrl||!hasR2()?'':'<button class="icon-btn" style="width:32px;height:32px;font-size:13px;color:var(--accent);border-color:rgba(92,157,255,0.2)" onclick="event.stopPropagation();reuploadMedia(\''+m.id+"')\">\u2191</button>")+'<button class="media-del" onclick="delMedia(\''+m.id+"')\">&#10005;</button>";
+    d.innerHTML='<div class="media-icon"'+(hasUrl?"":" style=\"opacity:.4\"")+'>'+icon+'</div><div class="media-info"><div class="media-name">'+esc(m.title)+(hasUrl?'<span style="color:var(--success);font-size:10px;margin-left:8px">\u266B</span>':'')+'</div><div class="media-meta">'+m.type+" · "+size+(hasUrl?"":" · no audio")+'</div></div>'+(hasUrl||!hasR2()?'':'<<button class="icon-btn" style="width:32px;height:32px;font-size:13px;color:var(--accent);border-color:rgba(92,157,255,0.2)" onclick="event.stopPropagation();reuploadMedia(\''+m.id+"')\">\u2191</button>")+'<<button class="media-del" onclick="delMedia(\''+m.id+"')\">&#10005;</button>";
     list.appendChild(d);
   });
 }
@@ -2070,7 +2166,7 @@ function renderMedia(){
 function reuploadMedia(id){
   if(!hasR2()){alert("R2 Worker not configured.");return}
   var m=null;
-  for(var i=0;i<mediaCache.length;i++){if(mediaCache[i].id===id){m=mediaCache[i];break}}
+  for(var i=0;i<<mediaCache.length;i++){if(mediaCache[i].id===id){m=mediaCache[i];break}}
   if(!m)return;
   var inp=document.createElement("input");
   inp.type="file";
@@ -2177,7 +2273,6 @@ function extractMemoriesAsync(recentMessages){
     try{
       var raw = data.choices[0].message.content;
       var c = raw.replace(/```json\n?|\n?```/g,"").trim();
-      // Fallback: find first { to last }
       var startIdx = c.indexOf('{');
       var endIdx = c.lastIndexOf('}');
       if(startIdx!==-1 && endIdx!==-1 && endIdx>startIdx) c = c.substring(startIdx,endIdx+1);
@@ -2203,7 +2298,7 @@ function storeExtractedMemories(data){
       var doc={type:s.type||"general",content:s.content,confidence:s.confidence||0.5,firstSeen:Date.now(),lastSeen:Date.now(),frequency:1,importance:s.importance||5};
       var col = uCol("memory_semantic");
       if(col){
-        col.add(doc).then(function(ref){memCache.semantic.unshift(Object.assign({id:ref.id},doc));}).catch(function(e){});
+        safeFirestoreAdd(col, doc).then(function(ref){memCache.semantic.unshift(Object.assign({id:ref.id},doc));}).catch(function(e){});
       } else {
         var id=uid();
         memCache.semantic.unshift(Object.assign({id:id},doc));
@@ -2215,7 +2310,7 @@ function storeExtractedMemories(data){
     var doc={date:e.date||new Date().toISOString().split("T")[0],summary:e.summary,importance:e.importance||5,topics:e.topics||[],ts:Date.now()};
     var col = uCol("memory_episodic");
     if(col){
-      col.add(doc).then(function(ref){memCache.episodic.unshift(Object.assign({id:ref.id},doc));}).catch(function(e){});
+      safeFirestoreAdd(col, doc).then(function(ref){memCache.episodic.unshift(Object.assign({id:ref.id},doc));}).catch(function(e){});
     } else {
       var id=uid();
       memCache.episodic.unshift(Object.assign({id:id},doc));
@@ -2228,7 +2323,7 @@ function storeExtractedMemories(data){
       var doc={source:r.source,target:r.target,type:r.type,strength:r.strength||0.5,ts:Date.now()};
       var col = uCol("memory_relations");
       if(col){
-        col.add(doc).then(function(ref){memCache.relations.unshift(Object.assign({id:ref.id},doc));}).catch(function(e){});
+        safeFirestoreAdd(col, doc).then(function(ref){memCache.relations.unshift(Object.assign({id:ref.id},doc));}).catch(function(e){});
       } else {
         var id=uid();
         memCache.relations.unshift(Object.assign({id:id},doc));
@@ -2248,7 +2343,7 @@ function storeExtractedMemories(data){
       var doc={theme:t,frequency:1,firstSeen:Date.now(),lastSeen:Date.now()};
       var col = uCol("memory_themes");
       if(col){
-        col.add(doc).then(function(ref){memCache.themes.unshift(Object.assign({id:ref.id},doc));}).catch(function(e){});
+        safeFirestoreAdd(col, doc).then(function(ref){memCache.themes.unshift(Object.assign({id:ref.id},doc));}).catch(function(e){});
       } else {
         var id=uid();
         memCache.themes.unshift(Object.assign({id:id},doc));
@@ -2268,7 +2363,7 @@ function addLocalEpisodic(summary){
   if(isStarterMode) saveLocalCache("episodic",memCache.episodic).catch(function(e){});
   else {
     var col = uCol("memory_episodic");
-    if(col) col.add(doc).catch(function(e){});
+    if(col) safeFirestoreAdd(col, doc).catch(function(e){});
   }
   if(document.getElementById("memGraph").classList.contains("active")) renderMemoryGraph();
 }
@@ -2351,7 +2446,7 @@ function sendMessage(){
   mediaFetchPromise.then(function(){
     var userMsg=userContent.length===1&&userContent[0].type==="text"?{role:"user",content:userContent[0].text}:{role:"user",content:userContent};
     chatHistory.push(userMsg);
-    saveChatSession(); // REAL-TIME: update Anniversary immediately after user sends message
+    saveChatSession();
     var messages=[sysMsg].concat(chatHistory);
     fetch("https://openrouter.ai/api/v1/chat/completions",{
       method:"POST",
@@ -2372,9 +2467,7 @@ function sendMessage(){
       if(chatHistory.length&&chatHistory[chatHistory.length-1].role==="user")chatHistory.pop();
     }).then(function(){
       loading=false;$inp.disabled=false;$inp.focus();updateSend();
-      // REAL-TIME: update Anniversary immediately after assistant replies
       saveChatSession();
-      // REAL-TIME: add local episodic entry immediately for Graph
       var lastUser = chatHistory.filter(function(m){return m.role==="user";}).pop();
       var lastAssistant = chatHistory.filter(function(m){return m.role==="assistant";}).pop();
       if(lastUser){
@@ -2384,7 +2477,6 @@ function sendMessage(){
       if(lastAssistant){
         addLocalEpisodic("Jarvis: "+lastAssistant.content.substring(0,60));
       }
-      // Background AI memory extraction (every message, throttled by setTimeout)
       setTimeout(function(){ extractMemoriesAsync(chatHistory.slice(-6)); }, 600);
     });
   });
@@ -2577,11 +2669,8 @@ function getTopKeywords(){
   var stopwords = {ko:new Set(["내가","내","나를","나는","너무","정말","있는","없는","같은","같아","그리고","그래서","하지만","그런데","오늘","어제","내일","매일","항상","가끔","이제","지금","여기","거기","어디","뭔가","뭐","무엇","어떻게","왜","누가","누구","아무","모든","전혀","조금","많이","아주","진짜","그냥","이렇게","그렇게","있어","없어","하는","했는","할","된","된다","됐다","입니다","있습니다","합니다","그러나","그래도","또는","또","및","등","을","를","이","가","은","는","의","에","와","과","도","만","까지","부터","에게","한테","으로","로","에서","하고","보다","처럼","같이","만큼","이나","나","든지","든가","거나","마다","밖에","뿐","조차","마저","커녕"]),en:new Set(["the","a","an","is","are","was","were","be","been","being","have","has","had","do","does","did","will","would","could","should","may","might","must","shall","can","need","to","of","in","for","on","with","at","by","from","as","into","through","during","before","after","above","below","between","under","again","further","then","once","here","there","when","where","why","how","all","each","few","more","most","other","some","such","no","nor","not","only","own","same","so","than","too","very","just","and","but","if","or","because","until","while","this","that","these","those","i","me","my","we","our","you","your","he","him","his","she","her","it","its","they","them","their","what","which","who","whom","whose","am","get","got","make","made","come","came","see","saw","know","knew","take","took","think","thought","say","said","go","went","look","looked","use","used","find","found","give","gave","tell","told","work","worked","call","called","try","tried","ask","asked","need","needed","feel","felt","become","became","leave","left","put","mean","meant","keep","kept","let","begin","began","seem","seemed","help","helped","show","showed","hear","heard","play","played","run","ran","move","moved","live","lived","believe","believed","bring","brought","happen","happened","stand","stood","lose","lost","pay","paid","meet","met","include","included","continue","continued","set","learn","learned","change","changed","lead","led","understand","understood","watch","watched","follow","followed","stop","stopped","create","created","speak","spoke","read","allow","allowed","add","added","spend","spent","grow","grew","open","opened","walk","walked","win","won","offer","offered","remember","remembered","love","loved","consider","considered","appear","appeared","buy","bought","wait","waited","serve","served","die","died","send","sent","expect","expected","build","built","stay","stayed","fall","fell","cut","reach","reached","kill","killed","remain","remained","suggest","suggested","raise","raised","pass","passed","sell","sold","require","required","report","reported","decide","decided","pull","pulled","return","returned","explain","explained","carry","carried","develop","developed","hope","hoped","drive","drove","break","broke","receive","received","agree","agreed","support","supported","remove","removed","describe","described","case","like","liked","line","kind","way","thing","time","man","woman","day","year","part","world","hand","eye","place","work","week","point","government","company","number","group","problem","fact","good","new","first","last","long","great","little","old","right","big","high","different","small","large","next","early","young","important","bad","able"]),ja:new Set(["の","に","は","を","た","が","で","て","と","し","れ","さ","ある","いる","も","する","から","な","こと","として","い","や","れる","など","なっ","ない","この","ため","それ","あっ","これ","よう","また","もの","という","あり","まで","られ","なる","へ","です","ます","した","いい","よ","う","そう","だ","か","どう","なぜ","いつ","どこ","何","私","僕","俺","あなた","君","彼","彼女","私たち","あなたたち","彼ら","これ","それ","あれ","ここ","そこ","あそこ","今日","昨日","明日","毎日","いつも","時々","今","何か","何","どれ","どの","どなた","誰か","誰も","全て","全然","少し","多く","とても","あまり","本当","ちょっと","こんな","そんな","あんな","どんな","いる","ある","なる","する","できる","だ","です","ます","した","している","された","させる","せる","られる","れる","て","で","に","を","が","は","も","と","や","か","な","ね","よ","わ","ぞ","ぜ","っす","でした","ました","ない","ません","なかった","ませんでした","だろう","でしょう","かも","必ず","絶対","多分","もしかしたら","もし","たら","ば","なら","ても","でも","しか","だけ","ばかり","くらい","ぐらい","ほど","より","から","まで","のみ","さえ","すら","しかし","けれど","けど","ので","から","ため","ように","ために","のに","ながら","つつ","一方","そして","それから","それに","だから","すると","そうすると","だが","とはいえ","逆に","対して","比べて","について","に関して","に伴い","に従い","に応じ","に基づき","において","における","にとって","として","とともに","にわたり","を通じ","を通して","を経て","を除き","を除いて","を含め","を含む","をめぐる","を中心に","を皮切りに","をきっかけに","を背景に","を前提に","を踏まえ","を受け","に加え","に比べ","に次い","に続き","に続いて","に先立ち","に先立って","に際し","に際して","に当たり","に当たって"]),es:new Set(["de","la","que","el","en","y","a","los","del","se","las","por","un","para","con","no","una","su","al","lo","más","pero","sus","le","ya","o","este","sí","porque","esta","entre","cuando","muy","sin","sobre","también","me","hasta","hay","donde","quien","desde","todo","nos","durante","todos","uno","les","ni","contra","otros","ese","eso","ante","ellos","e","esto","mí","antes","algunos","qué","unos","yo","otro","otras","otra","él","tanto","esa","estos","mucho","quienes","nada","muchos","cual","poco","ella","estar","estas","algunas","algo","nosotros","mi","mis","tú","te","ti","tu","tus","ellas","nosotras","vosostros","vosostras","os","mío","mía","míos","mías","tuyo","tuya","tuyos","tuyas","suyo","suya","suyos","suyas","nuestro","nuestra","nuestros","nuestras","vuestro","vuestra","vuestros","vuestras","esos","esas","estoy","estás","está","estamos","estáis","están","esté","estés","estemos","estéis","estén","estaré","estarás","estará","estaremos","estaréis","estarán","estaría","estarías","estaríamos","estaríais","estarían","estaba","estabas","estábamos","estabais","estaban","estuve","estuviste","estuvo","estuvimos","estuvisteis","estuvieron","estuviera","estuvieras","estuviéramos","estuvierais","estuvieran","estuviese","estuvieses","estuviésemos","estuvieseis","estuviesen","estando","estado","estada","estados","estadas","estad","he","has","ha","hemos","habéis","han","haya","hayas","hayamos","hayáis","hayan","habré","habrás","habrá","habremos","habréis","habrán","habría","habrías","habríamos","habríais","habrían","había","habías","habíamos","habíais","habían","hube","hubiste","hubo","hubimos","hubisteis","hubieron","hubiera","hubieras","hubiéramos","hubierais","hubieran","hubiese","hubieses","hubiésemos","hubieseis","hubiesen","habiendo","habido","habida","habidos","habidas","soy","eres","es","somos","sois","son","sea","seas","seamos","seáis","sean","seré","serás","será","seremos","seréis","serán","sería","serías","seríamos","seríais","serían","era","eras","éramos","erais","eran","fui","fuiste","fue","fuimos","fuisteis","fueron","fuera","fueras","fuéramos","fuerais","fueran","fuese","fueses","fuésemos","fueseis","fuesen","siendo","sido","tengo","tienes","tiene","tenemos","tenéis","tienen","tenga","tengas","tengamos","tengáis","tengan","tendré","tendrás","tendrá","tendremos","tendréis","tendrán","tendría","tendrías","tendríamos","tendríais","tendrían","tenía","tenías","teníamos","teníais","tenían","tuve","tuviste","tuvo","tuvimos","tuvisteis","tuvieron","tuviera","tuvieras","tuviéramos","tuvierais","tuvieran","tuviese","tuvieses","tuviésemos","tuvieseis","tuviesen","teniendo","tenido","tenida","tenidos","tenidas","tened"]),de:new Set(["der","die","das","den","dem","des","ein","eine","einer","eines","einem","einen","ich","du","er","sie","es","wir","ihr","sie","mich","dich","ihn","uns","euch","ihnen","mir","dir","ihm","mein","dein","sein","unser","euer","ihr","meine","deine","seine","unsere","euere","ihre","meiner","deiner","seiner","unserer","euerer","ihrer","meines","deines","seines","unseres","eueres","ihres","meinem","deinem","seinem","unserem","euerem","ihrem","meinen","deinen","seinen","unseren","eueren","ihren","mit","von","zu","bei","nach","aus","für","durch","gegen","ohne","um","an","auf","in","über","unter","vor","hinter","neben","zwischen","durch","für","gegen","ohne","um","aus","bei","mit","nach","seit","von","zu","während","wegen","bis","als","wie","dass","weil","ob","obwohl","wenn","da","damit","sodass","so","dass","indem","während","als","wie","da","denn","aber","oder","und","sondern","doch","jedoch","trotzdem","deshalb","deswegen","darum","daher","folglich","also","außerdem","zudem","übrigens","zuerst","dann","danach","schließlich","endlich","nämlich","zwar","aber","sondern","entweder","oder","weder","noch","nicht","nur","erst","schon","noch","immer","oft","manchmal","selten","nie","hier","da","dort","überall","nirgends","wo","wohin","woher","was","wer","wen","wem","wessen","welcher","welche","welches","warum","wieso","weshalb","wann","wie","wie","viel","wie","viele","ja","nein","doch","bitte","danke","gern","nicht","kein","keine","keiner","keines","keinem","keinen","nichts","niemand","jeder","jede","jedes","alle","manche","einige","mehrere","viele","wenige","andere","solche","man","jemand","etwas","nichts","alle","viel","wenig","mehr","am","im","zum","zur","beim","vom","ins","aufs","hinters","übers","unters","vors","durchs","fürs","ums","ans"])};
   var sw = stopwords[currentLang] || stopwords.en;
 
-  // Priority 1: themes from memory graph
   (memCache.themes||[]).forEach(function(t){if(t.theme){var key=t.theme.toLowerCase().trim();if(!sw.has(key)&&key.length>=2) keywords[key]=(keywords[key]||0)+(t.frequency||1)*3;}});
-  // Priority 2: semantic memory nodes (short phrases treated as topics)
   (memCache.semantic||[]).forEach(function(s){if(s.content){var key=s.content.toLowerCase().trim();if(!sw.has(key)&&key.length>=2&&key.length<=20) keywords[key]=(keywords[key]||0)+2;}});
-  // Priority 3: diary nouns (filtered)
   diaryCache.forEach(function(d){
     if(!d.text) return;
     var words = d.text.toLowerCase().split(/[\s,.!?;:　、。]+/).filter(function(w){return w.length>=2&&w.length<=12&&!sw.has(w);});
@@ -2637,7 +2726,6 @@ function renderAnniversary(){
   var scrollTop = overlay ? overlay.scrollTop : 0;
   var t = I18N[currentLang];
 
-  // Calculate accurate day count
   var firstTs = Date.now();
   var firstVisit = localStorage.getItem("jarvis_first_seen");
   if(firstVisit) firstTs = parseInt(firstVisit);
@@ -2652,21 +2740,18 @@ function renderAnniversary(){
   var isCJK = currentLang === "ko" || currentLang === "ja"; document.getElementById("anniTitle").textContent = isCJK ? days + t.anniversaryTitle : days + " " + t.anniversaryTitle;
   document.getElementById("anniSub").textContent = t.anniversarySub;
 
-  // Aggregate data
   var activity = aggregateActivityData();
   var keywords = getTopKeywords();
   var sentiment = analyzeSentiment();
 
   var html = '';
 
-  // HERO CARD
   html += '<div class="anni-card anni-hero">';
   html += '<div class="anni-big">'+days+'</div>';
   html += '<div class="anni-label">'+t.anniversaryTitle+'</div>';
   html += '<div class="anni-sub2">'+fmtDate(firstTs)+' ~ '+fmtDate(Date.now())+'</div>';
   html += '</div>';
 
-  // KEY STATS ROW
   html += '<div class="anni-stats-row">';
   html += '<div class="anni-stat-box"><div class="as-num">'+activity.total+'</div><div class="as-label">Messages</div></div>';
   html += '<div class="anni-stat-box"><div class="as-num">'+diaryCache.length+'</div><div class="as-label">Diary</div></div>';
@@ -2674,36 +2759,28 @@ function renderAnniversary(){
   html += '<div class="anni-stat-box"><div class="as-num">'+memCache.relations.length+'</div><div class="as-label">Relations</div></div>';
   html += '</div>';
 
-  // GRID: Heatmap + Calendar
   html += '<div class="anni-grid">';
 
-  // ACTIVITY HEATMAP
   html += '<div class="anni-card-v2">';
   html += '<div class="card-title">Activity Heatmap</div>';
   html += '<div class="heatmap-wrap">';
   html += '<div class="heatmap-radial">';
-  // Background rings
   html += '<div class="heatmap-ring r1"></div><div class="heatmap-ring r2"></div><div class="heatmap-ring r3"></div><div class="heatmap-ring r4"></div>';
-  // Time labels at cardinal positions
-  var timeLabels = [[0,-105],[6,105],[12,-105],[18,105]]; // [hour, y offset approx]
-  // Actually place them precisely
   html += '<div class="heatmap-time-label" style="top:8px;left:50%">00</div>';
   html += '<div class="heatmap-time-label" style="top:50%;right:8px;left:auto;transform:translate(0,-50%)">06</div>';
   html += '<div class="heatmap-time-label" style="bottom:8px;top:auto;left:50%">12</div>';
   html += '<div class="heatmap-time-label" style="top:50%;left:8px;transform:translate(0,-50%)">18</div>';
-  // Center info
   var peakH = activity.hourly.indexOf(Math.max.apply(null,activity.hourly));
   html += '<div class="heatmap-center"><div class="hc-label">Peak Hour</div><div class="hc-val">'+String(peakH).padStart(2,"0")+':00</div></div>';
-  // Radial bars
   var maxH = Math.max.apply(null,activity.hourly)||1;
   var baseR = 42;
   var maxLen = 68;
-  for(var h=0;h<24;h++){
+  for(var h=0;h<<24;h++){
     var intensity = activity.hourly[h]/maxH;
     var barLen = baseR + intensity*maxLen;
     var opacity = 0.08 + intensity*0.92;
     var glow = intensity*12;
-    var rot = h*15 - 90; // -90 puts 0 at top (12 o'clock)
+    var rot = h*15 - 90;
     var gradOp = Math.max(0.15, opacity);
     var segStyle = 'transform:rotate('+rot+'deg) translateY(-'+baseR+'px) scaleY('+(barLen/baseR).toFixed(2)+');';
     segStyle += 'opacity:'+opacity+';';
@@ -2720,7 +2797,6 @@ function renderAnniversary(){
   html += '</div>';
   html += '</div>';
 
-  // CALENDAR GRID
   html += '<div class="anni-card-v2">';
   html += '<div class="card-title">30-Day Activity</div>';
   html += '<div class="cal-header"><div>S</div><div>M</div><div>T</div><div>W</div><div>T</div><div>F</div><div>S</div></div>';
@@ -2740,9 +2816,8 @@ function renderAnniversary(){
   }
   html += '</div>';
 
-  html += '</div>'; // end anni-grid
+  html += '</div>';
 
-  // TREND LINE
   html += '<div class="anni-card-v2">';
   html += '<div class="card-title">Activity Trend</div>';
   html += '<div style="font-size:11px;color:var(--text-tertiary);margin-bottom:6px">Daily interactions over the last 30 days</div>';
@@ -2758,7 +2833,6 @@ function renderAnniversary(){
     if(activity.daily[i].count===maxCount) html += '<circle class="trend-peak" cx="'+p[0]+'" cy="'+p[1]+'" r="3"/>';
     else if(activity.daily[i].count>0) html += '<circle class="trend-dot" cx="'+p[0]+'" cy="'+p[1]+'" r="2"/>';
   });
-  // X-axis date labels every 5 days
   var labelIdx = [0, 7, 14, 21, 28];
   labelIdx.forEach(function(idx){
     if(idx < activity.daily.length){
@@ -2771,7 +2845,6 @@ function renderAnniversary(){
   html += '</div>';
   html += '</div>';
 
-  // TOPIC CLOUD
   html += '<div class="anni-card-v2">';
   html += '<div class="card-title">Top Topics</div>';
   html += '<div class="topic-cloud">';
@@ -2779,7 +2852,7 @@ function renderAnniversary(){
     var maxK = keywords[0].count;
     keywords.forEach(function(k,i){
       var cls = 'topic-tag';
-      if(i<3) cls += ' popular';
+      if(i<<3) cls += ' popular';
       else if(k.count===1) cls += ' rare';
       var size = 10 + (k.count/maxK)*6;
       html += '<div class="'+cls+'" style="font-size:'+size+'px">'+esc(k.word)+'</div>';
@@ -2790,7 +2863,6 @@ function renderAnniversary(){
   html += '</div>';
   html += '</div>';
 
-  // SENTIMENT FLOW
   html += '<div class="anni-card-v2">';
   html += '<div class="card-title">Sentiment Flow (30 Days)</div>';
   html += '<div class="sentiment-bar">';
@@ -2807,7 +2879,6 @@ function renderAnniversary(){
   html += '</div>';
   html += '</div>';
 
-  // KEY MOMENTS (keep original timeline)
   if(memCache.episodic.length || memCache.semantic.length){
     html += '<div class="section-label">Key Moments</div>';
     html += '<div class="anni-card-v2">';
