@@ -509,7 +509,7 @@ input:focus,textarea:focus{outline:none}
   <div class="messages" id="messages">
     <div class="empty-state" id="emptyState">
       <div class="empty-glyph">JARVIS</div>
-      <div class="empty-text"><span id="emptyName"></span> <span id="emptyOnline">is online</span>.<<br><small id="emptyHint">Say something or attach a file.</small></div>
+      <div class="empty-text"><span id="emptyName"></span> <span id="emptyOnline">is online</span>.<br><small id="emptyHint">Say something or attach a file.</small></div>
     </div>
   </div>
   <div class="input-bar">
@@ -668,7 +668,7 @@ var I18N = {
   en:{
     langSub:"Select your language",
     apikeySub:"Enter your OpenRouter API key to start.",
-    apikeyWarn:"<<strong>Security Notice:</strong> This key is stored locally in your browser. For production, route requests through a proxy (e.g., Firebase Functions) to avoid exposing keys in network tabs.",
+    apikeyWarn:"<strong>Security Notice:</strong> This key is stored locally in your browser. For production, route requests through a proxy (e.g., Firebase Functions) to avoid exposing keys in network tabs.",
     fbSetupSub:"Connect Firebase for cloud sync, backup, and media storage.",
     authSub:"Sign in to sync your memories across devices.",
     authToggle:"No account? <span>Sign up</span>",
@@ -695,7 +695,7 @@ var I18N = {
   es:{
     langSub:"Selecciona tu idioma",
     apikeySub:"Introduce tu clave de API de OpenRouter para comenzar.",
-    apikeyWarn:"<<strong>Aviso de seguridad:</strong> Esta clave se almacena localmente en tu navegador. Para producción, enruta las solicitudes a través de un proxy (por ejemplo, Firebase Functions) para evitar exponer las claves.",
+    apikeyWarn:"<strong>Aviso de seguridad:</strong> Esta clave se almacena localmente en tu navegador. Para producción, enruta las solicitudes a través de un proxy (por ejemplo, Firebase Functions) para evitar exponer las claves.",
     fbSetupSub:"Conecta Firebase para sincronización en la nube, respaldo y almacenamiento de medios.",
     authSub:"Inicia sesión para sincronizar tus recuerdos entre dispositivos.",
     authToggle:"¿No tienes cuenta? <span>Regístrate</span>",
@@ -722,7 +722,7 @@ var I18N = {
   ja:{
     langSub:"言語を選択してください",
     apikeySub:"OpenRouter APIキーを入力して開始してください。",
-    apikeyWarn:"<<strong>セキュリティ通知:</strong> このキーはブラウザのローカルストレージに保存されます。本番環境では、ネットワークタブでの露出を避けるため、Firebase Functionsなどのプロキシを経由してください。",
+    apikeyWarn:"<strong>セキュリティ通知:</strong> このキーはブラウザのローカルストレージに保存されます。本番環境では、ネットワークタブでの露出を避けるため、Firebase Functionsなどのプロキシを経由してください。",
     fbSetupSub:"クラウド同期、バックアップ、メディアストレージのためFirebaseを接続します。",
     authSub:"デバイス間で思い出を同期するためにサインインしてください。",
     authToggle:"アカウントをお持ちでないですか？ <span>登録</span>",
@@ -749,7 +749,7 @@ var I18N = {
   ko:{
     langSub:"언어를 선택하세요",
     apikeySub:"OpenRouter API 키를 입력하면 바로 시작할 수 있어요.",
-    apikeyWarn:"<<strong>보안 안내:</strong> 이 키는 브라우저 로컬 스토리지에 저장됩니다. 실제 배포 시에는 네트워크 탭 노출을 방지하기 위해 Firebase Functions 등 프록시 서버를 거치는 것을 권장합니다.",
+    apikeyWarn:"<strong>보안 안내:</strong> 이 키는 브라우저 로컬 스토리지에 저장됩니다. 실제 배포 시에는 네트워크 탭 노출을 방지하기 위해 Firebase Functions 등 프록시 서버를 거치는 것을 권장합니다.",
     fbSetupSub:"클라우드 동기화, 백업, 미디어 저장을 위해 Firebase를 연결하세요.",
     authSub:"기기 간 추억을 동기화하려면 로그인하세요.",
     authToggle:"계정이 없어요? <span>가입하기</span>",
@@ -776,7 +776,7 @@ var I18N = {
   de:{
     langSub:"Wähle deine Sprache",
     apikeySub:"Gib deinen OpenRouter API-Schlüssel ein, um zu starten.",
-    apikeyWarn:"<<strong>Sicherheitshinweis:</strong> Dieser Schlüssel wird lokal im Browser gespeichert. Für Produktionsumgebungen leite Anfragen über einen Proxy (z. B. Firebase Functions), um Schlüssel im Netzwerk-Tab zu verbergen.",
+    apikeyWarn:"<strong>Sicherheitshinweis:</strong> Dieser Schlüssel wird lokal im Browser gespeichert. Für Produktionsumgebungen leite Anfragen über einen Proxy (z. B. Firebase Functions), um Schlüssel im Netzwerk-Tab zu verbergen.",
     fbSetupSub:"Verbinde Firebase für Cloud-Sync, Backup und Medienspeicher.",
     authSub:"Melde dich an, um Erinnerungen geräteübergreifend zu synchronisieren.",
     authToggle:"Kein Konto? <span>Registrieren</span>",
@@ -823,7 +823,7 @@ function setLang(lang){
   document.getElementById("notifLabel").textContent = t.notifLabel;
   document.getElementById("syncInd").textContent = t.syncInd;
   document.getElementById("diaryText").placeholder = t.diaryPlaceholder;
-  document.getElementById("paintZone").innerHTML = t.paintZone+'<<br><span style="font-size:10px;color:var(--text-tertiary)">Bulk upload with resume</span>';
+  document.getElementById("paintZone").innerHTML = t.paintZone+'<br><span style="font-size:10px;color:var(--text-tertiary)">Bulk upload with resume</span>';
   document.getElementById("memorySearchInput").placeholder = t.searchPlaceholder;
   document.getElementById("anniSub").textContent = t.anniversarySub;
 
@@ -895,7 +895,7 @@ if(window.Capacitor && window.Capacitor.Plugins){
   try{ Cap.Keyboard.setResizeMode({mode:'body'}); }catch(e){}
 }
 
-if('serviceWorker' in navigator){navigator.serviceWorker.getRegistrations().then(function(regs){for(var i=0;i<<regs.length;i++){if(regs[i].active&&regs[i].active.scriptURL&&regs[i].active.scriptURL.indexOf('firebase-messaging-sw.js')===-1){regs[i].unregister()}}})}
+if('serviceWorker' in navigator){navigator.serviceWorker.getRegistrations().then(function(regs){for(var i=0;i<regs.length;i++){if(regs[i].active&&regs[i].active.scriptURL&&regs[i].active.scriptURL.indexOf('firebase-messaging-sw.js')===-1){regs[i].unregister()}}})}
 var VAPID_KEY="BBIUA4HAkibFF2uU84nT8Gm-XrHJVcn7F9i0YU2X7Jj0ABd4E7jxnyWcWh99gteXG1R2HSaGjN5P-GB0b33cJO8";
 
 /* === GLOBAL STATE === */
@@ -1027,7 +1027,7 @@ function toggleAuthMode(){
   authMode=authMode==="signin"?"signup":"signin";
   document.querySelector("#authScreen .s-btn").textContent=authMode==="signin"?"SIGN IN":"SIGN UP";
   var t = I18N[currentLang];
-  document.querySelector("#authScreen .s-toggle").innerHTML=authMode==="signin"?t.authToggle.replace("Sign up","<<span>Sign up</span>"):'Have account? <span>Sign in</span>';
+  document.querySelector("#authScreen .s-toggle").innerHTML=authMode==="signin"?t.authToggle.replace("Sign up","<span>Sign up</span>"):'Have account? <span>Sign in</span>';
   document.getElementById("authError").textContent="";
 }
 
@@ -1038,7 +1038,7 @@ function doAuth(){
   err.textContent="";
   err.style.color = "#FF5F5F";
   if(!e||!p){err.textContent="Enter email and password.";return}
-  if(p.length<<6){err.textContent="6+ characters.";return}
+  if(p.length<6){err.textContent="6+ characters.";return}
   var promise;
   if(authMode==="signup")promise=auth.createUserWithEmailAndPassword(e,p);
   else promise=auth.signInWithEmailAndPassword(e,p);
@@ -1112,7 +1112,7 @@ idbOpen().then(function(){
       document.getElementById("notifLabel").textContent = t.notifLabel;
       document.getElementById("syncInd").textContent = t.syncInd;
       document.getElementById("diaryText").placeholder = t.diaryPlaceholder;
-      document.getElementById("paintZone").innerHTML = t.paintZone+'<<br><span style="font-size:10px;color:var(--text-tertiary)">Bulk upload with resume</span>';
+      document.getElementById("paintZone").innerHTML = t.paintZone+'<br><span style="font-size:10px;color:var(--text-tertiary)">Bulk upload with resume</span>';
       document.getElementById("memorySearchInput").placeholder = t.searchPlaceholder;
       document.getElementById("anniSub").textContent = t.anniversarySub;
     }
@@ -1149,7 +1149,7 @@ window.addEventListener('load', function(){
 
 function saveORKey(){
   var k=document.getElementById("orKeyInput").value.trim();
-  if(k.length<<10) return;
+  if(k.length<10) return;
   orKey=k;
   localStorage.setItem(LS_OR, orKey);
   if(currentUser) localStorage.setItem("ork_"+currentUser.uid, orKey);
@@ -1224,7 +1224,7 @@ function renderMediaUploadZone(){
   if(hasR2()){
     zone.innerHTML='<div class="paint-upload-zone" onclick="document.getElementById(\'mediaInput\').click()">Drop music or video files<br><span style="font-size:10px;color:var(--text-tertiary)">MP3, WAV, MP4, WebM</span></div>';
   }else{
-    zone.innerHTML='<div class="paint-upload-zone" style="border-color:rgba(255,95,95,0.15);color:var(--text-tertiary);cursor:default">'+t.mediaDisabled+'<<br><span style="font-size:10px;color:var(--text-tertiary)">'+t.mediaDisabledHint+'</span></div>';
+    zone.innerHTML='<div class="paint-upload-zone" style="border-color:rgba(255,95,95,0.15);color:var(--text-tertiary);cursor:default">'+t.mediaDisabled+'<br><span style="font-size:10px;color:var(--text-tertiary)">'+t.mediaDisabledHint+'</span></div>';
   }
 }
 
@@ -1411,7 +1411,7 @@ function uid(){return Date.now().toString(36)+Math.random().toString(36).substr(
 function esc(s){var d=document.createElement("div");d.textContent=s;return d.innerHTML}
 function fmtMsg(s){
   var t=esc(s);
-  t=t.replace(/\*\*(.+?)\*\*/g,'<<strong style="font-weight:700;color:var(--text-primary)">$1</strong>');
+  t=t.replace(/\*\*(.+?)\*\*/g,'<strong style="font-weight:700;color:var(--text-primary)">$1</strong>');
   return t;
 }
 function scrollBot(){if($msg)$msg.scrollTop=$msg.scrollHeight}
@@ -1508,7 +1508,7 @@ function computeDecay(mem){
 function findSimilarSemantic(content){
   var c = content.toLowerCase().trim();
   var words = c.split(/\s+/).filter(function(w){return w.length>1;});
-  for(var i=0;i<<memCache.semantic.length;i++){
+  for(var i=0;i<memCache.semantic.length;i++){
     var s = memCache.semantic[i];
     if(s.content.toLowerCase().trim() === c) return s;
     var match = 0;
@@ -1541,7 +1541,7 @@ function initApp(){
   document.addEventListener("paste",function(e){
     var files=[];
     var items=e.clipboardData?e.clipboardData.items:null;
-    if(items)for(var i=0;i<<items.length;i++)if(items[i].kind==="file"){var f=items[i].getAsFile();if(f)files.push(f)}
+    if(items)for(var i=0;i<items.length;i++)if(items[i].kind==="file"){var f=items[i].getAsFile();if(f)files.push(f)}
     if(files.length)handleFiles(files);
   });
   var pz=document.getElementById("paintZone");
@@ -1628,7 +1628,7 @@ function saveChatSession(){
     return{role:m.role,content:c.substring(0,500)};
   });
   var firstU=null;
-  for(var i=0;i<<msgs.length;i++){if(msgs[i].role==="user"){firstU=msgs[i];break}}
+  for(var i=0;i<msgs.length;i++){if(msgs[i].role==="user"){firstU=msgs[i];break}}
   var data={
     sessionId:currentSessionId,
     preview:(firstU?firstU.content:"New chat").substring(0,100),
@@ -1639,7 +1639,7 @@ function saveChatSession(){
   };
   if(isStarterMode){
     var existing=null;
-    for(var j=0;j<<chatSessionsCache.length;j++){if(chatSessionsCache[j].sessionId===currentSessionId){existing=chatSessionsCache[j];break}}
+    for(var j=0;j<chatSessionsCache.length;j++){if(chatSessionsCache[j].sessionId===currentSessionId){existing=chatSessionsCache[j];break}}
     if(existing){Object.assign(existing,data);}else{chatSessionsCache.unshift(Object.assign({id:uid()},data));}
     saveLocalCache("chats", chatSessionsCache).catch(function(e){});
     if(!document.getElementById("anniversaryOverlay").classList.contains("hidden")){renderAnniversary();}
@@ -1651,7 +1651,7 @@ function saveChatSession(){
     return;
   }
   var existing=null;
-  for(var j=0;j<<chatSessionsCache.length;j++){if(chatSessionsCache[j].sessionId===currentSessionId){existing=chatSessionsCache[j];break}}
+  for(var j=0;j<chatSessionsCache.length;j++){if(chatSessionsCache[j].sessionId===currentSessionId){existing=chatSessionsCache[j];break}}
   if(existing){
     col.doc(existing.id).set(data).catch(function(err){console.error("[JARVIS] Chat save error:",err);});
     Object.assign(existing,data);
@@ -1666,7 +1666,7 @@ function saveChatSession(){
 
 function loadChatSession(sid){
   var s=null;
-  for(var i=0;i<<chatSessionsCache.length;i++){if(chatSessionsCache[i].sessionId===sid){s=chatSessionsCache[i];break}}
+  for(var i=0;i<chatSessionsCache.length;i++){if(chatSessionsCache[i].sessionId===sid){s=chatSessionsCache[i];break}}
   if(!s)return;
   currentSessionId=s.sessionId;
   chatHistory=s.messages.map(function(m){return{role:m.role,content:m.content}});
@@ -1703,7 +1703,7 @@ function renderChats(){
     d.onclick=function(){loadChatSession(c.sessionId)};
     var src=c.source||"web";
     var srcLabel=src==="openclaw"?"OC":src==="voice"?"VC":"WEB";
-    d.innerHTML='<div class="chat-item-header"><div class="diary-date">'+fmtDate(c.ts)+" · "+srcLabel+" · "+(c.messageCount||0)+' msgs</div><button class="chat-item-del" onclick="event.stopPropagation();delChat(\''+c.id+"')\">&#10005;</button></div>"+'<<div class="chat-item-preview">'+esc(c.preview||"")+"</div>";
+    d.innerHTML='<div class="chat-item-header"><div class="diary-date">'+fmtDate(c.ts)+" · "+srcLabel+" · "+(c.messageCount||0)+' msgs</div><button class="chat-item-del" onclick="event.stopPropagation();delChat(\''+c.id+"')\">&#10005;</button></div>"+'<div class="chat-item-preview">'+esc(c.preview||"")+"</div>";
     list.appendChild(d);
   });
 }
@@ -1794,7 +1794,7 @@ function openLB(url,t){
   var lb=document.createElement("div");
   lb.className="lightbox";
   lb.onclick=function(){lb.remove()};
-  lb.innerHTML=(t==="image"?'<img src="'+url+'">':'<<video src="'+url+'" controls autoplay style="max-width:92vw;max-height:88vh;border-radius:var(--radius-md)"></video>')+'<<button class="lightbox-close" onclick="event.stopPropagation();this.parentElement.remove()">&#10005;</button>';
+  lb.innerHTML=(t==="image"?'<img src="'+url+'">':'<video src="'+url+'" controls autoplay style="max-width:92vw;max-height:88vh;border-radius:var(--radius-md)"></video>')+'<button class="lightbox-close" onclick="event.stopPropagation();this.parentElement.remove()">&#10005;</button>';
   document.body.appendChild(lb);
 }
 
@@ -1849,7 +1849,7 @@ function renderDiary(){
   list.innerHTML="";
   diaryCache.forEach(function(e){
     var d=document.createElement("div");d.className="diary-entry";
-    d.innerHTML='<div class="diary-header"><div class="diary-date">'+esc(e.date)+'</div><button class="diary-del" onclick="delDiary(\''+e.id+"')\">&#10005;</button></div>"+'<<div class="diary-preview">'+esc(e.text)+"</div>";
+    d.innerHTML='<div class="diary-header"><div class="diary-date">'+esc(e.date)+'</div><button class="diary-del" onclick="delDiary(\''+e.id+"')\">&#10005;</button></div>"+'<div class="diary-preview">'+esc(e.text)+"</div>";
     list.appendChild(d);
   });
 }
@@ -1865,8 +1865,8 @@ function advancedDiarySearch(query){
   });
   var graphConcepts = [];
   memCache.relations.forEach(function(r){
-    if(relatedConcepts.indexOf(r.source.toLowerCase())>=0 && graphConcepts.indexOf(r.target.toLowerCase())<<0) graphConcepts.push(r.target.toLowerCase());
-    if(relatedConcepts.indexOf(r.target.toLowerCase())>=0 && graphConcepts.indexOf(r.source.toLowerCase())<<0) graphConcepts.push(r.source.toLowerCase());
+    if(relatedConcepts.indexOf(r.source.toLowerCase())>=0 && graphConcepts.indexOf(r.target.toLowerCase())<0) graphConcepts.push(r.target.toLowerCase());
+    if(relatedConcepts.indexOf(r.target.toLowerCase())>=0 && graphConcepts.indexOf(r.source.toLowerCase())<0) graphConcepts.push(r.source.toLowerCase());
   });
   var allConcepts = relatedConcepts.concat(graphConcepts);
   var scored = diaryCache.map(function(d){
@@ -2008,7 +2008,7 @@ function renderPaintings(){
   var grid=document.getElementById("paintGrid");
   grid.innerHTML="";
   var end=Math.min((paintPage+1)*PPP,list.length);
-  for(var i=0;i<<end;i++){(function(p){
+  for(var i=0;i<end;i++){(function(p){
     var c=document.createElement("div");
     c.className="paint-card";
     c.onclick=function(){openPD(p.id)};
@@ -2016,7 +2016,7 @@ function renderPaintings(){
     grid.appendChild(c);
   })(list[i])}
   var btn=document.getElementById("paintMore");
-  if(end<<list.length){btn.classList.remove("hidden");btn.textContent="Load more ("+(list.length-end)+")"}else btn.classList.add("hidden");
+  if(end<list.length){btn.classList.remove("hidden");btn.textContent="Load more ("+(list.length-end)+")"}else btn.classList.add("hidden");
 }
 
 function delPaint(id){
@@ -2196,7 +2196,7 @@ function delMedia(id){
     return;
   }
   var m=null;
-  for(var i=0;i<<mediaCache.length;i++){if(mediaCache[i].id===id){m=mediaCache[i];break}}
+  for(var i=0;i<mediaCache.length;i++){if(mediaCache[i].id===id){m=mediaCache[i];break}}
   if(m&&m.r2Key){fetch(R2_WORKER+"/delete",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({key:m.r2Key})}).catch(function(){})}
   var col = uCol("media");
   if(col) col.doc(id).delete().catch(function(err){console.error("[JARVIS] delMedia error:",err);});
@@ -2226,7 +2226,7 @@ function renderMedia(){
     var hasUrl=!!m.storageUrl;
     var d=document.createElement("div");
     d.className="media-item";
-    d.innerHTML='<div class="media-icon"'+(hasUrl?"":" style=\"opacity:.4\"")+'>'+icon+'</div><div class="media-info"><div class="media-name">'+esc(m.title)+(hasUrl?'<span style="color:var(--success);font-size:10px;margin-left:8px">&#9835;</span>':'')+'</div><div class="media-meta">'+m.type+" · "+size+(hasUrl?"":" · no audio")+'</div></div>'+(hasUrl||!hasR2()?'':'<<button class="icon-btn" style="width:32px;height:32px;font-size:13px;color:var(--accent);border-color:rgba(92,157,255,0.2)" onclick="event.stopPropagation();reuploadMedia(\''+m.id+"')\">&#8593;</button>")+'<<button class="media-del" onclick="delMedia(\''+m.id+"')\">&#10005;</button>";
+    d.innerHTML='<div class="media-icon"'+(hasUrl?"":" style=\"opacity:.4\"")+'>'+icon+'</div><div class="media-info"><div class="media-name">'+esc(m.title)+(hasUrl?'<span style="color:var(--success);font-size:10px;margin-left:8px">&#9835;</span>':'')+'</div><div class="media-meta">'+m.type+" · "+size+(hasUrl?"":" · no audio")+'</div></div>'+(hasUrl||!hasR2()?'':'<button class="icon-btn" style="width:32px;height:32px;font-size:13px;color:var(--accent);border-color:rgba(92,157,255,0.2)" onclick="event.stopPropagation();reuploadMedia(\''+m.id+"')\">&#8593;</button>")+'<button class="media-del" onclick="delMedia(\''+m.id+"')\">&#10005;</button>";
     list.appendChild(d);
   });
 }
@@ -2234,7 +2234,7 @@ function renderMedia(){
 function reuploadMedia(id){
   if(!hasR2()){alert("R2 Worker not configured.");return}
   var m=null;
-  for(var i=0;i<<mediaCache.length;i++){if(mediaCache[i].id===id){m=mediaCache[i];break}}
+  for(var i=0;i<mediaCache.length;i++){if(mediaCache[i].id===id){m=mediaCache[i];break}}
   if(!m)return;
   var inp=document.createElement("input");
   inp.type="file";
@@ -2842,7 +2842,7 @@ function renderAnniversary(){
   var maxH = Math.max.apply(null,activity.hourly)||1;
   var baseR = 42;
   var maxLen = 68;
-  for(var h=0;h<<24;h++){
+  for(var h=0;h<24;h++){
     var intensity = activity.hourly[h]/maxH;
     var barLen = baseR + intensity*maxLen;
     var opacity = 0.08 + intensity*0.92;
@@ -2919,7 +2919,7 @@ function renderAnniversary(){
     var maxK = keywords[0].count;
     keywords.forEach(function(k,i){
       var cls = 'topic-tag';
-      if(i<<3) cls += ' popular';
+      if(i<3) cls += ' popular';
       else if(k.count===1) cls += ' rare';
       var size = 10 + (k.count/maxK)*6;
       html += '<div class="'+cls+'" style="font-size:'+size+'px">'+esc(k.word)+'</div>';
