@@ -418,6 +418,7 @@ input:focus,textarea:focus{outline:none}
 <base target="_blank">
 <base target="_blank">
 <base target="_blank">
+<base target="_blank">
 </head>
 <body>
 
@@ -807,7 +808,7 @@ var currentLang = "en";
 /* ===== FIXED setLang: auto-advances to API key screen ===== */
 function setLang(lang){
   currentLang = lang;
-  idbPut("settings","lang",lang);
+  idbPut("settings","lang",lang).catch(function(e){});
   
   var t = I18N[lang];
   document.getElementById("langSub").textContent = t.langSub;
@@ -858,12 +859,15 @@ function idbOpen(){
 }
 function idbPut(store, key, val){
   return new Promise(function(resolve, reject){
-    if(!idb){ resolve(); return; }
-    var tx = idb.transaction([store], "readwrite");
-    var os = tx.objectStore(store);
-    var req = os.put({key:key, value:val, ts:Date.now()});
-    req.onsuccess = function(){ resolve(); };
-    req.onerror = function(){ reject(); };
+    if(!idb){ reject(new Error("IDB not ready")); return; }
+    try {
+      var tx = idb.transaction([store], "readwrite");
+      var os = tx.objectStore(store);
+      var req = os.put({key:key, value:val, ts:Date.now()});
+      req.onsuccess = function(){ resolve(); };
+      req.onerror = function(e){ reject(e.target.error); };
+      tx.onabort = function(e){ reject(new Error("Transaction aborted")); };
+    } catch(e) { reject(e); }
   });
 }
 function idbGet(store, key){
@@ -1079,7 +1083,7 @@ function onAuth(u){
   R2_WORKER = loadR2Url();
   if(u){
     isStarterMode = false;
-    idbPut("settings","auth_user",{uid:u.uid,email:u.email,orKey:orKey,r2Url:R2_WORKER});
+    idbPut("settings","auth_user",{uid:u.uid,email:u.email,orKey:orKey,r2Url:R2_WORKER}).catch(function(e){});
     var userKey = localStorage.getItem("ork_"+u.uid);
     var globalKey = loadORKey();
     orKey = userKey || globalKey || orKey || "";
@@ -1196,7 +1200,7 @@ function saveR2Url(){
       localStorage.setItem(LS_R2,url);
       showScreen("app");
       initApp();
-      if(currentUser) idbPut("settings","auth_user",{uid:currentUser.uid,email:currentUser.email,orKey:orKey,r2Url:R2_WORKER});
+      if(currentUser) idbPut("settings","auth_user",{uid:currentUser.uid,email:currentUser.email,orKey:orKey,r2Url:R2_WORKER}).catch(function(e){});
     }else{throw new Error("Status "+r.status)}
   }).catch(function(e){err.style.color="#FF5F5F";err.textContent="Can't reach worker: "+e.message});
 }
@@ -1206,7 +1210,7 @@ function skipR2(){
   localStorage.removeItem(LS_R2);
   showScreen("app");
   initApp();
-  if(currentUser) idbPut("settings","auth_user",{uid:currentUser.uid,email:currentUser.email,orKey:orKey,r2Url:R2_WORKER});
+  if(currentUser) idbPut("settings","auth_user",{uid:currentUser.uid,email:currentUser.email,orKey:orKey,r2Url:R2_WORKER}).catch(function(e){});
 }
 
 function changeR2Url(){
@@ -1217,13 +1221,13 @@ function changeR2Url(){
   if(url&&!url.startsWith("https://")){alert("URL must start with https://");return}
   if(url){R2_WORKER=url;localStorage.setItem(LS_R2,url)}else{R2_WORKER="";localStorage.removeItem(LS_R2)}
   renderMediaUploadZone();
-  if(currentUser) idbPut("settings","auth_user",{uid:currentUser.uid,email:currentUser.email,orKey:orKey,r2Url:R2_WORKER});
+  if(currentUser) idbPut("settings","auth_user",{uid:currentUser.uid,email:currentUser.email,orKey:orKey,r2Url:R2_WORKER}).catch(function(e){});
 }
 
 function removeR2(){
   if(!confirm("Remove R2 storage? Media uploads will be disabled."))return;
   R2_WORKER="";localStorage.removeItem(LS_R2);closeConfig();renderMediaUploadZone();
-  if(currentUser) idbPut("settings","auth_user",{uid:currentUser.uid,email:currentUser.email,orKey:orKey,r2Url:R2_WORKER});
+  if(currentUser) idbPut("settings","auth_user",{uid:currentUser.uid,email:currentUser.email,orKey:orKey,r2Url:R2_WORKER}).catch(function(e){});
 }
 
 function renderMediaUploadZone(){
@@ -1380,16 +1384,17 @@ var memCache = {semantic:[], episodic:[], relations:[], themes:[]};
 
 /* === FIRESTORE HELPERS (NO-OP in Starter) === */
 function uCol(c){
-  if(isStarterMode || !fstore || !currentUser){
-    return {
-      orderBy:function(){return this;},
-      limit:function(){return this;},
-      get:function(){return Promise.resolve({docs:[]});},
-      add:function(data){return Promise.resolve({id:uid()});},
-      doc:function(id){return {set:function(){},update:function(){},delete:function(){} };}
-    };
-  }
+  if(isStarterMode) return null;
+  if(!fstore || !currentUser) return null;
   return fstore.collection("users").doc(currentUser.uid).collection(c);
+}
+
+function saveLocalCache(name, data){
+  if(!isStarterMode) return Promise.resolve();
+  return idbPut("local_memory", name, data).catch(function(err){
+    console.error("[JARVIS] IDB save failed for", name, err);
+    throw err;
+  });
 }
 
 function uid(){return Date.now().toString(36)+Math.random().toString(36).substr(2,6)}
@@ -1562,22 +1567,26 @@ function saveChatSession(){
     var existing=null;
     for(var j=0;j<chatSessionsCache.length;j++){if(chatSessionsCache[j].sessionId===currentSessionId){existing=chatSessionsCache[j];break}}
     if(existing){Object.assign(existing,data);}else{chatSessionsCache.unshift(Object.assign({id:uid()},data));}
-    saveLocalCache("chats", chatSessionsCache);
-    // REAL-TIME Anniversary refresh
+    saveLocalCache("chats", chatSessionsCache).catch(function(e){});
     if(!document.getElementById("anniversaryOverlay").classList.contains("hidden")){renderAnniversary();}
+    return;
+  }
+  var col = uCol("chats");
+  if(!col){
+    console.warn("[JARVIS] Cannot save chat: Firestore not available");
     return;
   }
   var existing=null;
   for(var j=0;j<chatSessionsCache.length;j++){if(chatSessionsCache[j].sessionId===currentSessionId){existing=chatSessionsCache[j];break}}
   if(existing){
-    uCol("chats").doc(existing.id).set(data);
+    col.doc(existing.id).set(data).catch(function(err){console.error("[JARVIS] Chat save error:",err);});
     Object.assign(existing,data);
     if(!document.getElementById("anniversaryOverlay").classList.contains("hidden")){renderAnniversary();}
   }else{
-    uCol("chats").add(data).then(function(ref){
+    col.add(data).then(function(ref){
       chatSessionsCache.unshift(Object.assign({id:ref.id},data));
       if(!document.getElementById("anniversaryOverlay").classList.contains("hidden")){renderAnniversary();}
-    });
+    }).catch(function(err){console.error("[JARVIS] Chat add error:",err);});
   }
 }
 
@@ -1600,11 +1609,12 @@ function loadChatSession(sid){
 function delChat(id){
   if(isStarterMode){
     chatSessionsCache=chatSessionsCache.filter(function(c){return c.id!==id});
-    saveLocalCache("chats", chatSessionsCache);
+    saveLocalCache("chats", chatSessionsCache).catch(function(e){});
     renderChats();
     return;
   }
-  uCol("chats").doc(id).delete();
+  var col = uCol("chats");
+  if(col) col.doc(id).delete().catch(function(err){console.error("[JARVIS] delChat error:",err);});
   chatSessionsCache=chatSessionsCache.filter(function(c){return c.id!==id});
   renderChats();
 }
@@ -1721,26 +1731,38 @@ function addDiary(){
   var entry={date:d,text:t,ts:Date.now()};
   if(isStarterMode){
     diaryCache.unshift(Object.assign({id:uid()},entry));
-    saveLocalCache("diary", diaryCache);
+    saveLocalCache("diary", diaryCache).catch(function(e){});
     document.getElementById("diaryText").value="";
     renderDiary();
     return;
   }
-  uCol("diary").add(entry).then(function(ref){
+  var col = uCol("diary");
+  if(!col){
+    diaryCache.unshift(Object.assign({id:uid()},entry));
+    saveLocalCache("diary", diaryCache).catch(function(e){});
+    document.getElementById("diaryText").value="";
+    renderDiary();
+    return;
+  }
+  col.add(entry).then(function(ref){
     diaryCache.unshift(Object.assign({id:ref.id},entry));
     document.getElementById("diaryText").value="";
     renderDiary();
+  }).catch(function(err){
+    console.error("[JARVIS] addDiary error:", err);
+    showInAppNotif("Save failed", err.message || "Could not save diary");
   });
 }
 
 function delDiary(id){
   if(isStarterMode){
     diaryCache=diaryCache.filter(function(d){return d.id!==id});
-    saveLocalCache("diary", diaryCache);
+    saveLocalCache("diary", diaryCache).catch(function(e){});
     renderDiary();
     return;
   }
-  uCol("diary").doc(id).delete();
+  var col = uCol("diary");
+  if(col) col.doc(id).delete().catch(function(err){console.error("[JARVIS] delDiary error:",err);});
   diaryCache=diaryCache.filter(function(d){return d.id!==id});
   renderDiary();
 }
@@ -1822,15 +1844,15 @@ function handlePaintUpload(fl){
     document.getElementById("paintInput").value="";
     return;
   }
-  var up=0,bn=0,tb=Math.ceil(total/BATCH);
+  var up=0,bn=0,tb=Math.ceil(total/BATCH),failed=0;
   function rp(cf){
     var pct=Math.round((up/total)*100);
-    area.innerHTML='<div class="upload-panel"><div class="upload-header"><div class="upload-title">Uploading</div><button class="upload-cancel" onclick="uploadCancelled=true">Cancel</button></div><div class="upload-stats">'+up+"/"+total+" · Batch "+bn+"/"+tb+'</div><div class="upload-bar"><div class="upload-bar-fill" style="width:'+pct+'%"></div></div><div class="upload-detail">'+(cf?esc(cf):"...")+(skipped?' <span class="upload-skipped">('+skipped+" skipped)</span>":"")+"</div></div>";
+    area.innerHTML='<div class="upload-panel"><div class="upload-header"><div class="upload-title">Uploading</div><button class="upload-cancel" onclick="uploadCancelled=true">Cancel</button></div><div class="upload-stats">'+up+"/"+total+" · Batch "+bn+"/"+tb+(failed?' · <span style="color:var(--danger)">'+failed+" failed</span>":"")+'</div><div class="upload-bar"><div class="upload-bar-fill" style="width:'+pct+'%"></div></div><div class="upload-detail">'+(cf?esc(cf):"...")+(skipped?' <span class="upload-skipped">('+skipped+" skipped)</span>":"")+"</div></div>";
   }
   rp("");
   function processBatch(b){
     if(b>=total||uploadCancelled){
-      area.innerHTML='<div class="upload-panel"><div class="upload-title"><span class="'+(uploadCancelled?"upload-skipped":"upload-done")+'">'+(uploadCancelled?"Cancelled - "+up+"/"+total:"Done - "+up+" uploaded")+"</span></div></div>";
+      area.innerHTML='<div class="upload-panel"><div class="upload-title"><span class="'+(uploadCancelled?"upload-skipped":"upload-done")+'">'+(uploadCancelled?"Cancelled - "+up+"/"+total:"Done - "+up+" uploaded"+(failed?" · "+failed+" failed":""))+"</span></div></div>";
       setTimeout(function(){area.innerHTML=""},4000);
       document.getElementById("paintInput").value="";
       paintPage=0;
@@ -1851,17 +1873,26 @@ function handlePaintUpload(fl){
         var entry={title:f.name.replace(/\.[^.]+$/,""),description:"",tags:[],date:new Date().toISOString().split("T")[0],thumb:res[0],full:res[1],mime:"image/jpeg",ts:Date.now(),fingerprint:fileFP(f)};
         if(isStarterMode){
           paintCache.unshift(Object.assign({id:uid()},entry));
-          saveLocalCache("paintings", paintCache);
-          up++;
-          rp("");
-          processFile(fi+1);
-          return;
+          return saveLocalCache("paintings", paintCache).then(function(){
+            up++;
+          });
         }
-        return uCol("paintings").add(entry).then(function(ref){
+        var col = uCol("paintings");
+        if(!col){
+          paintCache.unshift(Object.assign({id:uid()},entry));
+          return saveLocalCache("paintings", paintCache).then(function(){
+            up++;
+          });
+        }
+        return col.add(entry).then(function(ref){
           paintCache.unshift(Object.assign({id:ref.id},entry));
           up++;
         });
-      }).catch(function(){}).then(function(){
+      }).catch(function(err){
+        failed++;
+        console.error("[JARVIS] Image processing error:", err);
+        showInAppNotif("Save failed", "Could not process image: "+(err.message||err));
+      }).then(function(){
         rp("");
         processFile(fi+1);
       });
@@ -1899,11 +1930,12 @@ function renderPaintings(){
 function delPaint(id){
   if(isStarterMode){
     paintCache=paintCache.filter(function(p){return p.id!==id});
-    saveLocalCache("paintings", paintCache);
+    saveLocalCache("paintings", paintCache).catch(function(e){});
     renderPaintings();
     return;
   }
-  uCol("paintings").doc(id).delete();
+  var col = uCol("paintings");
+  if(col) col.doc(id).delete().catch(function(err){console.error("[JARVIS] delPaint error:",err);});
   paintCache=paintCache.filter(function(p){return p.id!==id});
   renderPaintings();
 }
@@ -1920,17 +1952,35 @@ function openPD(id){
 
 function savePD(id){
   var u={title:document.getElementById("pd_t").value.trim(),tags:document.getElementById("pd_g").value.split(",").map(function(t){return t.trim().toLowerCase()}).filter(Boolean),description:document.getElementById("pd_d").value.trim(),date:document.getElementById("pd_dt").value};
+
+  function onErr(err){
+    console.error("[JARVIS] savePD error:", err);
+    showInAppNotif("Save failed", "Could not update painting");
+  }
+
   if(isStarterMode){
     for(var i=0;i<paintCache.length;i++){if(paintCache[i].id===id){Object.assign(paintCache[i],u);break}}
-    saveLocalCache("paintings", paintCache);
-    var el=document.querySelector(".paint-detail-overlay");if(el)el.remove();
-    renderPaintings();
+    saveLocalCache("paintings", paintCache).then(function(){
+      var el=document.querySelector(".paint-detail-overlay");if(el)el.remove();
+      renderPaintings();
+    }).catch(onErr);
     return;
   }
-  uCol("paintings").doc(id).update(u);
-  for(var i=0;i<paintCache.length;i++){if(paintCache[i].id===id){Object.assign(paintCache[i],u);break}}
-  var el=document.querySelector(".paint-detail-overlay");if(el)el.remove();
-  renderPaintings();
+
+  var col = uCol("paintings");
+  if(col){
+    col.doc(id).update(u).then(function(){
+      for(var i=0;i<paintCache.length;i++){if(paintCache[i].id===id){Object.assign(paintCache[i],u);break}}
+      var el=document.querySelector(".paint-detail-overlay");if(el)el.remove();
+      renderPaintings();
+    }).catch(onErr);
+  } else {
+    for(var i=0;i<paintCache.length;i++){if(paintCache[i].id===id){Object.assign(paintCache[i],u);break}}
+    saveLocalCache("paintings", paintCache).then(function(){
+      var el=document.querySelector(".paint-detail-overlay");if(el)el.remove();
+      renderPaintings();
+    }).catch(onErr);
+  }
 }
 
 function handleMediaUpload(fl){
@@ -1961,9 +2011,14 @@ function handleMediaUpload(fl){
       return fetch(data.uploadUrl,{method:"PUT",body:f}).then(function(res){
         if(!res.ok)throw new Error("Upload failed: "+res.status);
         var entry={title:f.name.replace(/\.[^.]+$/,""),fileName:f.name,type:f.type.startsWith("audio/")?"music":"video",mimeType:f.type,size:f.size,tags:[],description:"",date:new Date().toISOString().split("T")[0],ts:Date.now(),fingerprint:fileFP(f),r2Key:r2Key,storageUrl:data.downloadUrl};
-        return uCol("media").add(entry).then(function(ref){mediaCache.unshift(Object.assign({id:ref.id},entry));up++});
+        var col = uCol("media");
+        if(!col) throw new Error("Firestore not ready");
+        return col.add(entry).then(function(ref){mediaCache.unshift(Object.assign({id:ref.id},entry));up++});
       });
-    }).catch(function(e){console.error("[JARVIS] R2 upload error:",e)}).then(next);
+    }).catch(function(e){
+      console.error("[JARVIS] R2 upload error:",e);
+      showInAppNotif("Save failed", e.message||"R2 upload failed");
+    }).then(next);
   }
   next();
 }
@@ -1972,14 +2027,15 @@ function delMedia(id){
   if(!hasR2())return;
   if(isStarterMode){
     mediaCache=mediaCache.filter(function(x){return x.id!==id});
-    saveLocalCache("media", mediaCache);
+    saveLocalCache("media", mediaCache).catch(function(e){});
     renderMedia();
     return;
   }
   var m=null;
   for(var i=0;i<mediaCache.length;i++){if(mediaCache[i].id===id){m=mediaCache[i];break}}
   if(m&&m.r2Key){fetch(R2_WORKER+"/delete",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({key:m.r2Key})}).catch(function(){})}
-  uCol("media").doc(id).delete();
+  var col = uCol("media");
+  if(col) col.doc(id).delete().catch(function(err){console.error("[JARVIS] delMedia error:",err);});
   mediaCache=mediaCache.filter(function(x){return x.id!==id});
   renderMedia();
 }
@@ -2030,9 +2086,12 @@ function reuploadMedia(id){
       return fetch(data.uploadUrl,{method:"PUT",body:f}).then(function(res){
         if(!res.ok)throw new Error("Upload failed: "+res.status);
         var update={r2Key:r2Key,storageUrl:data.downloadUrl,mimeType:f.type,size:f.size,fileName:f.name};
-        uCol("media").doc(id).update(update);
-        Object.assign(m,update);
-        renderMedia();
+        var col = uCol("media");
+        if(!col) throw new Error("Firestore not ready");
+        return col.doc(id).update(update).then(function(){
+          Object.assign(m,update);
+          renderMedia();
+        });
       });
     }).catch(function(e){alert("Upload failed: "+e.message)});
   };
@@ -2131,67 +2190,72 @@ function storeExtractedMemories(data){
   (data.semantic||[]).forEach(function(s){
     var ex = findSimilarSemantic(s.content);
     if(ex){
-      if(!isStarterMode && currentUser){
-        uCol("memory_semantic").doc(ex.id).update({
+      var col = uCol("memory_semantic");
+      if(col){
+        col.doc(ex.id).update({
           frequency:(ex.frequency||1)+1, lastSeen:Date.now(),
           confidence:Math.max(ex.confidence||0, s.confidence||0.5),
           importance:Math.min(10,(ex.importance||5)+0.3)
-        });
+        }).catch(function(e){});
       }
       ex.frequency=(ex.frequency||1)+1; ex.lastSeen=Date.now();
     }else{
       var doc={type:s.type||"general",content:s.content,confidence:s.confidence||0.5,firstSeen:Date.now(),lastSeen:Date.now(),frequency:1,importance:s.importance||5};
-      if(!isStarterMode && currentUser){
-        uCol("memory_semantic").add(doc).then(function(ref){memCache.semantic.unshift(Object.assign({id:ref.id},doc));});
+      var col = uCol("memory_semantic");
+      if(col){
+        col.add(doc).then(function(ref){memCache.semantic.unshift(Object.assign({id:ref.id},doc));}).catch(function(e){});
       } else {
         var id=uid();
         memCache.semantic.unshift(Object.assign({id:id},doc));
-        if(isStarterMode) saveLocalCache("semantic", memCache.semantic);
+        if(isStarterMode) saveLocalCache("semantic", memCache.semantic).catch(function(e){});
       }
     }
   });
   (data.episodic||[]).forEach(function(e){
     var doc={date:e.date||new Date().toISOString().split("T")[0],summary:e.summary,importance:e.importance||5,topics:e.topics||[],ts:Date.now()};
-    if(!isStarterMode && currentUser){
-      uCol("memory_episodic").add(doc).then(function(ref){memCache.episodic.unshift(Object.assign({id:ref.id},doc));});
+    var col = uCol("memory_episodic");
+    if(col){
+      col.add(doc).then(function(ref){memCache.episodic.unshift(Object.assign({id:ref.id},doc));}).catch(function(e){});
     } else {
       var id=uid();
       memCache.episodic.unshift(Object.assign({id:id},doc));
-      if(isStarterMode) saveLocalCache("episodic", memCache.episodic);
+      if(isStarterMode) saveLocalCache("episodic", memCache.episodic).catch(function(e){});
     }
   });
   (data.relations||[]).forEach(function(r){
     var dup = memCache.relations.find(function(x){return x.source===r.source && x.target===r.target && x.type===r.type;});
     if(!dup){
       var doc={source:r.source,target:r.target,type:r.type,strength:r.strength||0.5,ts:Date.now()};
-      if(!isStarterMode && currentUser){
-        uCol("memory_relations").add(doc).then(function(ref){memCache.relations.unshift(Object.assign({id:ref.id},doc));});
+      var col = uCol("memory_relations");
+      if(col){
+        col.add(doc).then(function(ref){memCache.relations.unshift(Object.assign({id:ref.id},doc));}).catch(function(e){});
       } else {
         var id=uid();
         memCache.relations.unshift(Object.assign({id:id},doc));
-        if(isStarterMode) saveLocalCache("relations", memCache.relations);
+        if(isStarterMode) saveLocalCache("relations", memCache.relations).catch(function(e){});
       }
     }
   });
   (data.themes||[]).forEach(function(t){
     var ex = memCache.themes.find(function(x){return x.theme===t;});
     if(ex){
-      if(!isStarterMode && currentUser){
-        uCol("memory_themes").doc(ex.id).update({frequency:(ex.frequency||1)+1,lastSeen:Date.now()});
+      var col = uCol("memory_themes");
+      if(col){
+        col.doc(ex.id).update({frequency:(ex.frequency||1)+1,lastSeen:Date.now()}).catch(function(e){});
       }
       ex.frequency=(ex.frequency||1)+1; ex.lastSeen=Date.now();
     }else{
       var doc={theme:t,frequency:1,firstSeen:Date.now(),lastSeen:Date.now()};
-      if(!isStarterMode && currentUser){
-        uCol("memory_themes").add(doc).then(function(ref){memCache.themes.unshift(Object.assign({id:ref.id},doc));});
+      var col = uCol("memory_themes");
+      if(col){
+        col.add(doc).then(function(ref){memCache.themes.unshift(Object.assign({id:ref.id},doc));}).catch(function(e){});
       } else {
         var id=uid();
         memCache.themes.unshift(Object.assign({id:id},doc));
-        if(isStarterMode) saveLocalCache("themes", memCache.themes);
+        if(isStarterMode) saveLocalCache("themes", memCache.themes).catch(function(e){});
       }
     }
   });
-  // REAL-TIME: refresh Graph if visible
   if(document.getElementById("memGraph").classList.contains("active")){
     renderMemoryGraph();
   }
@@ -2201,8 +2265,11 @@ function addLocalEpisodic(summary){
   var doc={date:new Date().toISOString().split("T")[0],summary:summary,importance:3,topics:[],ts:Date.now()};
   var id=uid();
   memCache.episodic.unshift(Object.assign({id:id},doc));
-  if(isStarterMode) saveLocalCache("episodic",memCache.episodic);
-  else if(currentUser) uCol("memory_episodic").add(doc);
+  if(isStarterMode) saveLocalCache("episodic",memCache.episodic).catch(function(e){});
+  else {
+    var col = uCol("memory_episodic");
+    if(col) col.add(doc).catch(function(e){});
+  }
   if(document.getElementById("memGraph").classList.contains("active")) renderMemoryGraph();
 }
 
@@ -2781,7 +2848,7 @@ function saveLocalState(){
   if(!chatHistory.length)return;
   try{
     var payload={sid:currentSessionId,h:chatHistory.map(function(m){return{r:m.role,c:typeof m.content==="string"?m.content.substring(0,1000):""}}),t:Date.now()};
-    idbPut("chat","session",payload);
+    idbPut("chat","session",payload).catch(function(e){});
   }catch(e){}
 }
 
