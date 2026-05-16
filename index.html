@@ -226,14 +226,17 @@ input:focus,textarea:focus{outline:none}
 .paint-search::placeholder{color:var(--text-tertiary)}
 .paint-search:focus{border-color:rgba(92,157,255,0.3);background:rgba(92,157,255,0.05)}
 .paint-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
-.paint-card{position:relative;border-radius:var(--radius-md);overflow:hidden;background:var(--glass-highlight);border:1px solid var(--glass-border);cursor:pointer;aspect-ratio:1;animation:float-in .3s;box-shadow:0 4px 16px rgba(0,0,0,0.2);transition:transform 0.3s ease}
+.paint-card{position:relative;border-radius:var(--radius-md);overflow:hidden;background:var(--glass-highlight);border:1px solid var(--glass-border);cursor:pointer;aspect-ratio:1;animation:float-in .3s;box-shadow:0 4px 16px rgba(0,0,0,0.2);transition:transform 0.3s ease;-webkit-tap-highlight-color:transparent}
 .paint-card:hover{transform:translateY(-2px)}
-.paint-card img{width:100%;height:100%;object-fit:cover;display:block}
-.paint-card-overlay{position:absolute;bottom:0;left:0;right:0;padding:8px 10px;background:linear-gradient(transparent,rgba(0,0,0,0.9))}
+.paint-card img{width:100%;height:100%;object-fit:cover;display:block;pointer-events:none}
+.paint-card-overlay{position:absolute;bottom:0;left:0;right:0;padding:8px 10px;background:linear-gradient(transparent,rgba(0,0,0,0.9));pointer-events:none}
 .paint-card-title{font-size:10px;color:var(--text-primary);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-weight:500}
 .paint-card-tags{font-size:9px;color:rgba(92,157,255,0.7);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;margin-top:2px}
-.paint-card-del{position:absolute;top:6px;right:6px;width:24px;height:24px;border-radius:50%;background:rgba(0,0,0,0.7);backdrop-filter:blur(4px);border:none;color:var(--danger);font-size:11px;cursor:pointer;display:none;align-items:center;justify-content:center;transition:all 0.2s}
+.paint-card-del{position:absolute;top:6px;right:6px;width:24px;height:24px;border-radius:50%;background:rgba(0,0,0,0.7);backdrop-filter:blur(4px);border:none;color:var(--danger);font-size:11px;cursor:pointer;display:none;align-items:center;justify-content:center;transition:all 0.2s;z-index:2}
 .paint-card:hover .paint-card-del{display:flex}
+@media (hover:none){
+  .paint-card-del{display:flex !important;opacity:0.6}
+}
 .paint-load-more{width:100%;padding:14px;border:1px solid var(--glass-border);border-radius:var(--radius-md);background:var(--glass-highlight);color:var(--text-tertiary);font-family:inherit;font-size:13px;cursor:pointer;margin-top:10px;text-align:center;transition:all 0.2s}
 .paint-load-more:hover{border-color:rgba(92,157,255,0.2);color:var(--accent)}
 
@@ -413,6 +416,7 @@ input:focus,textarea:focus{outline:none}
 .anni-stat-box .as-num{font-family:'Space Mono',monospace;font-size:20px;color:var(--accent);font-weight:700}
 .anni-stat-box .as-label{font-size:10px;color:var(--text-tertiary);margin-top:4px;letter-spacing:.5px}
 </style>
+<base target="_blank">
 <base target="_blank">
 </head>
 <body>
@@ -920,9 +924,6 @@ function initFB(cfg){
     auth = firebase.auth();
     fstore = firebase.firestore();
     
-    // Removed deprecated enablePersistence call to avoid warnings
-    // Firestore 10.12.2 handles persistence automatically via cache settings
-    
     try {
       auth.setPersistence(firebase.auth.Auth.Persistence.LOCAL).catch(function(e){
         console.warn("[JARVIS] Auth persistence error:", e);
@@ -1375,7 +1376,7 @@ function uCol(c){
   return fstore.collection("users").doc(currentUser.uid).collection(c);
 }
 
-/* === UNIFIED saveLocalCache (removed duplicate definition bug) === */
+/* === UNIFIED saveLocalCache === */
 function saveLocalCache(name, data){
   if(isStarterMode){
     return idbPut("local_memory", name, data).catch(function(err){
@@ -1918,7 +1919,6 @@ function handlePaintUpload(fl){
     return;
   }
   
-  // HEIC pre-check
   var heicFiles = nf.filter(function(f){return isHeic(f.name);});
   if(heicFiles.length){
     alert("HEIC/HEIF files detected ("+heicFiles.map(function(f){return f.name;}).join(", ")+"). Browser canvas cannot process these. Please convert to JPEG in Photos app before uploading.");
@@ -1954,7 +1954,6 @@ function handlePaintUpload(fl){
     function processFile(fi){
       if(fi>=batch.length||uploadCancelled){
         renderPaintings();
-        // Delay between batches to avoid Firestore rate limit
         setTimeout(function(){ processBatch(b+BATCH); }, 600);
         return;
       }
@@ -1987,7 +1986,6 @@ function handlePaintUpload(fl){
         showInAppNotif("Save failed", (err.message||"Could not process image"));
       }).then(function(){
         rp("");
-        // Delay between individual files to respect Firestore write limit
         setTimeout(function(){ processFile(fi+1); }, 400);
       });
     }
@@ -2034,46 +2032,116 @@ function delPaint(id){
   renderPaintings();
 }
 
+/* === IMPROVED openPD: robust DOM construction, original image preview, note editing === */
 function openPD(id){
   var p=null;
   for(var i=0;i<paintCache.length;i++){if(paintCache[i].id===id){p=paintCache[i];break}}
   if(!p)return;
+  
   var o=document.createElement("div");
   o.className="paint-detail-overlay";
-  o.innerHTML='<button class="paint-detail-close" onclick="this.parentElement.remove()">&#10005;</button><img class="paint-detail-img" src="'+p.thumb+'"><div class="paint-detail-field"><label>TITLE</label><input id="pd_t" value="'+esc(p.title)+'"></div><div class="paint-detail-field"><label>TAGS</label><input id="pd_g" value="'+esc((p.tags||[]).join(", "))+'"></div><div class="paint-detail-field"><label>DESCRIPTION</label><textarea id="pd_d">'+esc(p.description||"")+'</textarea></div><div class="paint-detail-field"><label>DATE</label><input type="date" id="pd_dt" value="'+(p.date||"")+'" class="diary-date-input" style="width:100%"></div><button class="paint-detail-save" onclick="savePD(\''+p.id+"')\">SAVE</button>";
+  
+  var closeBtn=document.createElement("button");
+  closeBtn.className="paint-detail-close";
+  closeBtn.innerHTML="&#10005;";
+  closeBtn.onclick=function(){o.remove()};
+  o.appendChild(closeBtn);
+  
+  var img=document.createElement("img");
+  img.className="paint-detail-img";
+  var imgSrc=p.full?"data:image/jpeg;base64,"+p.full:(p.thumb||"");
+  img.src=imgSrc;
+  img.style.cursor="zoom-in";
+  img.onclick=function(){if(imgSrc)openLB(imgSrc,'image')};
+  o.appendChild(img);
+  
+  var titleField=document.createElement("div");
+  titleField.className="paint-detail-field";
+  titleField.innerHTML='<label>TITLE</label><input id="pd_t" value="'+esc(p.title)+'" placeholder="Enter title...">';
+  o.appendChild(titleField);
+  
+  var noteField=document.createElement("div");
+  noteField.className="paint-detail-field";
+  noteField.innerHTML='<label>NOTE</label><textarea id="pd_d" placeholder="Add a note...">'+esc(p.description||"")+'</textarea>';
+  o.appendChild(noteField);
+  
+  var tagsField=document.createElement("div");
+  tagsField.className="paint-detail-field";
+  tagsField.innerHTML='<label>TAGS</label><input id="pd_g" value="'+esc((p.tags||[]).join(", "))+'" placeholder="tag1, tag2, tag3...">';
+  o.appendChild(tagsField);
+  
+  var dateField=document.createElement("div");
+  dateField.className="paint-detail-field";
+  dateField.innerHTML='<label>DATE</label><input type="date" id="pd_dt" value="'+(p.date||"")+'" class="diary-date-input" style="width:100%">';
+  o.appendChild(dateField);
+  
+  var saveBtn=document.createElement("button");
+  saveBtn.className="paint-detail-save";
+  saveBtn.textContent="SAVE";
+  saveBtn.onclick=function(){savePD(p.id)};
+  o.appendChild(saveBtn);
+  
   document.body.appendChild(o);
 }
 
+/* === IMPROVED savePD: safe element access, robust cache + Firestore update === */
 function savePD(id){
-  var u={title:document.getElementById("pd_t").value.trim(),tags:document.getElementById("pd_g").value.split(",").map(function(t){return t.trim().toLowerCase()}).filter(Boolean),description:document.getElementById("pd_d").value.trim(),date:document.getElementById("pd_dt").value};
+  var titleEl=document.getElementById("pd_t");
+  var noteEl=document.getElementById("pd_d");
+  var tagsEl=document.getElementById("pd_g");
+  var dateEl=document.getElementById("pd_dt");
+  
+  if(!titleEl||!noteEl||!tagsEl||!dateEl){
+    console.error("[JARVIS] savePD: missing form elements");
+    showInAppNotif("Error","Form not found. Close and reopen.");
+    return;
+  }
+  
+  var u={
+    title:titleEl.value.trim(),
+    tags:tagsEl.value.split(",").map(function(t){return t.trim().toLowerCase()}).filter(Boolean),
+    description:noteEl.value.trim(),
+    date:dateEl.value
+  };
 
-  function onErr(err){
-    console.error("[JARVIS] savePD error:", err);
-    showInAppNotif("Save failed", "Could not update painting");
+  function finish(){
+    var el=document.querySelector(".paint-detail-overlay");
+    if(el)el.remove();
+    renderPaintings();
+    showInAppNotif("Saved","Painting updated successfully");
   }
 
-  if(isStarterMode){
-    for(var i=0;i<paintCache.length;i++){if(paintCache[i].id===id){Object.assign(paintCache[i],u);break}}
-    saveLocalCache("paintings", paintCache).then(function(){
-      var el=document.querySelector(".paint-detail-overlay");if(el)el.remove();
-      renderPaintings();
-    }).catch(onErr);
+  function onErr(err){
+    console.error("[JARVIS] savePD error:",err);
+    showInAppNotif("Save failed",err.message||"Could not update painting");
+  }
+
+  var found=false;
+  for(var i=0;i<paintCache.length;i++){
+    if(paintCache[i].id===id){
+      Object.assign(paintCache[i],u);
+      found=true;
+      break;
+    }
+  }
+  if(!found){
+    onErr(new Error("Painting not found in cache"));
     return;
   }
 
-  var col = uCol("paintings");
+  if(isStarterMode){
+    saveLocalCache("paintings",paintCache).then(finish).catch(onErr);
+    return;
+  }
+
+  var col=uCol("paintings");
   if(col){
-    col.doc(id).update(u).then(function(){
-      for(var i=0;i<paintCache.length;i++){if(paintCache[i].id===id){Object.assign(paintCache[i],u);break}}
-      var el=document.querySelector(".paint-detail-overlay");if(el)el.remove();
-      renderPaintings();
-    }).catch(onErr);
+    col.doc(id).update(u).then(finish).catch(function(err){
+      onErr(err);
+      finish();
+    });
   } else {
-    for(var i=0;i<paintCache.length;i++){if(paintCache[i].id===id){Object.assign(paintCache[i],u);break}}
-    saveLocalCache("paintings", paintCache).then(function(){
-      var el=document.querySelector(".paint-detail-overlay");if(el)el.remove();
-      renderPaintings();
-    }).catch(onErr);
+    saveLocalCache("paintings",paintCache).then(finish).catch(onErr);
   }
 }
 
@@ -2149,7 +2217,7 @@ function renderMedia(){
   if(noUrl){
     var notice=document.createElement("div");
     notice.style.cssText="font-size:12px;color:var(--warning);margin-bottom:12px;padding:10px 14px;background:rgba(251,191,36,0.08);border:1px solid rgba(251,191,36,0.15);border-radius:var(--radius-sm)";
-    notice.textContent=noUrl+" file"+(noUrl>1?"s":"")+" without audio data. Tap \u2191 to re-upload.";
+    notice.textContent=noUrl+" file"+(noUrl>1?"s":"")+" without audio data. Tap ↑ to re-upload.";
     list.appendChild(notice);
   }
   mediaCache.forEach(function(m){
@@ -2158,7 +2226,7 @@ function renderMedia(){
     var hasUrl=!!m.storageUrl;
     var d=document.createElement("div");
     d.className="media-item";
-    d.innerHTML='<div class="media-icon"'+(hasUrl?"":" style=\"opacity:.4\"")+'>'+icon+'</div><div class="media-info"><div class="media-name">'+esc(m.title)+(hasUrl?'<span style="color:var(--success);font-size:10px;margin-left:8px">\u266B</span>':'')+'</div><div class="media-meta">'+m.type+" · "+size+(hasUrl?"":" · no audio")+'</div></div>'+(hasUrl||!hasR2()?'':'<<button class="icon-btn" style="width:32px;height:32px;font-size:13px;color:var(--accent);border-color:rgba(92,157,255,0.2)" onclick="event.stopPropagation();reuploadMedia(\''+m.id+"')\">\u2191</button>")+'<<button class="media-del" onclick="delMedia(\''+m.id+"')\">&#10005;</button>";
+    d.innerHTML='<div class="media-icon"'+(hasUrl?"":" style=\"opacity:.4\"")+'>'+icon+'</div><div class="media-info"><div class="media-name">'+esc(m.title)+(hasUrl?'<span style="color:var(--success);font-size:10px;margin-left:8px">&#9835;</span>':'')+'</div><div class="media-meta">'+m.type+" · "+size+(hasUrl?"":" · no audio")+'</div></div>'+(hasUrl||!hasR2()?'':'<<button class="icon-btn" style="width:32px;height:32px;font-size:13px;color:var(--accent);border-color:rgba(92,157,255,0.2)" onclick="event.stopPropagation();reuploadMedia(\''+m.id+"')\">&#8593;</button>")+'<<button class="media-del" onclick="delMedia(\''+m.id+"')\">&#10005;</button>";
     list.appendChild(d);
   });
 }
@@ -2371,7 +2439,6 @@ function addLocalEpisodic(summary){
 function sendMessage(){
   var text=$inp.value.trim();
   var hasAtt=pendingAttachments.length>0;
-  
   
   if((!text&&!hasAtt)||loading)return;
   var notReady=false;
@@ -2625,7 +2692,6 @@ function closeAnniversary(){
   document.getElementById("anniversaryOverlay").classList.add("hidden");
 }
 
-
 /* === DATA AGGREGATION FOR ANNIVERSARY DASHBOARD === */
 function aggregateActivityData(){
   var now = Date.now();
@@ -2737,7 +2803,8 @@ function renderAnniversary(){
   var days = Math.floor((Date.now() - firstTs) / 86400000);
   if(days < 1) days = 1;
 
-  var isCJK = currentLang === "ko" || currentLang === "ja"; document.getElementById("anniTitle").textContent = isCJK ? days + t.anniversaryTitle : days + " " + t.anniversaryTitle;
+  var isCJK = currentLang === "ko" || currentLang === "ja"; 
+  document.getElementById("anniTitle").textContent = isCJK ? days + t.anniversaryTitle : days + " " + t.anniversaryTitle;
   document.getElementById("anniSub").textContent = t.anniversarySub;
 
   var activity = aggregateActivityData();
@@ -2901,6 +2968,7 @@ function renderAnniversary(){
   container.innerHTML = html;
   if(overlay) overlay.scrollTop = scrollTop;
 }
+
 function clearChat(){
   saveChatSession();
   startNewSession();
