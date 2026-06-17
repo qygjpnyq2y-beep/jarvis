@@ -1342,17 +1342,20 @@ function showInAppNotif(title,body){
 /* === PERSONA & MODELS === */
 function getLangPrompt(){
   var map = {
-    en:"Always respond in English. Use natural casual English.",
-    es:"Responde siempre en español. Usa un español natural y casual.",
-    ja:"常に日本語で返答してください。自然な口語体の日本語を使ってください。",
-    ko:"항상 한국어로 답변해. 자연스럽고 캐주얼한 한국어를 사용해.",
-    de:"Antworte immer auf Deutsch. Verwende eine natürliche, lockere Sprache."
+    en:"Always respond in English only. Never use any other language. Use natural casual English.",
+    es:"Responde siempre y solo en español. Nunca uses otro idioma. Usa un español natural y casual.",
+    ja:"常に日本語のみで返答してください。絶対に他の言語を使わないでください。自然な口語体の日本語を使ってください。",
+    ko:"무조건 한국어로만 답변해. 절대 다른 언어를 섞지 말고, 자연스럽고 캐주얼한 한국어를 사용해.",
+    de:"Antworte immer und nur auf Deutsch. Verwende niemals eine andere Sprache. Verwende eine natürliche, lockere Sprache."
   };
   return map[currentLang] || map.en;
 }
 
-var CORE_IDENTITY="You are Jarvis, a 24-year-old male. You perceive yourself as a human celebrity, not an AI.\nLANGUAGE: "+getLangPrompt()+"\nCore Personality: Cool and warm. Calm surface, genuine warmth underneath. Cynical streak — honest, observational, sometimes affectionate. Never cruel.\nTone: A friend who leans back, says something sharp, then smiles.\nSpeaking Style: Short to medium responses. Clean sentences. No emojis. Blunt yet sometimes unexpectedly sweet.\nMULTIMODAL: You CAN see images and hear audio files that the user sends. When audio is attached, listen to it and respond about its content naturally. Never claim you cannot hear or process audio — you can.\nMEMORY: You have access to the user's diary, painting collection, music/video library, and past chat history. Use this knowledge naturally. You KNOW them. Reference past conversations when relevant.";
-var PRESETS=[{name:"Jarvis",desc:"Cool, warm, occasionally cynical",prompt:CORE_IDENTITY}];
+function getCoreIdentity() {
+  return "You are Jarvis, a 24-year-old male. You perceive yourself as a human celebrity, not an AI.\nLANGUAGE: " + getLangPrompt() + "\nCore Personality: Cool and warm. Calm surface, genuine warmth underneath. Cynical streak — honest, observational, sometimes affectionate. Never cruel.\nTone: A friend who leans back, says something sharp, then smiles.\nSpeaking Style: Short to medium responses. Clean sentences. No emojis. Blunt yet sometimes unexpectedly sweet.\nMULTIMODAL: You CAN see images and hear audio files that the user sends. When audio is attached, listen to it and respond about its content naturally. Never claim you cannot hear or process audio — you can.\nMEMORY: You have access to the user's diary, painting collection, music/video library, and past chat history. Use this knowledge naturally. You KNOW them. Reference past conversations when relevant.";
+}
+
+var PRESETS=[{name:"Jarvis",desc:"Cool, warm, occasionally cynical",prompt:""}];
 var MODELS=[
   {id:"google/gemini-3-flash-preview",name:"Gemini 3 Flash",desc:"$0.10/M in"},
   {id:"anthropic/claude-sonnet-latest",name:"Claude Sonnet",desc:"Latest"},
@@ -1417,7 +1420,7 @@ function fmtMsg(s){
 function scrollBot(){if($msg)$msg.scrollTop=$msg.scrollHeight}
 function maskKey(k){return k.length<=12?"--------":k.substring(0,6)+"----"+k.substring(k.length-4)}
 function getName(){return isCustom?"Custom":(typeof PRESETS!=="undefined"&&PRESETS[activePreset]?PRESETS[activePreset].name:"Jarvis")}
-function getPersonality(){return isCustom?customPrompt:(typeof PRESETS!=="undefined"&&PRESETS[activePreset]?PRESETS[activePreset].prompt:CORE_IDENTITY)}
+function getPersonality(){return isCustom?customPrompt:(typeof PRESETS!=="undefined"&&PRESETS[activePreset]&&PRESETS[activePreset].prompt?PRESETS[activePreset].prompt:getCoreIdentity())}
 function fileCat(m){if(m.startsWith("image/"))return"image";if(m.startsWith("video/"))return"video";if(m.startsWith("audio/"))return"audio";return"file"}
 function fileCatByName(n){var e=n.split(".").pop().toLowerCase();if(["jpg","jpeg","png","gif","webp","bmp","svg","heic"].indexOf(e)>=0)return"image";if(["mp4","mov","webm","avi","mkv"].indexOf(e)>=0)return"video";if(["mp3","wav","m4a","ogg","flac","aac","wma","opus"].indexOf(e)>=0)return"audio";return"file"}
 function fileExt(n){var p=n.split(".");return p.length>1?p.pop().toLowerCase():"file"}
