@@ -1367,7 +1367,17 @@ var MODELS=[
   {id:"tencent/hy3:free",name:"Tencent HY3",desc:"Free"},
   {id:"poolside/laguna-m.1:free",name:"Laguna M.1",desc:"Free"}
 ];
-
+// 모델별 컨텍스트가 작은 것들 (:free 계열 등). 여기 있으면 메모리/히스토리를 축약해서 보냄
+var SMALL_CONTEXT_MODELS = [
+  "openai/gpt-oss-120b:free",
+  "google/gemma-4-31b-it:free",
+  "tencent/hy3:free",
+  "poolside/laguna-m.1:free"
+];
+function isSmallContext(){
+  return SMALL_CONTEXT_MODELS.indexOf(MODELS[activeModel].id) !== -1;
+}
+  
 var chatHistory=[],activePreset=0,activeModel=0,isCustom=false,loading=false,customPrompt="",pendingAttachments=[];
 var paintPage=0,diaryCache=[],paintCache=[],mediaCache=[],chatSessionsCache=[];
 var uploadCancelled=false,currentSessionId=null;
