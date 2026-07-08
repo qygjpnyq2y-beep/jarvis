@@ -2279,11 +2279,16 @@ function reuploadMedia(id){
 }
 
 function buildMemCtx(){
+  var small = isSmallContext();
   var ctx = "";
   if(diaryCache.length){
     var sorted = diaryCache.slice().sort(function(a,b){return (a.date||"").localeCompare(b.date||"");});
+    var recentDiary = small ? sorted.slice(-30) : sorted;
     ctx += "\n\n[USER'S DIARY]\n";
-    sorted.forEach(function(d){ctx += "--- "+d.date+" ---\n"+d.text+"\n\n";});
+    recentDiary.forEach(function(d){
+      var text = (small && d.text.length > 800) ? d.text.substring(0,800)+"...(truncated)" : d.text;
+      ctx += "--- "+d.date+" ---\n"+text+"\n\n";
+    });
     ctx += "[END DIARY]\n";
   }
   if(memCache.semantic.length){
@@ -2311,24 +2316,37 @@ function buildMemCtx(){
     ctx += "[END RELATIONS]\n";
   }
   if(paintCache.length){
-    ctx += "\n[PAINTINGS - "+paintCache.length+" works]\n";
-    paintCache.forEach(function(p){var t=(p.tags||[]).join(", "); ctx += '- "'+p.title+'" ('+p.date+")"+(t?" ["+t+"]":"")+(p.description?" - "+p.description:"")+"\n";});
+    var recentPaint = small ? paintCache.slice(0,40) : paintCache;
+    ctx += "\n[PAINTINGS - "+paintCache.length+" works"+(small?", showing recent "+recentPaint.length:"")+"]\n";
+    recentPaint.forEach(function(p){
+      var t=(p.tags||[]).join(", ");
+      var desc = (small && p.description) ? p.description.substring(0,150) : p.description;
+      ctx += '- "'+p.title+'" ('+p.date+")"+(t?" ["+t+"]":"")+(desc?" - "+desc:"")+"\n";
+    });
     ctx += "[END CATALOG]\n";
   }
   if(mediaCache.length){
-    ctx += "\n[MEDIA - "+mediaCache.length+" files]\n";
-    mediaCache.forEach(function(m){ctx += '- "'+m.title+'" ('+m.type+")"+(m.storageUrl?" [audio available]":"")+(m.tags&&m.tags.length?" ["+m.tags.join(", ")+"]":"")+(m.description?" - "+m.description:"")+"\n";});
+    var recentMedia = small ? mediaCache.slice(0,30) : mediaCache;
+    ctx += "\n[MEDIA - "+mediaCache.length+" files"+(small?", showing recent "+recentMedia.length:"")+"]\n";
+    recentMedia.forEach(function(m){
+      var desc = (small && m.description) ? m.description.substring(0,100) : m.description;
+      ctx += '- "'+m.title+'" ('+m.type+")"+(m.storageUrl?" [audio available]":"")+(m.tags&&m.tags.length?" ["+m.tags.join(", ")+"]":"")+(desc?" - "+desc:"")+"\n";
+    });
     ctx += "[END MEDIA]\n";
   }
   if(chatSessionsCache.length){
-    var recent = chatSessionsCache.slice(0,5);
+    var recent = small ? chatSessionsCache.slice(0,3) : chatSessionsCache.slice(0,5);
     ctx += "\n[RECENT CONVERSATIONS]\n";
     recent.forEach(function(c){
       ctx += "\n--- "+fmtDate(c.ts)+" ---\n";
-      if(c.messages && c.messages.length){ c.messages.slice(-10).forEach(function(m){
-        var content = typeof m.content==="string"?m.content:JSON.stringify(m.content);
-        ctx += (m.role==="assistant"?"Jarvis":"User")+": "+content.substring(0,250)+"\n";
-      });}
+      if(c.messages && c.messages.length){
+        var msgs = small ? c.messages.slice(-6) : c.messages.slice(-10);
+        msgs.forEach(function(m){
+          var content = typeof m.content==="string"?m.content:JSON.stringify(m.content);
+          var maxLen = small ? 200 : 250;
+          ctx += (m.role==="assistant"?"Jarvis":"User")+": "+content.substring(0,maxLen)+"\n";
+        });
+      }
     });
     ctx += "[END CONVERSATIONS]\n";
   }
