@@ -2460,8 +2460,14 @@ function sendMessage(){
   $inp.disabled=true;
   showLoad();
   var memCtx=buildMemCtx();
-  var relevant=searchPaintFor(text);
-  var relevantMedia=searchMediaFor(text);
+
+  // 비전(이미지/오디오) 지원 모델 목록 — 필요시 여기에 모델 id 추가/삭제
+  var visionModels = ["google/gemini-3-flash-preview","anthropic/claude-sonnet-5","x-ai/grok-4.3","openai/gpt-chat-latest","google/gemma-4-31b-it:free"];
+  var supportsVision = visionModels.indexOf(MODELS[activeModel].id) !== -1;
+
+  var relevant = supportsVision ? searchPaintFor(text) : [];
+  var relevantMedia = supportsVision ? searchMediaFor(text) : [];
+
   var kstNow=new Date(Date.now()+9*60*60*1000);
   var timeStr=kstNow.getUTCFullYear()+"-"+String(kstNow.getUTCMonth()+1).padStart(2,"0")+"-"+String(kstNow.getUTCDate()).padStart(2,"0")+" "+String(kstNow.getUTCHours()).padStart(2,"0")+":"+String(kstNow.getUTCMinutes()).padStart(2,"0");
   var dayNames=["일","월","화","수","목","금","토"];
@@ -2523,7 +2529,7 @@ function sendMessage(){
     fetch("https://openrouter.ai/api/v1/chat/completions",{
       method:"POST",
       headers:{"Content-Type":"application/json","Authorization":"Bearer "+orKey,"HTTP-Referer":"https://jarvis.app","X-Title":"JARVIS"},
-      body:JSON.stringify({model:MODELS[activeModel].id,messages:messages,max_tokens:2000,provider:{order:["google"]}})
+      body:JSON.stringify({model:MODELS[activeModel].id,messages:messages,max_tokens:2000})
     }).then(function(res){return res.json()}).then(function(data){
       if(data.error)throw new Error(data.error.message||JSON.stringify(data.error));
       var reply=data.choices&&data.choices[0]&&data.choices[0].message?data.choices[0].message.content:null;
@@ -2553,7 +2559,6 @@ function sendMessage(){
     });
   });
 }
-
 function openConfig(){
   document.getElementById("customTextarea").value=customPrompt;
   document.getElementById("keyDisplay").textContent="OpenRouter: "+maskKey(orKey);
