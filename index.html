@@ -2554,7 +2554,8 @@ function sendMessage(){
     var userMsg=userContent.length===1&&userContent[0].type==="text"?{role:"user",content:userContent[0].text}:{role:"user",content:userContent};
     chatHistory.push(userMsg);
     saveChatSession();
-    var messages=[sysMsg].concat(chatHistory);
+    var trimmedHistory = isSmallContext() && chatHistory.length > 20 ? chatHistory.slice(-20) : chatHistory;
+    var messages=[sysMsg].concat(trimmedHistory);
     fetch("https://openrouter.ai/api/v1/chat/completions",{
       method:"POST",
       headers:{"Content-Type":"application/json","Authorization":"Bearer "+orKey,"HTTP-Referer":"https://jarvis.app","X-Title":"JARVIS"},
