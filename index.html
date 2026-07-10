@@ -336,6 +336,24 @@ input:focus,textarea:focus{outline:none}
 .anni-event-text{font-size:13px;color:var(--text-secondary);line-height:1.6}
 .anni-empty{text-align:center;padding:40px 20px;color:var(--text-tertiary);font-size:14px}
 
+/* Memory Timeline */
+.mtl-section-label{font-size:11px;color:var(--accent);letter-spacing:2.5px;margin:20px 0 12px;font-weight:700;opacity:0.8;text-transform:uppercase}
+.mtl-section-label:first-child{margin-top:0}
+.mtl-timeline{position:relative;padding-left:22px}
+.mtl-timeline::before{content:'';position:absolute;left:5px;top:6px;bottom:6px;width:2px;background:linear-gradient(to bottom,var(--accent),transparent);opacity:.3;border-radius:2px}
+.mtl-day{position:relative;margin-bottom:18px;animation:float-in .3s}
+.mtl-day::before{content:'';position:absolute;left:-22px;top:5px;width:8px;height:8px;border-radius:50%;background:var(--accent);box-shadow:0 0 8px var(--accent-glow)}
+.mtl-day-date{font-family:'Space Mono',monospace;font-size:13px;color:var(--accent);font-weight:700;letter-spacing:.5px;margin-bottom:4px}
+.mtl-day-line{font-size:13px;color:var(--text-secondary);line-height:1.6;padding-left:16px;position:relative}
+.mtl-day-line::before{content:'\2514';position:absolute;left:0;top:0;color:var(--text-tertiary)}
+.mtl-month-card{background:var(--glass-highlight);backdrop-filter:blur(10px);border:1px solid var(--glass-border);border-radius:var(--radius-md);padding:14px 16px;margin-bottom:10px;animation:float-in .3s;transition:all .2s}
+.mtl-month-card:hover{border-color:rgba(255,255,255,0.12)}
+.mtl-month-date{font-family:'Space Mono',monospace;font-size:13px;color:var(--accent);font-weight:700;margin-bottom:6px;display:flex;align-items:center;justify-content:space-between}
+.mtl-month-count{font-size:10px;color:var(--text-tertiary);font-weight:400;letter-spacing:.5px}
+.mtl-month-summary{font-size:13px;color:var(--text-secondary);line-height:1.7;padding-left:16px;position:relative}
+.mtl-month-summary::before{content:'\2514';position:absolute;left:0;top:0;color:var(--text-tertiary)}
+.mtl-empty{text-align:center;padding:36px 20px;color:var(--text-tertiary);font-size:13px;line-height:1.7}
+
 .mode-badge{display:inline-block;padding:3px 10px;border-radius:20px;font-size:9px;font-weight:700;letter-spacing:1px;text-transform:uppercase;margin-left:8px}
 .mode-starter{background:rgba(74,222,128,0.12);color:var(--success);border:1px solid rgba(74,222,128,0.2)}
 .mode-advanced{background:rgba(92,157,255,0.12);color:var(--accent);border:1px solid rgba(92,157,255,0.2)}
@@ -600,6 +618,7 @@ input:focus,textarea:focus{outline:none}
         <button class="mem-tab" onclick="switchMemTab('media')">MEDIA</button>
         <button class="mem-tab" onclick="switchMemTab('chats')">CHATS</button>
         <button class="mem-tab" onclick="switchMemTab('graph')">GRAPH</button>
+        <button class="mem-tab" onclick="switchMemTab('timeline')">TIMELINE</button>
         <button class="mem-tab" onclick="switchMemTab('search')">SEARCH</button>
       </div>
       <div class="mem-tab-content active" id="memDiary">
@@ -638,6 +657,11 @@ input:focus,textarea:focus{outline:none}
         <div class="section-label">SEMANTIC MEMORY GRAPH</div>
         <div style="font-size:12px;color:var(--text-tertiary);margin-bottom:14px">Nodes decay over time unless reinforced.</div>
         <div id="graphContainer"></div>
+      </div>
+      <div class="mem-tab-content" id="memTimeline">
+        <div class="section-label">MEMORY TIMELINE</div>
+        <div style="font-size:12px;color:var(--text-tertiary);margin-bottom:14px">This month: day by day. Earlier months: condensed into one summary.</div>
+        <div id="timelineContainer"></div>
       </div>
       <div class="mem-tab-content" id="memSearch">
         <div class="section-label">CROSS-MEMORY SEARCH</div>
@@ -2753,15 +2777,17 @@ function closeMemory(){
 }
 
 function switchMemTab(t){
-  var tabs=["diary","paintings","media","chats","graph","search"];
+  var tabs=["diary","paintings","media","chats","graph","timeline","search"];
   document.querySelectorAll(".mem-tab").forEach(function(el,i){el.classList.toggle("active",tabs[i]===t)});
   document.getElementById("memDiary").classList.toggle("active",t==="diary");
   document.getElementById("memPaintings").classList.toggle("active",t==="paintings");
   document.getElementById("memMedia").classList.toggle("active",t==="media");
   document.getElementById("memChats").classList.toggle("active",t==="chats");
   document.getElementById("memGraph").classList.toggle("active",t==="graph");
+  document.getElementById("memTimeline").classList.toggle("active",t==="timeline");
   document.getElementById("memSearch").classList.toggle("active",t==="search");
   if(t==="graph") renderMemoryGraph();
+  if(t==="timeline") renderMemoryTimeline();
   if(t==="search") renderMemorySearch();
 }
 
@@ -2795,6 +2821,98 @@ function renderMemoryGraph(){
   }
   var t = I18N[currentLang];
   container.innerHTML = html || '<div style="color:var(--text-tertiary);font-size:13px;text-align:center;padding:24px">'+t.graphEmpty+'</div>';
+}
+
+/* === MEMORY TIMELINE ===
+   이번 달: 날짜별로 "그날의 가장 중요한 활동" 한 줄씩.
+   지난 달들: 달 단위로 묶어서, 그 달의 가장 중요한 활동들만 중간 길이 요약 한 줄로.
+   추가 API 호출 없이 이미 쌓여있는 memCache.episodic(에피소드 메모리)의 importance 점수를 활용함.
+   addLocalEpisodic()로 자동 생성되는 저importance(3) 잡담 로그는 노이즈라서 제외하고,
+   extractMemoriesAsync()가 LLM으로 뽑아낸 의미있는 이벤트(importance>=TIMELINE_MIN_IMPORTANCE)만 사용. */
+var TIMELINE_MIN_IMPORTANCE = 4;
+var TIMELINE_MONTH_SUMMARY_MAX_CHARS = 220;
+var TIMELINE_MONTH_TOP_N = 4;
+
+function fmtYMD(dateStr){
+  // dateStr: "YYYY-MM-DD" -> "YYYY.MM.DD"
+  return (dateStr||"").replace(/-/g,".");
+}
+function fmtYM(ymStr){
+  // ymStr: "YYYY-MM" -> "YYYY.MM"
+  return (ymStr||"").replace(/-/g,".");
+}
+
+function buildMemoryTimelineData(){
+  var now = new Date();
+  var currentYM = now.getFullYear()+"-"+String(now.getMonth()+1).padStart(2,"0");
+
+  var meaningful = memCache.episodic.filter(function(e){
+    return e.date && e.summary && (e.importance||0) >= TIMELINE_MIN_IMPORTANCE;
+  });
+
+  var byDate = {};   // 이번 달: date -> best entry
+  var byMonth = {};  // 지난 달: YYYY-MM -> [entries]
+
+  meaningful.forEach(function(e){
+    var ym = e.date.substring(0,7);
+    if(ym === currentYM){
+      if(!byDate[e.date] || (e.importance||0) > (byDate[e.date].importance||0)){
+        byDate[e.date] = e;
+      }
+    } else {
+      if(!byMonth[ym]) byMonth[ym] = [];
+      byMonth[ym].push(e);
+    }
+  });
+
+  var currentMonthItems = Object.keys(byDate).sort().reverse().map(function(date){
+    return {date:date, summary:byDate[date].summary};
+  });
+
+  var pastMonthItems = Object.keys(byMonth).sort().reverse().map(function(ym){
+    var entries = byMonth[ym].slice().sort(function(a,b){return (b.importance||0)-(a.importance||0);});
+    var top = entries.slice(0,TIMELINE_MONTH_TOP_N);
+    var summary = top.map(function(e){return e.summary;}).join(" · ");
+    if(summary.length > TIMELINE_MONTH_SUMMARY_MAX_CHARS) summary = summary.substring(0,TIMELINE_MONTH_SUMMARY_MAX_CHARS)+"...";
+    return {month:ym, summary:summary, count:entries.length};
+  });
+
+  return {current:currentMonthItems, past:pastMonthItems};
+}
+
+function renderMemoryTimeline(){
+  var container = document.getElementById("timelineContainer");
+  if(!container) return;
+  var data = buildMemoryTimelineData();
+  var html = "";
+
+  if(data.current.length){
+    html += '<div class="mtl-section-label">This Month</div>';
+    html += '<div class="mtl-timeline">';
+    data.current.forEach(function(item){
+      html += '<div class="mtl-day">';
+      html += '<div class="mtl-day-date">'+esc(fmtYMD(item.date))+'</div>';
+      html += '<div class="mtl-day-line">'+esc(item.summary)+'</div>';
+      html += '</div>';
+    });
+    html += '</div>';
+  }
+
+  if(data.past.length){
+    html += '<div class="mtl-section-label">Earlier</div>';
+    data.past.forEach(function(item){
+      html += '<div class="mtl-month-card">';
+      html += '<div class="mtl-month-date">'+esc(fmtYM(item.month))+'<span class="mtl-month-count">'+item.count+' events</span></div>';
+      html += '<div class="mtl-month-summary">'+esc(item.summary)+'</div>';
+      html += '</div>';
+    });
+  }
+
+  if(!data.current.length && !data.past.length){
+    html = '<div class="mtl-empty">No timeline data yet.<br>Keep chatting — Jarvis will pick out the important moments automatically.</div>';
+  }
+
+  container.innerHTML = html;
 }
 
 function renderMemorySearch(){
