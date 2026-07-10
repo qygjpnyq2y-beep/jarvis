@@ -2376,6 +2376,73 @@ function buildMemCtx(){
   return ctx;
 }
 
+/* === PAST-CONVERSATION SEARCH ===
+   사용자가 예전에 했던 얘기를 언급하면(예: "저번에 얘기했던 그거"),
+   buildMemCtx()가 담아주는 "최근 세션 몇 개"로는 못 찾는 경우가 많음.
+   그래서 매 메시지마다 diaryCache 전체 + chatSessionsCache 전체(과거 전체 대화)를
+   키워드로 스캔해서, 지금 질문과 관련된 항목만 소량으로 뽑아 컨텍스트에 추가로 얹음.
+   -> 평소엔 아무것도 안 붙지만(관련 없으면 스킵), 과거 얘기를 꺼내면 자동으로 찾아줌. */
+function searchPastConversations(query, opts){
+  opts = opts || {};
+  var maxDiary = opts.maxDiary != null ? opts.maxDiary : 5;
+  var maxChats = opts.maxChats != null ? opts.maxChats : 3;
+  if(!query || !query.trim()) return {diary:[], chats:[]};
+  var terms = query.toLowerCase().split(/\s+/).filter(function(w){return w.length>=2;});
+  if(!terms.length) return {diary:[], chats:[]};
+
+  var diaryScored = diaryCache.map(function(d){
+    var text = ((d.text||"")+" "+(d.date||"")).toLowerCase();
+    var score=0;
+    terms.forEach(function(t){ if(text.indexOf(t)>=0) score+=2; });
+    return {entry:d, score:score};
+  }).filter(function(x){return x.score>0;}).sort(function(a,b){return b.score-a.score;});
+
+  // 이미 buildMemCtx()에 실린 "최근 세션"과 지금 세션은 중복이니 제외
+  var alreadyIncluded = chatSessionsCache.slice(0, COST.MAX_CHAT_SESSIONS_CTX).map(function(c){return c.sessionId;});
+  alreadyIncluded.push(currentSessionId);
+
+  var chatScored = chatSessionsCache.filter(function(c){
+    return alreadyIncluded.indexOf(c.sessionId) === -1;
+  }).map(function(c){
+    var hay = (c.preview||"") + " " + (c.messages||[]).map(function(m){
+      return typeof m.content==="string" ? m.content : "";
+    }).join(" ");
+    hay = hay.toLowerCase();
+    var score=0;
+    terms.forEach(function(t){ if(hay.indexOf(t)>=0) score+=2; });
+    return {session:c, score:score};
+  }).filter(function(x){return x.score>0;}).sort(function(a,b){return b.score-a.score;});
+
+  return { diary: diaryScored.slice(0,maxDiary), chats: chatScored.slice(0,maxChats) };
+}
+
+function buildPastSearchCtx(query){
+  var small = isSmallContext();
+  var res = searchPastConversations(query, {maxDiary: small?3:5, maxChats: small?1:3});
+  if(!res.diary.length && !res.chats.length) return "";
+  var ctx = "\n\n[RELEVANT PAST CONTEXT — matched by searching older diary/chat history against the user's current message. Use this to recall specifics if they're asking about something from before.]\n";
+  if(res.diary.length){
+    ctx += "-- Diary matches --\n";
+    res.diary.forEach(function(d){
+      var text = d.entry.text.length > COST.MAX_DIARY_CHARS ? d.entry.text.substring(0,COST.MAX_DIARY_CHARS)+"..." : d.entry.text;
+      ctx += d.entry.date+": "+text+"\n";
+    });
+  }
+  if(res.chats.length){
+    ctx += "-- Past conversation matches --\n";
+    res.chats.forEach(function(c){
+      ctx += "["+fmtDate(c.session.ts)+"]\n";
+      var msgs = (c.session.messages||[]).slice(-COST.MAX_CHAT_SESSION_MSGS);
+      msgs.forEach(function(m){
+        var content = typeof m.content==="string" ? m.content : "";
+        ctx += (m.role==="assistant"?"Jarvis":"User")+": "+content.substring(0,200)+"\n";
+      });
+    });
+  }
+  ctx += "[END RELEVANT PAST CONTEXT]\n";
+  return ctx;
+}
+
 function searchPaintFor(q){if(!q||!paintCache.length)return[];var terms=q.toLowerCase().split(/\s+/).filter(Boolean);var scored=paintCache.map(function(p){var hay=[p.title,p.description].concat(p.tags||[]).join(" ").toLowerCase();var s=0;terms.forEach(function(t){if(hay.indexOf(t)>=0)s+=1;if((p.tags||[]).indexOf(t)>=0)s+=2;if(p.title.toLowerCase().indexOf(t)>=0)s+=1.5});return Object.assign({},p,{score:s})}).filter(function(x){return x.score>0});scored.sort(function(a,b){return b.score-a.score});return scored.slice(0,5)}
 function searchMediaFor(q){if(!q||!mediaCache.length)return[];var terms=q.toLowerCase().split(/\s+/).filter(Boolean);var scored=mediaCache.map(function(m){var hay=[m.title,m.description||"",m.fileName||""].concat(m.tags||[]).join(" ").toLowerCase();var s=0;terms.forEach(function(t){if(hay.indexOf(t)>=0)s+=1;if((m.tags||[]).indexOf(t)>=0)s+=2;if(m.title.toLowerCase().indexOf(t)>=0)s+=1.5});return Object.assign({},m,{score:s})}).filter(function(x){return x.score>0&&x.storageUrl});scored.sort(function(a,b){return b.score-a.score});return scored.slice(0,2)}
 function fetchUrlAsB64(url){return fetch(url).then(function(r){return r.blob()}).then(function(b){return new Promise(function(res,rej){var reader=new FileReader();reader.onload=function(){res(reader.result.split(",")[1])};reader.onerror=rej;reader.readAsDataURL(b)})})}
@@ -2512,6 +2579,7 @@ function sendMessage(){
   $inp.disabled=true;
   showLoad();
   var memCtx=buildMemCtx();
+  var pastCtx=buildPastSearchCtx(text); // 과거 일기/대화 검색 결과 (관련 있을 때만 채워짐)
 
   // 비전(이미지/오디오) 지원 모델 목록 — 필요시 여기에 모델 id 추가/삭제
   var visionModels = ["google/gemini-3-flash-preview","anthropic/claude-sonnet-5","x-ai/grok-4.3","openai/gpt-chat-latest","google/gemma-4-31b-it:free"];
@@ -2525,7 +2593,7 @@ function sendMessage(){
   var dayNames=["일","월","화","수","목","금","토"];
   var dayName=dayNames[kstNow.getUTCDay()];
   var timeCtx="\n[CURRENT TIME] "+timeStr+" ("+dayName+"요일) KST\n";
-  var sysMsg={role:"system",content:getPersonality()+timeCtx+memCtx};
+  var sysMsg={role:"system",content:getPersonality()+timeCtx+memCtx+pastCtx};
   var userContent=[];
   curAtt.forEach(function(a){
     if(a.category==="image"){userContent.push({type:"image_url",image_url:{url:"data:"+a.mime+";base64,"+a.b64}})}
