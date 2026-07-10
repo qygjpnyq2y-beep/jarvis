@@ -1385,6 +1385,24 @@ var PPP=30,BATCH=50;
 var LAMBDA_DECAY = 0.04;
 var memCache = {semantic:[], episodic:[], relations:[], themes:[]};
 
+/* === COST CONTROL CONFIG ===
+   튜닝 포인트: 아래 값들만 조절해도 토큰 사용량이 크게 줄어듭니다. */
+var COST = {
+  MAX_HISTORY_MSGS: 24,        // 모델 상관없이 매 요청에 실어보낼 최근 대화 메시지 수 상한
+  MAX_HISTORY_MSGS_SMALL: 14,  // SMALL_CONTEXT_MODELS용 (더 타이트하게)
+  MAX_DIARY_ENTRIES: 40,       // 시스템 프롬프트에 넣을 최근 일기 개수 상한
+  MAX_DIARY_CHARS: 400,        // 일기 한 건당 최대 글자 수 (초과분은 잘라냄)
+  MAX_PAINTINGS_LISTED: 40,    // 카탈로그 텍스트로 나열할 그림 개수 상한
+  MAX_MEDIA_LISTED: 30,        // 카탈로그 텍스트로 나열할 미디어 개수 상한
+  MAX_CHAT_SESSIONS_CTX: 2,    // 컨텍스트에 요약해서 넣을 과거 대화 세션 수
+  MAX_CHAT_SESSION_MSGS: 6,    // 그 세션당 메시지 수
+  RELEVANT_PAINT_COUNT: 1,     // 관련 그림 자동 첨부 개수 (기존 3 -> 대폭 축소)
+  RELEVANT_PAINT_USE_THUMB: true, // true면 원본 대신 썸네일(작은 이미지)만 첨부
+  RELEVANT_MEDIA_MIN_SCORE: 3, // 이 점수 이상일 때만 오디오를 자동 첨부 (기존엔 0보다 크면 무조건 첨부)
+  MEMORY_EXTRACT_EVERY_N: 3    // 메시지 N번마다 한 번씩만 메모리 추출 API 호출 (기존엔 매번 호출)
+};
+var msgCountSinceExtract = 0; // MEMORY_EXTRACT_EVERY_N 카운터
+
 /* === FIRESTORE HELPERS (NO-OP in Starter) === */
 function uCol(c){
   if(isStarterMode) return null;
@@ -2283,10 +2301,12 @@ function buildMemCtx(){
   var ctx = "";
   if(diaryCache.length){
     var sorted = diaryCache.slice().sort(function(a,b){return (a.date||"").localeCompare(b.date||"");});
-    var recentDiary = small ? sorted.slice(-30) : sorted;
-    ctx += "\n\n[USER'S DIARY]\n";
+    var diaryLimit = small ? Math.min(30, COST.MAX_DIARY_ENTRIES) : COST.MAX_DIARY_ENTRIES;
+    var recentDiary = sorted.slice(-diaryLimit);
+    ctx += "\n\n[USER'S DIARY (most recent "+recentDiary.length+" of "+diaryCache.length+")]\n";
     recentDiary.forEach(function(d){
-      var text = (small && d.text.length > 800) ? d.text.substring(0,800)+"...(truncated)" : d.text;
+      var maxChars = COST.MAX_DIARY_CHARS;
+      var text = (d.text.length > maxChars) ? d.text.substring(0,maxChars)+"...(truncated)" : d.text;
       ctx += "--- "+d.date+" ---\n"+text+"\n\n";
     });
     ctx += "[END DIARY]\n";
@@ -2316,31 +2336,34 @@ function buildMemCtx(){
     ctx += "[END RELATIONS]\n";
   }
   if(paintCache.length){
-    var recentPaint = small ? paintCache.slice(0,40) : paintCache;
-    ctx += "\n[PAINTINGS - "+paintCache.length+" works"+(small?", showing recent "+recentPaint.length:"")+"]\n";
+    var paintLimit = small ? Math.min(30, COST.MAX_PAINTINGS_LISTED) : COST.MAX_PAINTINGS_LISTED;
+    var recentPaint = paintCache.slice(0,paintLimit);
+    ctx += "\n[PAINTINGS - "+paintCache.length+" works, showing recent "+recentPaint.length+"]\n";
     recentPaint.forEach(function(p){
       var t=(p.tags||[]).join(", ");
-      var desc = (small && p.description) ? p.description.substring(0,150) : p.description;
+      var desc = p.description ? p.description.substring(0,150) : p.description;
       ctx += '- "'+p.title+'" ('+p.date+")"+(t?" ["+t+"]":"")+(desc?" - "+desc:"")+"\n";
     });
     ctx += "[END CATALOG]\n";
   }
   if(mediaCache.length){
-    var recentMedia = small ? mediaCache.slice(0,30) : mediaCache;
-    ctx += "\n[MEDIA - "+mediaCache.length+" files"+(small?", showing recent "+recentMedia.length:"")+"]\n";
+    var mediaLimit = small ? Math.min(20, COST.MAX_MEDIA_LISTED) : COST.MAX_MEDIA_LISTED;
+    var recentMedia = mediaCache.slice(0,mediaLimit);
+    ctx += "\n[MEDIA - "+mediaCache.length+" files, showing recent "+recentMedia.length+"]\n";
     recentMedia.forEach(function(m){
-      var desc = (small && m.description) ? m.description.substring(0,100) : m.description;
+      var desc = m.description ? m.description.substring(0,100) : m.description;
       ctx += '- "'+m.title+'" ('+m.type+")"+(m.storageUrl?" [audio available]":"")+(m.tags&&m.tags.length?" ["+m.tags.join(", ")+"]":"")+(desc?" - "+desc:"")+"\n";
     });
     ctx += "[END MEDIA]\n";
   }
   if(chatSessionsCache.length){
-    var recent = small ? chatSessionsCache.slice(0,3) : chatSessionsCache.slice(0,5);
+    var sessLimit = small ? 2 : COST.MAX_CHAT_SESSIONS_CTX;
+    var recent = chatSessionsCache.slice(0,sessLimit);
     ctx += "\n[RECENT CONVERSATIONS]\n";
     recent.forEach(function(c){
       ctx += "\n--- "+fmtDate(c.ts)+" ---\n";
       if(c.messages && c.messages.length){
-        var msgs = small ? c.messages.slice(-6) : c.messages.slice(-10);
+        var msgs = c.messages.slice(-COST.MAX_CHAT_SESSION_MSGS);
         msgs.forEach(function(m){
           var content = typeof m.content==="string"?m.content:JSON.stringify(m.content);
           var maxLen = small ? 200 : 250;
@@ -2523,17 +2546,26 @@ function sendMessage(){
     }
   });
   if(relevant.length){
+    var paintAttachCount = Math.max(0, COST.RELEVANT_PAINT_COUNT);
     userContent.push({type:"text",text:"[Relevant paintings from your collection:]"});
-    relevant.slice(0,3).forEach(function(rp){
+    relevant.slice(0,paintAttachCount).forEach(function(rp){
       userContent.push({type:"text",text:'"'+rp.title+'" ('+rp.date+")"+(rp.description?" - "+rp.description:"")});
-      if(rp.full)userContent.push({type:"image_url",image_url:{url:"data:image/jpeg;base64,"+rp.full}});
+      // 비용 절감: 원본 대신 작은 썸네일만 첨부 (COST.RELEVANT_PAINT_USE_THUMB)
+      var imgData = (COST.RELEVANT_PAINT_USE_THUMB && rp.thumb) ? rp.thumb.split(",")[1] : rp.full;
+      var imgMime = (COST.RELEVANT_PAINT_USE_THUMB && rp.thumb) ? "image/jpeg" : "image/jpeg";
+      if(imgData)userContent.push({type:"image_url",image_url:{url:"data:"+imgMime+";base64,"+imgData}});
+    });
+    // 나머지는 텍스트(제목/설명)만 참고자료로 남기고 이미지는 첨부하지 않음
+    relevant.slice(paintAttachCount).forEach(function(rp){
+      userContent.push({type:"text",text:'(also in collection) "'+rp.title+'" ('+rp.date+")"+(rp.description?" - "+rp.description:"")});
     });
   }
   userContent.push({type:"text",text:text||"Describe this file."});
   var mediaFetchPromise=Promise.resolve();
-  if(relevantMedia.length&&hasR2()){
+  var relevantMediaFiltered = relevantMedia.filter(function(rm){return rm.score >= COST.RELEVANT_MEDIA_MIN_SCORE;});
+  if(relevantMediaFiltered.length&&hasR2()){
     userContent.push({type:"text",text:"[Relevant audio/video from your library:]"});
-    var mediaPromises=relevantMedia.map(function(rm){
+    var mediaPromises=relevantMediaFiltered.slice(0,1).map(function(rm){
       userContent.push({type:"text",text:'"'+rm.title+'" ('+rm.type+", "+rm.fileName+")"});
       if((rm.r2Key||rm.storageUrl)&&rm.type==="music"){
         var getUrl;
@@ -2554,7 +2586,9 @@ function sendMessage(){
     var userMsg=userContent.length===1&&userContent[0].type==="text"?{role:"user",content:userContent[0].text}:{role:"user",content:userContent};
     chatHistory.push(userMsg);
     saveChatSession();
-    var trimmedHistory = isSmallContext() && chatHistory.length > 20 ? chatHistory.slice(-20) : chatHistory;
+    // 비용 절감: 모델 상관없이 항상 최근 N개 메시지로 히스토리 트리밍
+    var histCap = isSmallContext() ? COST.MAX_HISTORY_MSGS_SMALL : COST.MAX_HISTORY_MSGS;
+    var trimmedHistory = chatHistory.length > histCap ? chatHistory.slice(-histCap) : chatHistory;
     var messages=[sysMsg].concat(trimmedHistory);
     fetch("https://openrouter.ai/api/v1/chat/completions",{
       method:"POST",
@@ -2585,7 +2619,12 @@ function sendMessage(){
       if(lastAssistant){
         addLocalEpisodic("Jarvis: "+lastAssistant.content.substring(0,60));
       }
-      setTimeout(function(){ extractMemoriesAsync(chatHistory.slice(-6)); }, 600);
+      // 비용 절감: 메모리 추출 API 호출을 매번이 아니라 N턴마다 한 번만
+      msgCountSinceExtract++;
+      if(msgCountSinceExtract >= COST.MEMORY_EXTRACT_EVERY_N){
+        msgCountSinceExtract = 0;
+        setTimeout(function(){ extractMemoriesAsync(chatHistory.slice(-6*COST.MEMORY_EXTRACT_EVERY_N)); }, 600);
+      }
     });
   });
 }
