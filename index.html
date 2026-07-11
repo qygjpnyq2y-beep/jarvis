@@ -2324,14 +2324,11 @@ function buildMemCtx(){
   var small = isSmallContext();
   var ctx = "";
   if(diaryCache.length){
+    // 사용자 요청: 일기 전체를 항상 온전히 읽도록 함 (개수/글자수 제한 없음)
     var sorted = diaryCache.slice().sort(function(a,b){return (a.date||"").localeCompare(b.date||"");});
-    var diaryLimit = small ? Math.min(30, COST.MAX_DIARY_ENTRIES) : COST.MAX_DIARY_ENTRIES;
-    var recentDiary = sorted.slice(-diaryLimit);
-    ctx += "\n\n[USER'S DIARY (most recent "+recentDiary.length+" of "+diaryCache.length+")]\n";
-    recentDiary.forEach(function(d){
-      var maxChars = COST.MAX_DIARY_CHARS;
-      var text = (d.text.length > maxChars) ? d.text.substring(0,maxChars)+"...(truncated)" : d.text;
-      ctx += "--- "+d.date+" ---\n"+text+"\n\n";
+    ctx += "\n\n[USER'S DIARY (all "+sorted.length+" entries)]\n";
+    sorted.forEach(function(d){
+      ctx += "--- "+d.date+" ---\n"+d.text+"\n\n";
     });
     ctx += "[END DIARY]\n";
   }
@@ -2400,164 +2397,6 @@ function buildMemCtx(){
   return ctx;
 }
 
-/* === PAST-CONVERSATION SEARCH (SEMANTIC) ===
-   사용자가 예전에 했던 얘기를 언급하면(예: "저번에 얘기했던 그거"),
-   buildMemCtx()가 담아주는 "최근 세션 몇 개"로는 못 찾는 경우가 많음.
-   그래서 매 메시지마다 diaryCache 전체 + chatSessionsCache 전체(과거 전체 대화)를
-   "의미 기반(임베딩)"으로 스캔해서, 지금 질문과 관련된 항목만 소량으로 뽑아
-   컨텍스트에 추가로 얹음. 키워드가 하나도 안 겹쳐도 의미가 비슷하면 찾아냄.
-   -> 평소엔 아무것도 안 붙지만(관련 없으면 스킵), 과거 얘기를 꺼내면 자동으로 찾아서 추론에 반영. */
-var EMBED_MODEL = "openai/text-embedding-3-small"; // OpenRouter 임베딩 엔드포인트, 저렴하고 빠름
-var EMBED_BACKFILL_PER_TURN = 40; // 메시지 한 번당 새로 임베딩할 항목 상한 (비용/지연 제어)
-var SEMANTIC_MIN_SIM = 0.28; // 이 유사도 미만은 "관련 없음"으로 버림
-
-function cosineSim(a,b){
-  if(!a||!b||a.length!==b.length) return 0;
-  var dot=0,na=0,nb=0;
-  for(var i=0;i<a.length;i++){dot+=a[i]*b[i];na+=a[i]*a[i];nb+=b[i]*b[i];}
-  if(na===0||nb===0) return 0;
-  return dot/(Math.sqrt(na)*Math.sqrt(nb));
-}
-
-function fetchEmbeddings(texts){
-  if(!orKey || !texts.length) return Promise.resolve(texts.map(function(){return null;}));
-  return fetch("https://openrouter.ai/api/v1/embeddings",{
-    method:"POST",
-    headers:{"Content-Type":"application/json","Authorization":"Bearer "+orKey},
-    body:JSON.stringify({model:EMBED_MODEL, input:texts})
-  }).then(function(r){return r.json();}).then(function(data){
-    if(data.error || !data.data) { console.warn("[JARVIS] Embedding error:",data.error); return texts.map(function(){return null;}); }
-    var byIndex = new Array(texts.length).fill(null);
-    data.data.forEach(function(d){ if(typeof d.index==="number") byIndex[d.index]=d.embedding; });
-    return byIndex;
-  }).catch(function(e){ console.warn("[JARVIS] Embedding fetch failed:",e); return texts.map(function(){return null;}); });
-}
-
-// items: 배열, textFn: 항목 -> 임베딩할 텍스트. items[i].embedding 없는 것만 골라 채움 (최대 EMBED_BACKFILL_PER_TURN개)
-function ensureEmbeddings(items, textFn){
-  var missing = items.filter(function(it){return !it.embedding && textFn(it);}).slice(0, EMBED_BACKFILL_PER_TURN);
-  if(!missing.length) return Promise.resolve(false);
-  var texts = missing.map(textFn);
-  return fetchEmbeddings(texts).then(function(vecs){
-    var got=false;
-    missing.forEach(function(it,i){ if(vecs[i]){ it.embedding=vecs[i]; got=true; } });
-    return got;
-  });
-}
-
-function diaryEmbedText(d){ return (d.text||"").substring(0,2000); }
-function chatEmbedText(c){
-  var msgs=(c.messages||[]).map(function(m){return typeof m.content==="string"?m.content:"";}).join(" ");
-  return ((c.preview||"")+" "+msgs).substring(0,2000);
-}
-
-// 기존 키워드 검색 (임베딩 API 키가 없거나 호출 실패 시 폴백용)
-function keywordPastSearch(query, opts){
-  opts = opts || {};
-  var maxDiary = opts.maxDiary != null ? opts.maxDiary : 5;
-  var maxChats = opts.maxChats != null ? opts.maxChats : 3;
-  if(!query || !query.trim()) return {diary:[], chats:[]};
-  var terms = query.toLowerCase().split(/\s+/).filter(function(w){return w.length>=2;});
-  if(!terms.length) return {diary:[], chats:[]};
-
-  var diaryScored = diaryCache.map(function(d){
-    var text = ((d.text||"")+" "+(d.date||"")).toLowerCase();
-    var score=0;
-    terms.forEach(function(t){ if(text.indexOf(t)>=0) score+=2; });
-    return {entry:d, score:score};
-  }).filter(function(x){return x.score>0;}).sort(function(a,b){return b.score-a.score;});
-
-  var alreadyIncluded = chatSessionsCache.slice(0, COST.MAX_CHAT_SESSIONS_CTX).map(function(c){return c.sessionId;});
-  alreadyIncluded.push(currentSessionId);
-
-  var chatScored = chatSessionsCache.filter(function(c){
-    return alreadyIncluded.indexOf(c.sessionId) === -1;
-  }).map(function(c){
-    var hay = (c.preview||"") + " " + (c.messages||[]).map(function(m){
-      return typeof m.content==="string" ? m.content : "";
-    }).join(" ");
-    hay = hay.toLowerCase();
-    var score=0;
-    terms.forEach(function(t){ if(hay.indexOf(t)>=0) score+=2; });
-    return {session:c, score:score};
-  }).filter(function(x){return x.score>0;}).sort(function(a,b){return b.score-a.score;});
-
-  return { diary: diaryScored.slice(0,maxDiary), chats: chatScored.slice(0,maxChats) };
-}
-
-// 진짜 의미 기반 검색. 쿼리를 임베딩하고, 일기/과거대화도 임베딩해서 코사인 유사도로 랭킹.
-// 키워드가 하나도 안 겹쳐도("돈 걱정" ↔ "월급 스트레스") 의미가 비슷하면 잡아냄.
-function semanticPastSearch(query, opts){
-  opts = opts || {};
-  var maxDiary = opts.maxDiary != null ? opts.maxDiary : 5;
-  var maxChats = opts.maxChats != null ? opts.maxChats : 3;
-  if(!query || !query.trim()) return Promise.resolve({diary:[], chats:[]});
-  if(!orKey) return Promise.resolve(keywordPastSearch(query, opts));
-
-  var alreadyIncluded = chatSessionsCache.slice(0, COST.MAX_CHAT_SESSIONS_CTX).map(function(c){return c.sessionId;});
-  alreadyIncluded.push(currentSessionId);
-  var candidateChats = chatSessionsCache.filter(function(c){ return alreadyIncluded.indexOf(c.sessionId)===-1; });
-
-  return Promise.all([
-    ensureEmbeddings(diaryCache, diaryEmbedText),
-    ensureEmbeddings(candidateChats, chatEmbedText),
-    fetchEmbeddings([query.substring(0,2000)])
-  ]).then(function(results){
-    var queryVec = results[2] && results[2][0];
-    if(!queryVec){
-      // 임베딩 실패 시 키워드 검색으로 폴백
-      return keywordPastSearch(query, opts);
-    }
-    var diaryScored = diaryCache.filter(function(d){return d.embedding;}).map(function(d){
-      return {entry:d, score:cosineSim(queryVec, d.embedding)};
-    }).filter(function(x){return x.score>=SEMANTIC_MIN_SIM;}).sort(function(a,b){return b.score-a.score;});
-
-    var chatScored = candidateChats.filter(function(c){return c.embedding;}).map(function(c){
-      return {session:c, score:cosineSim(queryVec, c.embedding)};
-    }).filter(function(x){return x.score>=SEMANTIC_MIN_SIM;}).sort(function(a,b){return b.score-a.score;});
-
-    // 새로 계산된 임베딩을 캐시에 영구 저장 (다음부터는 재계산 없이 재사용)
-    if(isStarterMode){
-      saveLocalCache("diary", diaryCache).catch(function(){});
-      saveLocalCache("chats", chatSessionsCache).catch(function(){});
-    }
-
-    return { diary: diaryScored.slice(0,maxDiary), chats: chatScored.slice(0,maxChats) };
-  }).catch(function(e){
-    console.warn("[JARVIS] Semantic search failed, falling back to keyword:",e);
-    return keywordPastSearch(query, opts);
-  });
-}
-
-function buildPastSearchCtx(query){
-  var small = isSmallContext();
-  return semanticPastSearch(query, {maxDiary: small?3:5, maxChats: small?1:3}).then(function(res){
-    if(!res.diary.length && !res.chats.length) return "";
-    var ctx = "\n\n[RELEVANT PAST CONTEXT — found via semantic (meaning-based) search over older diary/chat history against the user's current message. Use this to recall specifics if they're asking about something from before.]\n";
-    if(res.diary.length){
-      ctx += "-- Diary matches --\n";
-      res.diary.forEach(function(d){
-        var text = d.entry.text.length > COST.MAX_DIARY_CHARS ? d.entry.text.substring(0,COST.MAX_DIARY_CHARS)+"..." : d.entry.text;
-        var relTag = d.score!=null ? " (relevance:"+d.score.toFixed(2)+")" : "";
-        ctx += d.entry.date+relTag+": "+text+"\n";
-      });
-    }
-    if(res.chats.length){
-      ctx += "-- Past conversation matches --\n";
-      res.chats.forEach(function(c){
-        var relTag = c.score!=null ? " (relevance:"+c.score.toFixed(2)+")" : "";
-        ctx += "["+fmtDate(c.session.ts)+relTag+"]\n";
-        var msgs = (c.session.messages||[]).slice(-COST.MAX_CHAT_SESSION_MSGS);
-        msgs.forEach(function(m){
-          var content = typeof m.content==="string" ? m.content : "";
-          ctx += (m.role==="assistant"?"Jarvis":"User")+": "+content.substring(0,200)+"\n";
-        });
-      });
-    }
-    ctx += "[END RELEVANT PAST CONTEXT]\n";
-    return ctx;
-  });
-}
 
 
 function searchPaintFor(q){if(!q||!paintCache.length)return[];var terms=q.toLowerCase().split(/\s+/).filter(Boolean);var scored=paintCache.map(function(p){var hay=[p.title,p.description].concat(p.tags||[]).join(" ").toLowerCase();var s=0;terms.forEach(function(t){if(hay.indexOf(t)>=0)s+=1;if((p.tags||[]).indexOf(t)>=0)s+=2;if(p.title.toLowerCase().indexOf(t)>=0)s+=1.5});return Object.assign({},p,{score:s})}).filter(function(x){return x.score>0});scored.sort(function(a,b){return b.score-a.score});return scored.slice(0,5)}
@@ -2696,7 +2535,7 @@ function sendMessage(){
   $inp.disabled=true;
   showLoad();
   var memCtx=buildMemCtx();
-  var pastCtxPromise=buildPastSearchCtx(text); // 과거 일기/대화 "의미 기반" 검색 (비동기, 관련 있을 때만 채워짐)
+  // 참고: 일기는 buildMemCtx()에서 이제 항상 전체가 포함되므로 별도 과거-검색이 필요 없음
 
   // 비전(이미지/오디오) 지원 모델 목록 — 필요시 여기에 모델 id 추가/삭제
   var visionModels = ["google/gemini-3-flash-preview","anthropic/claude-sonnet-5","x-ai/grok-4.3","openai/gpt-chat-latest","google/gemma-4-31b-it:free"];
@@ -2766,9 +2605,8 @@ function sendMessage(){
     });
     mediaFetchPromise=Promise.all(mediaPromises);
   }
-  Promise.all([pastCtxPromise, mediaFetchPromise]).then(function(results){
-    var pastCtx = results[0] || "";
-    var sysMsg={role:"system",content:getPersonality()+timeCtx+memCtx+pastCtx};
+  mediaFetchPromise.then(function(){
+    var sysMsg={role:"system",content:getPersonality()+timeCtx+memCtx};
     var userMsg=userContent.length===1&&userContent[0].type==="text"?{role:"user",content:userContent[0].text}:{role:"user",content:userContent};
     chatHistory.push(userMsg);
     saveChatSession();
