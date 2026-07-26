@@ -2539,7 +2539,7 @@ function sendMessage(){
   // 참고: 일기는 buildMemCtx()에서 이제 항상 전체가 포함되므로 별도 과거-검색이 필요 없음
 
   // 비전(이미지/오디오) 지원 모델 목록 — 필요시 여기에 모델 id 추가/삭제
-  var visionModels = ["google/gemini-3-flash-preview","anthropic/claude-sonnet-5","x-ai/grok-4.3","openai/gpt-chat-latest","google/gemma-4-31b-it:free"];
+  var visionModels = ["google/gemini-3-flash-preview","google/gemini-3.5-flash-lite","anthropic/claude-sonnet-5","x-ai/grok-4.3","openai/gpt-chat-latest","google/gemma-4-31b-it:free"];
   var supportsVision = visionModels.indexOf(MODELS[activeModel].id) !== -1;
 
   var relevant = supportsVision ? searchPaintFor(text) : [];
